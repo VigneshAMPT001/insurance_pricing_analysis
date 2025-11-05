@@ -6,8 +6,7 @@ import pandas as pd
 import streamlit as st
 
 
-DATA_ROOT = "/home/ampera/Documents/insurance_pricing_data"
-NORMALIZED_FILE = os.path.join(DATA_ROOT, "normalized_plans.json")
+NORMALIZED_FILE = "normalized_plans.json"
 
 
 @st.cache_data(show_spinner=False)
