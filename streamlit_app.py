@@ -89,7 +89,7 @@ def main() -> None:
         st.subheader("Plans and Pricing")
         st.dataframe(
             df,
-            use_container_width=True,
+            width="stretch",
             hide_index=True,
         )
 
@@ -139,23 +139,23 @@ def main() -> None:
         if df.empty:
             st.info("No plans matched your filters.")
         else:
-            sort_by = st.selectbox(
-                "Sort by",
-                options=["Total Premium", "Net Premium", "Company", "Model", "Plan"],
-                index=0,
-            )
-            ascending = st.checkbox("Ascending", value=True)
-            if sort_by in df.columns:
-                df = df.sort_values(by=sort_by, ascending=ascending, na_position="last")
+            # sort_by = st.selectbox(
+            #     "Sort by",
+            #     options=["Total Premium", "Net Premium", "Company", "Model", "Plan"],
+            #     index=0,
+            # )
+            # ascending = st.checkbox("Ascending", value=True)
+            # if sort_by in df.columns:
+            #     df = df.sort_values(by=sort_by, ascending=ascending, na_position="last")
 
-            st.dataframe(df, use_container_width=True, hide_index=True)
+            st.dataframe(df, width="stretch", hide_index=True)
 
             # Optional: quick price summary by company
             st.markdown("**Summary by company (min / max total premium)**")
             summary = (
                 df.groupby("Company")["Total Premium"].agg(["min", "max"]).reset_index()
             )
-            st.dataframe(summary, use_container_width=True, hide_index=True)
+            st.dataframe(summary, width="stretch", hide_index=True)
 
     # Summary stats
     if not df.empty:
