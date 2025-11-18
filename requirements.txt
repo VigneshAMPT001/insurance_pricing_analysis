@@ -1,1 +1,12 @@
 streamlit
+requests
+beautifulsoup4
+tqdm
+pillow
+cairosvg
+fastapi
+uvicorn
+pillow
+numpy
+torch
+git+https://github.com/openai/CLIP.git

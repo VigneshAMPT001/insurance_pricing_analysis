@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+
+# Output files
+output/
+*.csv
+*.xlsx
+
+# Screenshots
+*.png
+
+# IDE
+.vscode/
+.idea/
+*.swp
