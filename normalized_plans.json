@@ -224,7 +224,7 @@
           "total_premium": 42194.44,
           "net_premium": 35758.0,
           "tax_amount": 6436.44,
-          "currency": "INR"
+          "cuTypeError: 'PlaywrightContextManager' object does not support the asynchronous context manager protocolrrency": "INR"
         },
         "source_file": "/home/ampera/Documents/insurance_pricing_data/royal_sundaram/windsor_ev/comprehensive_plan.json"
       },
