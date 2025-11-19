@@ -1,0 +1,66 @@
+{
+    "status": 0,
+    "txt": "",
+    "data": [
+        {
+            "PARTYNAME": "KAMAL MOTORS- TATA MOTORS-THANE",
+            "ADDRESS": "VARTAK WADI PLOT BETWEEN IOC PUMP AND APPLE IND HUB . PELHAR VILLAGE. N H NO -08. NALLASOPARA(E) -40",
+            "MOBILENUMBER": "9372768074",
+            "CITY": "THANE",
+            "STATE": "MAHARASHTRA",
+            "PINCODE": "401208",
+            "TXT_LATITUDE": "19.20105",
+            "TXT_LONGITUDE": "72.978535"
+        },
+        {
+            "PARTYNAME": "Palladium Automotive - Royal Enfield TW",
+            "ADDRESS": "CHANDAN VALLEY C WING OPP SHIWAR GARDEN MIRA BHAYANDAR ROAD MIRAROAD EAST",
+            "MOBILENUMBER": "9619564694",
+            "CITY": "THANE",
+            "STATE": "MAHARASHTRA",
+            "PINCODE": "401101",
+            "TXT_LATITUDE": "19.2999",
+            "TXT_LONGITUDE": "72.8397"
+        },
+        {
+            "PARTYNAME": "TEJPAL MOTORS PVT LTD",
+            "ADDRESS": "WESTERN EXTERSION INDUSTRIES MAJIWADA NEAR CAPITAL HOTEL THANE WEST",
+            "MOBILENUMBER": "7304441294",
+            "CITY": "THANE",
+            "STATE": "MAHARASHTRA",
+            "PINCODE": "400606",
+            "TXT_LATITUDE": "18.636",
+            "TXT_LONGITUDE": "73.78535"
+        },
+        {
+            "PARTYNAME": "REGENT HONDA  -THANE ",
+            "ADDRESS": "PLOT NO.1 MOHAN MILL COMP. GB ROAD ",
+            "MOBILENUMBER": "9890807062",
+            "CITY": "THANE ",
+            "STATE": "MAHARASHTRA",
+            "PINCODE": "400607",
+            "TXT_LATITUDE": "19.5077",
+            "TXT_LONGITUDE": "73.62297"
+        },
+        {
+            "PARTYNAME": "WELLWISHER CARS PRIVATE LIMITED - TATA - MAHAPE",
+            "ADDRESS": "GEN 71/2 TTC INDUSTRIAL AREA MIDC INDUSTRIAL AREA MAHAPE NAVI MUMBAI  ",
+            "MOBILENUMBER": "8655770360",
+            "CITY": "THANE",
+            "STATE": "MAHARASHTRA",
+            "PINCODE": "400710",
+            "TXT_LATITUDE": "19.231",
+            "TXT_LONGITUDE": "72.9517"
+        },
+        {
+            "PARTYNAME": "OK PLAST MULTI SOLUTIONS -THANE",
+            "ADDRESS": "SHIRWANE SHRI PRAKASH SUTAR PLOT NO-MTTC  NAVI MUMBAI TTC IND AREA  ",
+            "MOBILENUMBER": "7558032756",
+            "CITY": "THANE",
+            "STATE": "MAHARASHTRA",
+            "PINCODE": "400706",
+            "TXT_LATITUDE": "19.21475",
+            "TXT_LONGITUDE": "72.976691"
+        }
+    ]
+}

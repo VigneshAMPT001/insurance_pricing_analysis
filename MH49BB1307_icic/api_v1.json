@@ -1,0 +1,57 @@
+{
+    "ProposalId": "epn_5muqJYFhB6XXPm1E33",
+    "StartDate": "2025-11-19T15:11:35.8140443+05:30",
+    "EndDate": "2026-11-18T23:59:59+05:30",
+    "IsInspection": true,
+    "Addons": [],
+    "Liability": [
+        {
+            "Liability": "Basic",
+            "SumInsured": 0,
+            "NoOfPerson": 0,
+            "Premium": 3416
+        },
+        {
+            "Liability": "CPA",
+            "SumInsured": 0,
+            "NoOfPerson": 0,
+            "Premium": 675
+        }
+    ],
+    "Loading": [],
+    "OwnDamage": [],
+    "Tenure": 1,
+    "NetPremium": 4091,
+    "GST": 736,
+    "TotalPremium": 4827,
+    "PreviousPolicy": {
+        "PolicyType": "Comprehensive Package",
+        "Tenure": 0,
+        "EndDate": "10/15/2025 00:00:00",
+        "NoofClaims": 0,
+        "NCB": 0,
+        "PolicyNo": "0",
+        "Insurer": "ICLB"
+    },
+    "MakeCode": 8,
+    "MakeName": "HYUNDAI",
+    "ModelCode": 18775,
+    "ModelName": "I 20 ACTIVE 1.2 S",
+    "PurchaseDate": "2018-10-17T00:00:00",
+    "RTOCode": 5,
+    "RTOName": "MAHARASHTRA-NAGPUR",
+    "SumInsured": 0,
+    "IssuanceType": "ThirdParty",
+    "EmailId": "surbhi255@gmail.com",
+    "MobileNo": "8534678235",
+    "IsCorporateCustomer": false,
+    "RegistrationNo": "MH49BB1307",
+    "VehicleAge": 7.08871,
+    "HasSkipKYC": false,
+    "ErrorId": 0,
+    "Success": true,
+    "StatusCode": 0,
+    "TechnicalError": null,
+    "DisplayMessage": null,
+    "CorelationId": "744669a6-6aae-7cc8-1695-a32972c93d2c"
+}

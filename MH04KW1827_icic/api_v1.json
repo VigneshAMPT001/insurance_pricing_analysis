@@ -1,0 +1,57 @@
+{
+    "ProposalId": null,
+    "StartDate": "2025-11-19T14:54:34.0993639+05:30",
+    "EndDate": "2026-11-18T23:59:59+05:30",
+    "IsInspection": true,
+    "Addons": [],
+    "Liability": [
+        {
+            "Liability": "Basic",
+            "SumInsured": 0,
+            "NoOfPerson": 0,
+            "Premium": 0
+        },
+        {
+            "Liability": "CPA",
+            "SumInsured": 0,
+            "NoOfPerson": 0,
+            "Premium": 0
+        }
+    ],
+    "Loading": [],
+    "OwnDamage": [],
+    "Tenure": 1,
+    "NetPremium": 0,
+    "GST": 0,
+    "TotalPremium": 0,
+    "PreviousPolicy": {
+        "PolicyType": "Comprehensive Package",
+        "Tenure": 0,
+        "EndDate": "10/08/2025 00:00:00",
+        "NoofClaims": 0,
+        "NCB": 0,
+        "PolicyNo": "0",
+        "Insurer": "ICLB"
+    },
+    "MakeCode": 11,
+    "MakeName": "Tata Motors",
+    "ModelCode": 29871,
+    "ModelName": "NEXON 1.2 XE",
+    "PurchaseDate": "2021-09-29T00:00:00",
+    "RTOCode": 13,
+    "RTOName": "MAHARASHTRA-THANE",
+    "SumInsured": 0,
+    "IssuanceType": "ThirdParty",
+    "EmailId": "surbhi259@gmail.com",
+    "MobileNo": "8534678235",
+    "IsCorporateCustomer": false,
+    "RegistrationNo": "MH04KW1827",
+    "VehicleAge": 4.13978,
+    "HasSkipKYC": false,
+    "ErrorId": 0,
+    "Success": true,
+    "StatusCode": 2403,
+    "TechnicalError": "SATP configuration not applicable for this vehicle!",
+    "DisplayMessage": null,
+    "CorelationId": "ac0d42ce-f70d-b9ad-3eb9-f32fb0ecc943"
+}

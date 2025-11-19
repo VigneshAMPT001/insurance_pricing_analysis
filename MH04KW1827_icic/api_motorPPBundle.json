@@ -1,0 +1,18 @@
+{
+    "MotorPPBundleConfigs": [
+        {
+            "SumInsured": 300000.0,
+            "IsDefault": "N"
+        },
+        {
+            "SumInsured": 500000.0,
+            "IsDefault": "Y"
+        }
+    ],
+    "ErrorId": 0,
+    "Success": true,
+    "StatusCode": 200,
+    "TechnicalError": null,
+    "DisplayMessage": null,
+    "CorelationId": null
+}
