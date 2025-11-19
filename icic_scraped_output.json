@@ -1,0 +1,56 @@
+[
+    {
+        "plan_type": "Comprehensive",
+        "plan_type_index": 0,
+        "button_index": 0,
+        "button_text": "Recommended\nNo Frills, just basics\n\nMust-have cove",
+        "scraped_data": {
+            "plans": [],
+            "premium_summary": {
+                "base_premium": null,
+                "additional_covers": null,
+                "sub_total": null,
+                "discounts": null,
+                "net_premium": null,
+                "total_premium": null,
+                "gst": null
+            }
+        }
+    },
+    {
+        "plan_type": "Comprehensive",
+        "plan_type_index": 0,
+        "button_index": 1,
+        "button_text": "Zero Dep, zero worries\n\nStay protected against car",
+        "scraped_data": {
+            "plans": [],
+            "premium_summary": {
+                "base_premium": null,
+                "additional_covers": null,
+                "sub_total": null,
+                "discounts": null,
+                "net_premium": null,
+                "total_premium": null,
+                "gst": null
+            }
+        }
+    },
+    {
+        "plan_type": "Comprehensive",
+        "plan_type_index": 0,
+        "button_index": 2,
+        "button_text": "Smart Cover, better pricing\n\nFair prices, based on",
+        "scraped_data": {
+            "plans": [],
+            "premium_summary": {
+                "base_premium": null,
+                "additional_covers": null,
+                "sub_total": null,
+                "discounts": null,
+                "net_premium": null,
+                "total_premium": null,
+                "gst": null
+            }
+        }
+    }
+]
