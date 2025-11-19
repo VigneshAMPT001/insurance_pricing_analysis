@@ -1,49 +1,55 @@
 import json
 import asyncio
 import copy
+import os
 from urllib.parse import urlparse, parse_qs
 
 import requests
 from playwright.async_api import async_playwright
 
-CAR_NUMBER = "MH12VZ2302"
+CAR_NUMBER = "MH12SE5466"
 PHONE = "8335278236"
+INSURANCE_NAME = "acko"
 
 HOME_URL = "https://www.acko.com/"
 CAR_URL = "https://www.acko.com/gi/car"
 ACKO_NEXT_NODE_URL = "https://www.acko.com/sdui/api/v1/next-node"
+CLAIM_STATUES = ["not_claimed", "claimed"]
 
-
-# -------------------------------------------------------------------
-# SAFE HELPERS
-# -------------------------------------------------------------------
-async def safe_get_text(locator):
-    try:
-        val = await locator.text_content()
-        return (val or "").strip()
-    except:
-        return None
-
-
-async def safe_get_attr(locator, attr):
-    try:
-        return await locator.get_attribute(attr)
-    except:
-        return None
-
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+INSURER_OUTPUT_DIR = os.path.join(BASE_DIR, "insurer", INSURANCE_NAME)
+os.makedirs(INSURER_OUTPUT_DIR, exist_ok=True)
 
 # -------------------------------------------------------------------
 # API HELPERS
 # -------------------------------------------------------------------
 NODE_BODIES = {
+    "entry_node": {
+        "journey": "fresh_car",
+        "data": {
+            "is_new": False,
+            "origin": "acko",
+            "product": "car",
+            "proposal_ekey": "",
+            "session_data": {
+                "vehicle_addons_node_visited": False,
+                "family_addons_node_visited": False,
+                "idv_packs_node_visited": False,
+                "multi_year_plan_node_visited": False,
+                "multi_tenure_plan_node_visited": False,
+                "is_edit_journey": False,
+            },
+        },
+        "current_node": "entry_node",
+    },
     "previous_claim_confirmation_node": {
         "journey": "fresh_car",
         "data": {
             "is_new": "false",
             "origin": "acko",
             "product": "car",
-            "previous_policy_claim_answer": "not_claimed",
-            "pincode": 400615,
+            "previous_policy_claim_answer": "",
+            "pincode": "",
             "phone": PHONE,
             "proposal_ekey": "",
             "session_data": {
@@ -58,6 +64,9 @@ NODE_BODIES = {
         "expected_node": "",
         "current_node": "previous_claim_confirmation_node",
     },
+}
+
+NODE_BODIES_EXTENDED = {
     "plan_selection_node": {
         "journey": "fresh_car",
         "data": {
@@ -105,18 +114,22 @@ NODE_BODIES = {
 }
 
 
-def get_request_body(current_node, proposal_key):
+def get_request_body(current_node, proposal_key, claim_status=None, pincode=None):
     if current_node not in NODE_BODIES:
         raise ValueError(f"Unknown current_node: {current_node}")
 
     body = copy.deepcopy(NODE_BODIES[current_node])
     if "data" in body:
         body["data"]["proposal_ekey"] = proposal_key
+        if claim_status:
+            body["data"]["previous_policy_claim_answer"] = claim_status
+        if pincode and "pincode" in body["data"]:
+            body["data"]["pincode"] = pincode
     return body
 
 
-def call_next_node_api(current_node, proposal_key):
-    body = get_request_body(current_node, proposal_key)
+def call_next_node_api(current_node, proposal_key, claim_status=None, pincode=None):
+    body = get_request_body(current_node, proposal_key, claim_status, pincode)
 
     headers = {
         "Content-Type": "application/json",
@@ -130,9 +143,47 @@ def call_next_node_api(current_node, proposal_key):
     print(f"\n➡ Request sent for node: {current_node}")
     print("➡ Status Code:", response.status_code)
     print("➡ Response:")
-    print(json.dumps(data, indent=2))
+    # print(json.dumps(data, indent=2))
 
     return data
+
+
+def save_claim_response(car_number, claim_status, response_data):
+    if not claim_status:
+        return
+    filename = f"{car_number}-{claim_status}.json"
+    file_path = os.path.join(INSURER_OUTPUT_DIR, filename)
+    with open(file_path, "w", encoding="utf-8") as f:
+        json.dump(response_data, f, indent=4)
+    print(f">>> Saved {claim_status} response to {file_path}")
+
+
+def extract_pincode_from_response(data):
+    """
+    Traverse the response JSON and try to locate the pincode value.
+    """
+
+    if isinstance(data, dict):
+        if data.get("name") == "pincode" and isinstance(data.get("value"), (str, int)):
+            return str(data["value"])
+        if data.get("payloadData"):
+            payload = data["payloadData"]
+            if (
+                isinstance(payload, dict)
+                and payload.get("name") == "pincode"
+                and payload.get("value")
+            ):
+                return str(payload["value"])
+        for value in data.values():
+            pincode = extract_pincode_from_response(value)
+            if pincode:
+                return pincode
+    elif isinstance(data, list):
+        for item in data:
+            pincode = extract_pincode_from_response(item)
+            if pincode:
+                return pincode
+    return None
 
 
 # -------------------------------------------------------------------
@@ -140,7 +191,11 @@ def call_next_node_api(current_node, proposal_key):
 # -------------------------------------------------------------------
 async def scrape_acko_full_flow():
 
-    final_json = {}
+    output_path = f"acko_full_output_{CAR_NUMBER}.json"
+    final_json = {
+        "car_number": CAR_NUMBER,
+        "api_responses": {},
+    }
     api_nodes = [
         "previous_claim_confirmation_node",
         "plan_selection_node",
@@ -187,10 +242,21 @@ async def scrape_acko_full_flow():
         await page.click("button.jsx-2611325737.style-button-primary")
 
         # ---------------------------------------------------------
+        # STEP 3: Entering Phone
+        # ---------------------------------------------------------
+        print(">>> Entering Phone")
+        await page.wait_for_selector("input#phone")
+        await page.fill("input#phone", PHONE)
+        print(">>> Clicking View Prices")
+        await page.click("button.sc-eHgmQL.sc-cqpYsc")
+        # ---------------------------------------------------------
         # STEP 3: PREVIOUS CLAIM → YES/NO
         # ---------------------------------------------------------
-        # print(">>> Handling Claim Question")
-        # await page.wait_for_selector("div.jsx-1278309658.question")
+        print(">>> Handling Claim Question")
+        await page.wait_for_selector("div.jsx-1278309658.question")
+
+        yes_no = page.locator("button.sc-elJkPf")
+        await yes_no.nth(0).click()  # Click YES
 
         # Wait until the page URL changes and contains a proposal_ekey (timeout 30s)
         initial_url = page.url
@@ -217,126 +283,56 @@ async def scrape_acko_full_flow():
         if not proposal_ekey:
             raise RuntimeError("Could not determine proposal_ekey from the URL.")
         final_json["proposal_ekey"] = proposal_ekey
+        with open(output_path, "w", encoding="utf-8") as f:
+            json.dump(final_json, f, indent=4)
 
         print(f">>> Captured proposal_ekey: {proposal_ekey}")
 
         print(">>> Triggering API nodes")
         loop = asyncio.get_running_loop()
-        api_responses = {}
-        for node in api_nodes:
-            api_responses[node] = await loop.run_in_executor(
-                None, call_next_node_api, node, proposal_ekey
-            )
 
-        final_json["api_responses"] = api_responses
-
-        with open(f"acko_full_output_{CAR_NUMBER}.json", "w", encoding="utf-8") as f:
+        # First node call: entry_node
+        entry_node_response = await loop.run_in_executor(
+            None, call_next_node_api, "entry_node", proposal_ekey
+        )
+        final_json["api_responses"]["entry_node"] = entry_node_response
+        extracted_pincode = extract_pincode_from_response(entry_node_response)
+        if extracted_pincode:
+            print(f">>> Extracted pincode from entry node: {extracted_pincode}")
+        else:
+            print(">>> Warning: Failed to extract pincode from entry node response")
+        with open(output_path, "w", encoding="utf-8") as f:
             json.dump(final_json, f, indent=4)
 
-        yes_no = page.locator("button.sc-elJkPf")
-        await yes_no.nth(0).click()  # Click YES
+        # Second node: previous_claim_confirmation_node - make two calls
+        for claim_status in CLAIM_STATUES:
+            node_key = f"previous_claim_confirmation_node_{claim_status}"
+            node_response = await loop.run_in_executor(
+                None,
+                call_next_node_api,
+                "previous_claim_confirmation_node",
+                proposal_ekey,
+                claim_status,
+                extracted_pincode,
+            )
+            final_json["api_responses"][node_key] = node_response
+            with open(output_path, "w", encoding="utf-8") as f:
+                json.dump(final_json, f, indent=4)
+            save_claim_response(CAR_NUMBER, claim_status, node_response)
 
-        # ---------------------------------------------------------
-        # STEP 4: ENTER PHONE
-        # ---------------------------------------------------------
-        print(">>> Entering Phone")
-        await page.wait_for_selector("input#phone")
-        await page.fill("input#phone", PHONE)
-
-        print(">>> Clicking View Prices")
-        await page.click("button.sc-eHgmQL.sc-cqpYsc")
-
-        # ---------------------------------------------------------
-        # STEP 5: LAND ON PRICING PAGE
-        # ---------------------------------------------------------
-        print(">>> Waiting for Pricing Page")
-        await page.wait_for_selector(
-            "p.sc-cSHVUG.styles__CardHeadingText-sc-h1idlt-1.ejkRwz", timeout=60000
-        )
-
-        # print(">>> Scraping Pricing Page...")
-
-        # # ---------------------------------------------------------
-        # # PRICING PAGE SCRAPE START
-        # # ---------------------------------------------------------
-        # scraped = {}
-
-        # idv_title = page.locator(
-        #     "p.sc-cSHVUG.styles__CardHeadingText-sc-h1idlt-1.ejkRwz"
-        # )
-        # scraped["idv_title"] = await safe_get_text(idv_title)
-
-        # idv_input = page.locator("#idv-input-box")
-        # scraped["idv_value"] = await safe_get_attr(idv_input, "value")
-
-        # idv_span = page.locator("span.sc-jPPmml.ihflud")
-        # scraped["idv_span"] = await safe_get_text(idv_span)
-
-        # # Three plans
-        # plans = page.locator("div.sc-bdVaJa.sc-bwzfXH.sc-kDhYZr.bfAmwl")
-        # count = await plans.count()
-        # scraped["plans"] = []
-
-        # for i in range(count):
-        #     garages = await safe_get_text(
-        #         plans.nth(i).locator("span[style*='text-decoration:underline']")
+        # Remaining plan-related nodes
+        # for node in api_nodes[1:]:
+        #     node_response = await loop.run_in_executor(
+        #         None, call_next_node_api, node, proposal_ekey
         #     )
-        #     scraped["plans"].append({"plan_number": i + 1, "garages": garages})
+        #     final_json["api_responses"][node] = node_response
+        #     with open(output_path, "w", encoding="utf-8") as f:
+        #         json.dump(final_json, f, indent=4)
 
-        # # Footer Price
-        # footer = page.locator(
-        #     "div.sc-bdVaJa.sc-bwzfXH.iVupIy p.sc-cSHVUG.styles__FooterPrice-sc-1brs59m-0.fLbRJt"
-        # )
-        # scraped["footer_price"] = await safe_get_text(footer)
-
-        # final_json["price_page"] = scraped
-
-        # ---------------------------------------------------------
-        # STEP 6: NAVIGATE TO ADDONS PAGE
-        # ---------------------------------------------------------
-        print(">>> Going to Addons page...")
-        await page.goto(
-            "https://www.acko.com/gi/auto-storefront/fresh-car/vehicle-addons/car?proposal_ekey",
-            timeout=60000,
-        )
-
-        # addons = {}
-        # addons["recommended_heading"] = await safe_get_text(
-        #     page.locator("p div.sc-iuJeZd.ioQIDr p.sc-esOvli.kPPQzO")
-        # )
-
-        # addons["recommended_description"] = await safe_get_text(
-        #     page.locator("div.jsx-96484109.children-container > p")
-        # )
-
-        # addon_cards = page.locator(
-        #     "div.sc-bdVaJa.styles__AddOnCardWrapper-sc-1crp5za-0.bwsaBt"
-        # )
-        # cnt = await addon_cards.count()
-
-        # addons["cards"] = []
-        # for i in range(cnt):
-        #     card = addon_cards.nth(i)
-        #     title = await safe_get_text(
-        #         card.locator("p.sc-cSHVUG.styles__CardHeading-sc-1crp5za-1.ihTnoH")
-        #     )
-        #     bottom = await safe_get_text(
-        #         card.locator(
-        #             "p.sc-cSHVUG.styles__AddOnCardBottonText-sc-1crp5za-4.eGaoVQ"
-        #         )
-        #     )
-
-        #     addons["cards"].append({"title": title, "bottom_text": bottom})
-
-        # final_json["addons"] = addons
-
-        # ---------------------------------------------------------
-        # FINAL SAVE
-        # ---------------------------------------------------------
-
-        print("\n>>> DONE: Saved → acko_full_output.json\n")
+        print(f"\n>>> DONE: Latest data → {output_path}\n")
 
         await browser.close()
+        return
 
 
 # RUN

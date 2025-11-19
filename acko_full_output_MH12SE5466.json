@@ -1,12 +1,12 @@
 {
-    "car_number": "MH04KW1827",
+    "car_number": "MH12SE5466",
     "api_responses": {
         "entry_node": {
             "url": {
                 "base_path": "fresh-car/vehicle-prequote",
                 "host_name": "",
                 "query_params": {
-                    "ekey": "V1RNy4kfFc3gvCXyyhQz0w"
+                    "ekey": "vzbl4xHhb6TSS_MpA4aVOw"
                 }
             },
             "actions": {
@@ -27,28 +27,28 @@
                     {
                         "args": {
                             "edata": {
-                                "registration_number": "MH04KW1827",
-                                "vehicle_make": "Tata",
-                                "vehicle_model": "Nexon [2017-2023]",
-                                "variant_id": 13042,
-                                "vehicle_variant": "1.2 Revotron XE",
-                                "engine_cc": "1198",
+                                "registration_number": "MH12SE5466",
+                                "vehicle_make": "Hyundai",
+                                "vehicle_model": "Elite i20",
+                                "variant_id": 22781,
+                                "vehicle_variant": "Sportz Plus 1.2",
+                                "engine_cc": "1197",
                                 "fuel_type": "petrol",
-                                "registration_year": 2021,
-                                "registration_month": 9,
+                                "registration_year": 2019,
+                                "registration_month": 11,
                                 "chassis_number": "MAXXXXXXXXXXXXXXX",
-                                "engine_number": "REXXXXXXXXXXXXXXX",
-                                "rto_zone": "MH-04",
+                                "engine_number": "G4XXXXXXXXXX",
+                                "rto_zone": "MH-12",
                                 "is_expired": false,
                                 "previous_policy_type": "comprehensive",
                                 "previous_policy_expiry_bucket": "+30-",
-                                "previous_insurer": "royal-sundaram",
-                                "previous_policy_expiry_date": "2026-11-05T05:30:00+05:30",
-                                "previous_od_expiry_date": "2026-11-05T05:30:00+05:30",
+                                "previous_insurer": "liberty",
+                                "previous_policy_expiry_date": "2026-11-26T05:30:00+05:30",
+                                "previous_od_expiry_date": "2026-11-26T05:30:00+05:30",
                                 "previous_ncb": 0,
-                                "proposal_id": "V1RNy4kfFc3gvCXyyhQz0w",
-                                "last_claim_year": 2025,
-                                "customer_name": "Sunny Gangaram Daki",
+                                "proposal_id": "vzbl4xHhb6TSS_MpA4aVOw",
+                                "last_claim_year": 2023,
+                                "customer_name": "RAJESH SHAH",
                                 "journey_version": "v3",
                                 "logged_in": false,
                                 "asset_type": "car",
@@ -69,7 +69,7 @@
                                 "is_pincode_autofilled": false,
                                 "is_rc_name_autofilled": true,
                                 "eligible_for_previous_plan": true,
-                                "previous_policy_claims_count": 1,
+                                "previous_policy_claims_count": 2,
                                 "discounts_offered": []
                             },
                             "odata": {
@@ -214,16 +214,16 @@
                                         "row": 2,
                                         "props": {
                                             "ncb": 0,
-                                            "make": "Tata",
-                                            "pped": "05 Nov 2026",
-                                            "year": 2021,
-                                            "model": "Nexon [2017-2023]",
-                                            "reg_no": "MH04KW1827",
-                                            "variant": "1.2 Revotron XE",
+                                            "make": "Hyundai",
+                                            "pped": "26 Nov 2026",
+                                            "year": 2019,
+                                            "model": "Elite i20",
+                                            "reg_no": "MH12SE5466",
+                                            "variant": "Sportz Plus 1.2",
                                             "gst_text": "If you have a company-owned car, add your GST number after payment and get a GST invoice.",
                                             "acko_logo": "/public/images/acko_logo.svg",
                                             "is_visible": true,
-                                            "ppepd_text": "05 Nov 2026",
+                                            "ppepd_text": "26 Nov 2026",
                                             "vehicle_logo": "public/images/car_image.png",
                                             "wrapperStyles": {
                                                 "margin-top": "-1rem"
@@ -278,12 +278,12 @@
                                             },
                                             "isExpired": false,
                                             "is_visible": true,
-                                            "start_date": "05 2026",
+                                            "start_date": "26 2026",
                                             "payloadData": {
                                                 "name": "previous_policy_claim_answer",
                                                 "value": null
                                             },
-                                            "prev_insurer": "royal-sundaram"
+                                            "prev_insurer": "liberty"
                                         }
                                     },
                                     "type": "qna",
@@ -393,7 +393,7 @@
                                             "is_visible": true,
                                             "payloadData": {
                                                 "name": "pincode",
-                                                "value": "400615"
+                                                "value": "402403"
                                             },
                                             "placeholder": "Pin code",
                                             "defaultValue": "",
@@ -688,7 +688,7 @@
                 "base_path": "fresh-car/plans-coverage",
                 "host_name": "",
                 "query_params": {
-                    "ekey": "V1RNy4kfFc3gvCXyyhQz0w"
+                    "ekey": "vzbl4xHhb6TSS_MpA4aVOw"
                 }
             },
             "actions": {
@@ -710,32 +710,32 @@
                         "args": {
                             "edata": {
                                 "phone": "8335278236",
-                                "user_pincode_journey": 400615,
-                                "registration_number": "MH04KW1827",
-                                "vehicle_make": "Tata",
-                                "vehicle_model": "Nexon [2017-2023]",
-                                "variant_id": 13042,
-                                "vehicle_variant": "1.2 Revotron XE",
-                                "engine_cc": "1198",
+                                "user_pincode_journey": 402403,
+                                "registration_number": "MH12SE5466",
+                                "vehicle_make": "Hyundai",
+                                "vehicle_model": "Elite i20",
+                                "variant_id": 22781,
+                                "vehicle_variant": "Sportz Plus 1.2",
+                                "engine_cc": "1197",
                                 "fuel_type": "petrol",
-                                "registration_year": 2021,
-                                "registration_month": 9,
+                                "registration_year": 2019,
+                                "registration_month": 11,
                                 "is_commercial": false,
                                 "chassis_number": "MAXXXXXXXXXXXXXXX",
-                                "engine_number": "REXXXXXXXXXXXXXXX",
-                                "rto_zone": "MH-04",
+                                "engine_number": "G4XXXXXXXXXX",
+                                "rto_zone": "MH-12",
                                 "is_expired": false,
                                 "previous_policy_type": "comprehensive",
                                 "previous_policy_expiry_bucket": "+30-",
-                                "previous_insurer": "royal-sundaram",
-                                "previous_policy_expiry_date": "2026-11-05T05:30:00+05:30",
+                                "previous_insurer": "liberty",
+                                "previous_policy_expiry_date": "2026-11-26T05:30:00+05:30",
                                 "previous_ncb": 0,
                                 "last_year_claim_flag": "not_claimed",
-                                "proposal_id": "V1RNy4kfFc3gvCXyyhQz0w",
+                                "proposal_id": "vzbl4xHhb6TSS_MpA4aVOw",
                                 "current_ncb": 20,
                                 "is_inspection_reqd": false,
-                                "last_claim_year": 2025,
-                                "customer_name": "Sunny Gangaram Daki",
+                                "last_claim_year": 2023,
+                                "customer_name": "RAJESH SHAH",
                                 "journey_version": "v3",
                                 "logged_in": false,
                                 "asset_type": "car",
@@ -755,42 +755,40 @@
                                 "is_phone_number_autofilled": true,
                                 "is_pincode_autofilled": true,
                                 "is_rc_name_autofilled": true,
-                                "asset_age": 4,
-                                "plan_selected": "Comprehensive - Super Saver",
-                                "current_idv": 312750,
+                                "asset_age": 6,
+                                "plan_selected": "Comprehensive Plan",
+                                "current_idv": 266040,
                                 "lastyear_renewal_ncb_delta": 20,
                                 "eligible_for_previous_plan": false,
-                                "previous_policy_claims_count": 1,
+                                "previous_policy_claims_count": 2,
                                 "plans_offered": [
                                     "car_comprehensive",
-                                    "zero_dep",
-                                    "car_acko_garage_comprehensive_deductible",
                                     "car_tp",
                                     "zero_dep_deductible"
                                 ],
-                                "recommended_idv": 312750,
-                                "min_idv": 173750,
-                                "max_idv": 590750,
-                                "idv_selected": 312750,
+                                "recommended_idv": 266040,
+                                "min_idv": 147800,
+                                "max_idv": 474233,
+                                "idv_selected": 266040,
                                 "add_ons_offered": [
                                     "pa_owner_car",
                                     "engine_protect_car",
+                                    "ncb_protect_car",
                                     "pa_unnamed_passenger_car",
                                     "rsa_outstation_keyprotect_combo_car",
-                                    "ncb_protect_car",
-                                    "legal_liability_car",
                                     "consumables_car",
+                                    "legal_liability_car",
                                     "electrical_accessories_own_damage_basic_car",
                                     "non_electrical_accessories_own_damage_basic_car"
                                 ],
                                 "add_on_offered_count": 9,
                                 "add_ons_selected_count": 0,
                                 "add_ons_selected": [],
-                                "discounts_offered": [
-                                    "FASTAG500"
+                                "discounts_offered": [],
+                                "discounts_applied": [
+                                    "hidden_coupon"
                                 ],
-                                "discounts_applied": [],
-                                "total_discount_amount_applied": 0,
+                                "total_discount_amount_applied": 749,
                                 "experiments": [
                                     "tp-recommendation-fresh-carC"
                                 ]
@@ -926,10 +924,10 @@
                                                         "display": "none"
                                                     },
                                                     "idvData": {
-                                                        "min": 173750,
-                                                        "max": 590750,
-                                                        "recommended": 312750,
-                                                        "selected": 312750,
+                                                        "min": 147800,
+                                                        "max": 474233,
+                                                        "recommended": 266040,
+                                                        "selected": 266040,
                                                         "type": "recommended",
                                                         "year_wise": null
                                                     },
@@ -972,10 +970,10 @@
                                                 "row": 3,
                                                 "props": {
                                                     "idv": {
-                                                        "min": 173750,
-                                                        "max": 590750,
-                                                        "recommended": 312750,
-                                                        "selected": 312750,
+                                                        "min": 147800,
+                                                        "max": 474233,
+                                                        "recommended": 266040,
+                                                        "selected": 266040,
                                                         "type": "recommended",
                                                         "year_wise": null
                                                     },
@@ -1040,8 +1038,8 @@
                                                                                 "product": "car",
                                                                                 "action_name": "tap_btn_idv_edited",
                                                                                 "action_type": "tap_btn",
-                                                                                "initial_idv": 312750,
-                                                                                "recommended_idv": 312750
+                                                                                "initial_idv": 266040,
+                                                                                "recommended_idv": 266040
                                                                             },
                                                                             "odata": {
                                                                                 "journey": "fresh_car"
@@ -1089,9 +1087,9 @@
                                                 "display": "flex",
                                                 "flex-direction": "column"
                                             },
-                                            "fastagTitle": "FASTag plan with <strong> \u20b9500  recharge included </strong>",
-                                            "showFastag": true,
-                                            "fastagAmount": 500,
+                                            "fastagTitle": "FASTag plan with <strong> \u20b9undefined  recharge included </strong>",
+                                            "showFastag": false,
+                                            "fastagAmount": null,
                                             "is_visible": true
                                         },
                                         "iterableKey": "plans.covers"
@@ -1102,8 +1100,8 @@
                                             {
                                                 "args": {
                                                     "globalData": {
-                                                        "price": "4,400",
-                                                        "plan_id": "car_acko_garage_comprehensive_deductible",
+                                                        "price": "8,379",
+                                                        "plan_id": "car_comprehensive",
                                                         "category": "comp",
                                                         "coupon_length": 0
                                                     }
@@ -1113,7 +1111,7 @@
                                             {
                                                 "args": {
                                                     "payloadData": {
-                                                        "plan_id": "car_acko_garage_comprehensive_deductible",
+                                                        "plan_id": "car_comprehensive",
                                                         "display_name_sdui": "Comprehensive Plan"
                                                     }
                                                 },
@@ -1155,7 +1153,7 @@
                                                                 "args": {
                                                                     "component_id": "footer_data",
                                                                     "update_props": {
-                                                                        "price": "4,400",
+                                                                        "price": "8,379",
                                                                         "gstText": "+ 18% GST",
                                                                         "preText": null
                                                                     }
@@ -1200,7 +1198,7 @@
                                                                                 "args": {
                                                                                     "component_id": "footer_data",
                                                                                     "update_props": {
-                                                                                        "price": "4,400",
+                                                                                        "price": "8,379",
                                                                                         "gstText": "",
                                                                                         "preText": "Plan starts from"
                                                                                     }
@@ -1222,7 +1220,7 @@
                                                                                 "args": {
                                                                                     "component_id": "footer_data",
                                                                                     "update_props": {
-                                                                                        "price": "4,400",
+                                                                                        "price": "8,379",
                                                                                         "gstText": "+ 18% GST",
                                                                                         "preText": null
                                                                                     }
@@ -1281,13 +1279,13 @@
                                                                             }
                                                                         ]
                                                                     },
-                                                                    "value": 2
+                                                                    "value": 1
                                                                 },
                                                                 "type": "checkValueAndCall"
                                                             }
                                                         ]
                                                     },
-                                                    "value": "car_acko_garage_comprehensive_deductible"
+                                                    "value": "car_comprehensive"
                                                 },
                                                 "type": "checkValueAndCall"
                                             },
@@ -1396,7 +1394,7 @@
                                                                             }
                                                                         ]
                                                                     },
-                                                                    "value": "car_acko_garage_comprehensive_deductible"
+                                                                    "value": "car_comprehensive"
                                                                 },
                                                                 "type": "checkValueAndCall"
                                                             }
@@ -1422,7 +1420,7 @@
                                     },
                                     "children": [
                                         {
-                                            "id": "car_acko_garage_comprehensive_deductible_plan_1",
+                                            "id": "car_comprehensive_plan_1",
                                             "data": {
                                                 "props": {
                                                     "badge": {
@@ -1431,17 +1429,17 @@
                                                         "image": "https://storefront-consumer-assets.s3.ap-south-1.amazonaws.com/static/sdui-common/recommended_star.svg",
                                                         "is_visible": true
                                                     },
-                                                    "planId": "car_acko_garage_comprehensive_deductible",
-                                                    "premium": "4,400",
+                                                    "planId": "car_comprehensive",
+                                                    "premium": "8,379",
                                                     "category": "comp",
-                                                    "planName": "Comprehensive Plans",
+                                                    "planName": "Comprehensive Plan",
                                                     "isSelected": true,
                                                     "is_visible": true,
                                                     "description": "This plan covers theft and damage to your car from accidents, fire, and natural disasters. It also covers accidental damage caused by your car to others and their property.",
                                                     "showLearnMore": true,
                                                     "pseudoDiscount": "",
                                                     "strikeOffPrice": "",
-                                                    "variantsLength": 2
+                                                    "variantsLength": 1
                                                 }
                                             },
                                             "type": "plan_card",
@@ -1450,7 +1448,7 @@
                                                     {
                                                         "args": {
                                                             "edata": {
-                                                                "plan_id": "car_acko_garage_comprehensive_deductible",
+                                                                "plan_id": "car_comprehensive",
                                                                 "product": "car",
                                                                 "action_name": "tap_btn_plan_selected",
                                                                 "action_type": "tap_btn"
@@ -1465,8 +1463,8 @@
                                                     {
                                                         "args": {
                                                             "globalData": {
-                                                                "price": "4,400",
-                                                                "plan_id": "car_acko_garage_comprehensive_deductible",
+                                                                "price": "8,379",
+                                                                "plan_id": "car_comprehensive",
                                                                 "category": "comp"
                                                             }
                                                         },
@@ -1475,7 +1473,7 @@
                                                     {
                                                         "args": {
                                                             "payloadData": {
-                                                                "plan_id": "car_acko_garage_comprehensive_deductible",
+                                                                "plan_id": "car_comprehensive",
                                                                 "display_name_sdui": "Comprehensive Plan"
                                                             }
                                                         },
@@ -1485,7 +1483,7 @@
                                                         "args": {
                                                             "component_id": "footer_data",
                                                             "update_props": {
-                                                                "price": "4,400"
+                                                                "price": "8,379"
                                                             }
                                                         },
                                                         "type": "updateProps"
@@ -1534,7 +1532,7 @@
                                                                     }
                                                                 ]
                                                             },
-                                                            "value": "car_acko_garage_comprehensive_deductible"
+                                                            "value": "car_comprehensive"
                                                         },
                                                         "type": "checkValueAndCall"
                                                     },
@@ -1574,7 +1572,7 @@
                                                                         "args": {
                                                                             "component_id": "footer_data",
                                                                             "update_props": {
-                                                                                "price": "4,400",
+                                                                                "price": "8,379",
                                                                                 "gstText": "+ 18% GST",
                                                                                 "preText": null
                                                                             }
@@ -1619,7 +1617,7 @@
                                                                                         "args": {
                                                                                             "component_id": "footer_data",
                                                                                             "update_props": {
-                                                                                                "price": "4,400",
+                                                                                                "price": "8,379",
                                                                                                 "gstText": "",
                                                                                                 "preText": "Plan starting from"
                                                                                             }
@@ -1632,7 +1630,7 @@
                                                                                         "args": {
                                                                                             "component_id": "footer_data",
                                                                                             "update_props": {
-                                                                                                "price": "4,400",
+                                                                                                "price": "8,379",
                                                                                                 "gstText": "+ 18% GST",
                                                                                                 "preText": ""
                                                                                             }
@@ -1700,13 +1698,13 @@
                                                                                     }
                                                                                 ]
                                                                             },
-                                                                            "value": 2
+                                                                            "value": 1
                                                                         },
                                                                         "type": "checkValueAndCall"
                                                                     }
                                                                 ]
                                                             },
-                                                            "value": "car_acko_garage_comprehensive_deductible"
+                                                            "value": "car_comprehensive"
                                                         },
                                                         "type": "checkValueAndCall"
                                                     }
@@ -1714,7 +1712,7 @@
                                                 "learn_more_on_click": [
                                                     {
                                                         "args": {
-                                                            "ids": "car_acko_garage_comprehensive_deductible_covered_not_covered_addons_modal"
+                                                            "ids": "car_comprehensive_covered_not_covered_addons_modal"
                                                         },
                                                         "type": "submit_call"
                                                     },
@@ -1760,7 +1758,7 @@
                                             },
                                             "children": [
                                                 {
-                                                    "id": "car_acko_garage_comprehensive_deductible_benefits_section_divider",
+                                                    "id": "car_comprehensive_benefits_section_divider",
                                                     "data": {
                                                         "props": {
                                                             "is_visible": true
@@ -1769,7 +1767,7 @@
                                                     "type": "section_divider"
                                                 },
                                                 {
-                                                    "id": "car_acko_garage_comprehensive_deductible_benefits_container",
+                                                    "id": "car_comprehensive_benefits_container",
                                                     "data": {
                                                         "props": {
                                                             "benefits": [
@@ -1810,10 +1808,10 @@
                                                     }
                                                 },
                                                 {
-                                                    "id": "car_acko_garage_comprehensive_deductible_covered_not_covered_addons_modal",
+                                                    "id": "car_comprehensive_covered_not_covered_addons_modal",
                                                     "data": {
                                                         "props": {
-                                                            "addonId": "car_acko_garage_comprehensive_deductible",
+                                                            "addonId": "car_comprehensive",
                                                             "heading": "Comprehensive Plan",
                                                             "options": [
                                                                 {
@@ -1899,8 +1897,8 @@
                                                                             "title": "Save yourself from costly engine repairs",
                                                                             "image": "https://storefront-consumer-assets.s3.ap-south-1.amazonaws.com/static/sdui-plans/upgrade/engine_protect.svg",
                                                                             "price": {
-                                                                                "net_premium": 782,
-                                                                                "gross_premium": 923,
+                                                                                "net_premium": 665,
+                                                                                "gross_premium": 785,
                                                                                 "basic_net_premium": null,
                                                                                 "old_net_premium": null,
                                                                                 "old_gross_premium": null,
@@ -1909,7 +1907,7 @@
                                                                                     "sgst": null,
                                                                                     "utgst": null,
                                                                                     "igst": null,
-                                                                                    "gst": 141
+                                                                                    "gst": 120
                                                                                 },
                                                                                 "gst_percentage": null,
                                                                                 "net_strike_through_premium": null,
@@ -1929,11 +1927,11 @@
                                                                                 "text": "Recommended for you",
                                                                                 "type": "PREMIUM"
                                                                             },
-                                                                            "min_variant_price": 782,
+                                                                            "min_variant_price": 665,
                                                                             "assured_accessories": null,
                                                                             "sum_insured_slabs": null,
                                                                             "sum_assured_value": 0,
-                                                                            "display_net_premium": "782"
+                                                                            "display_net_premium": "665"
                                                                         },
                                                                         {
                                                                             "id": "pa_owner_car",
@@ -2050,6 +2048,45 @@
                                                                             "sum_insured_slabs": null,
                                                                             "sum_assured_value": 1500000,
                                                                             "display_net_premium": "399"
+                                                                        },
+                                                                        {
+                                                                            "id": "ncb_protect_car",
+                                                                            "display_name": "NCB Protection",
+                                                                            "description": "Make a claim without losing your No Claim Bonus (NCB). Valid only for 1 claim.",
+                                                                            "detailed_description": "Make a claim without losing your No Claim Bonus (NCB). Valid only for 1 claim.",
+                                                                            "title": "Protect your No Claim Bonus",
+                                                                            "image": "https://storefront-consumer-assets.s3.ap-south-1.amazonaws.com/static/sdui-plans/upgrade/extra_car_protect.svg",
+                                                                            "price": {
+                                                                                "net_premium": 556,
+                                                                                "gross_premium": 656,
+                                                                                "basic_net_premium": null,
+                                                                                "old_net_premium": null,
+                                                                                "old_gross_premium": null,
+                                                                                "gst": {
+                                                                                    "cgst": null,
+                                                                                    "sgst": null,
+                                                                                    "utgst": null,
+                                                                                    "igst": null,
+                                                                                    "gst": 100
+                                                                                },
+                                                                                "gst_percentage": null,
+                                                                                "net_strike_through_premium": null,
+                                                                                "price_discount": {
+                                                                                    "ncb_discount": null,
+                                                                                    "od_effective_coupon_discount": null,
+                                                                                    "renewal_effective_coupon_discount": null
+                                                                                }
+                                                                            },
+                                                                            "is_selected": true,
+                                                                            "is_accessory": false,
+                                                                            "priority": 1,
+                                                                            "variants": [],
+                                                                            "variant_id": null,
+                                                                            "min_variant_price": 556,
+                                                                            "assured_accessories": null,
+                                                                            "sum_insured_slabs": null,
+                                                                            "sum_assured_value": 0,
+                                                                            "display_net_premium": "556"
                                                                         },
                                                                         {
                                                                             "id": "pa_unnamed_passenger_car",
@@ -2200,15 +2237,15 @@
                                                                             "display_net_premium": "299"
                                                                         },
                                                                         {
-                                                                            "id": "ncb_protect_car",
-                                                                            "display_name": "NCB Protection",
-                                                                            "description": "Make a claim without losing your No Claim Bonus (NCB). Valid only for 1 claim.",
-                                                                            "detailed_description": "Make a claim without losing your No Claim Bonus (NCB). Valid only for 1 claim.",
-                                                                            "title": "Protect your No Claim Bonus",
-                                                                            "image": "https://storefront-consumer-assets.s3.ap-south-1.amazonaws.com/static/sdui-plans/upgrade/extra_car_protect.svg",
+                                                                            "id": "consumables_car",
+                                                                            "display_name": "Consumables Cover",
+                                                                            "description": "Cover the cost of consumables like nuts, bolts, brake oil, engine oil, etc. that get replaced during repairs.",
+                                                                            "detailed_description": "Cover the cost of consumables like nuts, bolts, brake oil, engine oil, etc. that get replaced during repairs.",
+                                                                            "title": "Save on repair extras",
+                                                                            "image": "https://storefront-consumer-assets.s3.ap-south-1.amazonaws.com/static/sdui-plans/upgrade/consumables.svg",
                                                                             "price": {
-                                                                                "net_premium": 148,
-                                                                                "gross_premium": 175,
+                                                                                "net_premium": 224,
+                                                                                "gross_premium": 264,
                                                                                 "basic_net_premium": null,
                                                                                 "old_net_premium": null,
                                                                                 "old_gross_premium": null,
@@ -2217,7 +2254,7 @@
                                                                                     "sgst": null,
                                                                                     "utgst": null,
                                                                                     "igst": null,
-                                                                                    "gst": 27
+                                                                                    "gst": 40
                                                                                 },
                                                                                 "gst_percentage": null,
                                                                                 "net_strike_through_premium": null,
@@ -2232,11 +2269,11 @@
                                                                             "priority": 1,
                                                                             "variants": [],
                                                                             "variant_id": null,
-                                                                            "min_variant_price": 148,
+                                                                            "min_variant_price": 224,
                                                                             "assured_accessories": null,
                                                                             "sum_insured_slabs": null,
                                                                             "sum_assured_value": 0,
-                                                                            "display_net_premium": "148"
+                                                                            "display_net_premium": "224"
                                                                         },
                                                                         {
                                                                             "id": "legal_liability_car",
@@ -2276,45 +2313,6 @@
                                                                             "sum_insured_slabs": null,
                                                                             "sum_assured_value": 0,
                                                                             "display_net_premium": "50"
-                                                                        },
-                                                                        {
-                                                                            "id": "consumables_car",
-                                                                            "display_name": "Consumables Cover",
-                                                                            "description": "Cover the cost of consumables like nuts, bolts, brake oil, engine oil, etc. that get replaced during repairs.",
-                                                                            "detailed_description": "Cover the cost of consumables like nuts, bolts, brake oil, engine oil, etc. that get replaced during repairs.",
-                                                                            "title": "Save on repair extras",
-                                                                            "image": "https://storefront-consumer-assets.s3.ap-south-1.amazonaws.com/static/sdui-plans/upgrade/consumables.svg",
-                                                                            "price": {
-                                                                                "net_premium": 40,
-                                                                                "gross_premium": 47,
-                                                                                "basic_net_premium": null,
-                                                                                "old_net_premium": null,
-                                                                                "old_gross_premium": null,
-                                                                                "gst": {
-                                                                                    "cgst": null,
-                                                                                    "sgst": null,
-                                                                                    "utgst": null,
-                                                                                    "igst": null,
-                                                                                    "gst": 7
-                                                                                },
-                                                                                "gst_percentage": null,
-                                                                                "net_strike_through_premium": null,
-                                                                                "price_discount": {
-                                                                                    "ncb_discount": null,
-                                                                                    "od_effective_coupon_discount": null,
-                                                                                    "renewal_effective_coupon_discount": null
-                                                                                }
-                                                                            },
-                                                                            "is_selected": true,
-                                                                            "is_accessory": false,
-                                                                            "priority": 1,
-                                                                            "variants": [],
-                                                                            "variant_id": null,
-                                                                            "min_variant_price": 40,
-                                                                            "assured_accessories": null,
-                                                                            "sum_insured_slabs": null,
-                                                                            "sum_assured_value": 0,
-                                                                            "display_net_premium": "40"
                                                                         },
                                                                         {
                                                                             "id": "electrical_accessories_own_damage_basic_car",
@@ -2406,7 +2404,7 @@
                                                         "on_click": [
                                                             {
                                                                 "args": {
-                                                                    "reverseIds": "car_acko_garage_comprehensive_deductible_covered_not_covered_addons_modal"
+                                                                    "reverseIds": "car_comprehensive_covered_not_covered_addons_modal"
                                                                 },
                                                                 "type": "submit_call"
                                                             }
@@ -2414,7 +2412,7 @@
                                                         "on_close": [
                                                             {
                                                                 "args": {
-                                                                    "reverseIds": "car_acko_garage_comprehensive_deductible_covered_not_covered_addons_modal"
+                                                                    "reverseIds": "car_comprehensive_covered_not_covered_addons_modal"
                                                                 },
                                                                 "type": "submit_call"
                                                             }
@@ -2422,7 +2420,7 @@
                                                     }
                                                 },
                                                 {
-                                                    "id": "car_acko_garage_comprehensive_deductible_plan_banner",
+                                                    "id": "car_comprehensive_plan_banner",
                                                     "data": {
                                                         "row": 3,
                                                         "props": {
@@ -2583,7 +2581,7 @@
                                                         "is_visible": true
                                                     },
                                                     "planId": "zero_dep_deductible",
-                                                    "premium": "4,770",
+                                                    "premium": "11,633",
                                                     "category": "zd",
                                                     "planName": "Zero Depreciation Plans",
                                                     "isSelected": null,
@@ -2616,7 +2614,7 @@
                                                     {
                                                         "args": {
                                                             "globalData": {
-                                                                "price": "4,770",
+                                                                "price": "11,633",
                                                                 "plan_id": "zero_dep_deductible",
                                                                 "category": "zd"
                                                             }
@@ -2636,7 +2634,7 @@
                                                         "args": {
                                                             "component_id": "footer_data",
                                                             "update_props": {
-                                                                "price": "4,770"
+                                                                "price": "11,633"
                                                             }
                                                         },
                                                         "type": "updateProps"
@@ -2725,7 +2723,7 @@
                                                                         "args": {
                                                                             "component_id": "footer_data",
                                                                             "update_props": {
-                                                                                "price": "4,770",
+                                                                                "price": "11,633",
                                                                                 "gstText": "+ 18% GST",
                                                                                 "preText": null
                                                                             }
@@ -2770,7 +2768,7 @@
                                                                                         "args": {
                                                                                             "component_id": "footer_data",
                                                                                             "update_props": {
-                                                                                                "price": "4,770",
+                                                                                                "price": "11,633",
                                                                                                 "gstText": "",
                                                                                                 "preText": "Plan starting from"
                                                                                             }
@@ -2783,7 +2781,7 @@
                                                                                         "args": {
                                                                                             "component_id": "footer_data",
                                                                                             "update_props": {
-                                                                                                "price": "4,770",
+                                                                                                "price": "11,633",
                                                                                                 "gstText": "+ 18% GST",
                                                                                                 "preText": ""
                                                                                             }
@@ -3055,8 +3053,8 @@
                                                                             "title": "Save yourself from costly engine repairs",
                                                                             "image": "https://storefront-consumer-assets.s3.ap-south-1.amazonaws.com/static/sdui-plans/upgrade/engine_protect.svg",
                                                                             "price": {
-                                                                                "net_premium": 782,
-                                                                                "gross_premium": 923,
+                                                                                "net_premium": 665,
+                                                                                "gross_premium": 785,
                                                                                 "basic_net_premium": null,
                                                                                 "old_net_premium": null,
                                                                                 "old_gross_premium": null,
@@ -3065,7 +3063,7 @@
                                                                                     "sgst": null,
                                                                                     "utgst": null,
                                                                                     "igst": null,
-                                                                                    "gst": 141
+                                                                                    "gst": 120
                                                                                 },
                                                                                 "gst_percentage": null,
                                                                                 "net_strike_through_premium": null,
@@ -3085,11 +3083,11 @@
                                                                                 "text": "Recommended for you",
                                                                                 "type": "PREMIUM"
                                                                             },
-                                                                            "min_variant_price": 782,
+                                                                            "min_variant_price": 665,
                                                                             "assured_accessories": null,
                                                                             "sum_insured_slabs": null,
                                                                             "sum_assured_value": 0,
-                                                                            "display_net_premium": "782"
+                                                                            "display_net_premium": "665"
                                                                         },
                                                                         {
                                                                             "id": "pa_owner_car",
@@ -3206,6 +3204,45 @@
                                                                             "sum_insured_slabs": null,
                                                                             "sum_assured_value": 1500000,
                                                                             "display_net_premium": "399"
+                                                                        },
+                                                                        {
+                                                                            "id": "ncb_protect_car",
+                                                                            "display_name": "NCB Protection",
+                                                                            "description": "Make a claim without losing your No Claim Bonus (NCB). Valid only for 1 claim.",
+                                                                            "detailed_description": "Make a claim without losing your No Claim Bonus (NCB). Valid only for 1 claim.",
+                                                                            "title": "Protect your No Claim Bonus",
+                                                                            "image": "https://storefront-consumer-assets.s3.ap-south-1.amazonaws.com/static/sdui-plans/upgrade/extra_car_protect.svg",
+                                                                            "price": {
+                                                                                "net_premium": 556,
+                                                                                "gross_premium": 656,
+                                                                                "basic_net_premium": null,
+                                                                                "old_net_premium": null,
+                                                                                "old_gross_premium": null,
+                                                                                "gst": {
+                                                                                    "cgst": null,
+                                                                                    "sgst": null,
+                                                                                    "utgst": null,
+                                                                                    "igst": null,
+                                                                                    "gst": 100
+                                                                                },
+                                                                                "gst_percentage": null,
+                                                                                "net_strike_through_premium": null,
+                                                                                "price_discount": {
+                                                                                    "ncb_discount": null,
+                                                                                    "od_effective_coupon_discount": null,
+                                                                                    "renewal_effective_coupon_discount": null
+                                                                                }
+                                                                            },
+                                                                            "is_selected": true,
+                                                                            "is_accessory": false,
+                                                                            "priority": 1,
+                                                                            "variants": [],
+                                                                            "variant_id": null,
+                                                                            "min_variant_price": 556,
+                                                                            "assured_accessories": null,
+                                                                            "sum_insured_slabs": null,
+                                                                            "sum_assured_value": 0,
+                                                                            "display_net_premium": "556"
                                                                         },
                                                                         {
                                                                             "id": "pa_unnamed_passenger_car",
@@ -3356,15 +3393,15 @@
                                                                             "display_net_premium": "299"
                                                                         },
                                                                         {
-                                                                            "id": "ncb_protect_car",
-                                                                            "display_name": "NCB Protection",
-                                                                            "description": "Make a claim without losing your No Claim Bonus (NCB). Valid only for 1 claim.",
-                                                                            "detailed_description": "Make a claim without losing your No Claim Bonus (NCB). Valid only for 1 claim.",
-                                                                            "title": "Protect your No Claim Bonus",
-                                                                            "image": "https://storefront-consumer-assets.s3.ap-south-1.amazonaws.com/static/sdui-plans/upgrade/extra_car_protect.svg",
+                                                                            "id": "consumables_car",
+                                                                            "display_name": "Consumables Cover",
+                                                                            "description": "Cover the cost of consumables like nuts, bolts, brake oil, engine oil, etc. that get replaced during repairs.",
+                                                                            "detailed_description": "Cover the cost of consumables like nuts, bolts, brake oil, engine oil, etc. that get replaced during repairs.",
+                                                                            "title": "Save on repair extras",
+                                                                            "image": "https://storefront-consumer-assets.s3.ap-south-1.amazonaws.com/static/sdui-plans/upgrade/consumables.svg",
                                                                             "price": {
-                                                                                "net_premium": 162,
-                                                                                "gross_premium": 191,
+                                                                                "net_premium": 224,
+                                                                                "gross_premium": 264,
                                                                                 "basic_net_premium": null,
                                                                                 "old_net_premium": null,
                                                                                 "old_gross_premium": null,
@@ -3373,7 +3410,7 @@
                                                                                     "sgst": null,
                                                                                     "utgst": null,
                                                                                     "igst": null,
-                                                                                    "gst": 29
+                                                                                    "gst": 40
                                                                                 },
                                                                                 "gst_percentage": null,
                                                                                 "net_strike_through_premium": null,
@@ -3388,11 +3425,11 @@
                                                                             "priority": 1,
                                                                             "variants": [],
                                                                             "variant_id": null,
-                                                                            "min_variant_price": 162,
+                                                                            "min_variant_price": 224,
                                                                             "assured_accessories": null,
                                                                             "sum_insured_slabs": null,
                                                                             "sum_assured_value": 0,
-                                                                            "display_net_premium": "162"
+                                                                            "display_net_premium": "224"
                                                                         },
                                                                         {
                                                                             "id": "legal_liability_car",
@@ -3432,45 +3469,6 @@
                                                                             "sum_insured_slabs": null,
                                                                             "sum_assured_value": 0,
                                                                             "display_net_premium": "50"
-                                                                        },
-                                                                        {
-                                                                            "id": "consumables_car",
-                                                                            "display_name": "Consumables Cover",
-                                                                            "description": "Cover the cost of consumables like nuts, bolts, brake oil, engine oil, etc. that get replaced during repairs.",
-                                                                            "detailed_description": "Cover the cost of consumables like nuts, bolts, brake oil, engine oil, etc. that get replaced during repairs.",
-                                                                            "title": "Save on repair extras",
-                                                                            "image": "https://storefront-consumer-assets.s3.ap-south-1.amazonaws.com/static/sdui-plans/upgrade/consumables.svg",
-                                                                            "price": {
-                                                                                "net_premium": 44,
-                                                                                "gross_premium": 52,
-                                                                                "basic_net_premium": null,
-                                                                                "old_net_premium": null,
-                                                                                "old_gross_premium": null,
-                                                                                "gst": {
-                                                                                    "cgst": null,
-                                                                                    "sgst": null,
-                                                                                    "utgst": null,
-                                                                                    "igst": null,
-                                                                                    "gst": 8
-                                                                                },
-                                                                                "gst_percentage": null,
-                                                                                "net_strike_through_premium": null,
-                                                                                "price_discount": {
-                                                                                    "ncb_discount": null,
-                                                                                    "od_effective_coupon_discount": null,
-                                                                                    "renewal_effective_coupon_discount": null
-                                                                                }
-                                                                            },
-                                                                            "is_selected": true,
-                                                                            "is_accessory": false,
-                                                                            "priority": 1,
-                                                                            "variants": [],
-                                                                            "variant_id": null,
-                                                                            "min_variant_price": 44,
-                                                                            "assured_accessories": null,
-                                                                            "sum_insured_slabs": null,
-                                                                            "sum_assured_value": 0,
-                                                                            "display_net_premium": "44"
                                                                         },
                                                                         {
                                                                             "id": "electrical_accessories_own_damage_basic_car",
@@ -4699,7 +4697,7 @@
                             "id": "idv_message",
                             "data": {
                                 "props": {
-                                    "text": "For your 4-year-old Tata Nexon [2017-2023], we advise selecting an <strong>IDV of 3.1 lakh or more </strong>for maximum protection",
+                                    "text": "For your 6-year-old Hyundai Elite i20, we advise selecting an <strong>IDV of 2.7 lakh or more </strong>for maximum protection",
                                     "image": {
                                         "alt": "icon",
                                         "width": 24,
@@ -4721,10 +4719,10 @@
                             "data": {
                                 "props": {
                                     "idv": {
-                                        "min": 173750,
-                                        "max": 590750,
-                                        "recommended": 312750,
-                                        "selected": 312750,
+                                        "min": 147800,
+                                        "max": 474233,
+                                        "recommended": 266040,
+                                        "selected": 266040,
                                         "type": "recommended",
                                         "year_wise": null
                                     },
@@ -4762,8 +4760,8 @@
                                                                 "product": "car",
                                                                 "action_name": "tap_btn_idv_edited",
                                                                 "action_type": "tap_btn",
-                                                                "initial_idv": 312750,
-                                                                "recommended_idv": 312750
+                                                                "initial_idv": 266040,
+                                                                "recommended_idv": 266040
                                                             },
                                                             "odata": {
                                                                 "journey": "fresh_car"
@@ -4846,7 +4844,7 @@
                             "id": "idv_message",
                             "data": {
                                 "props": {
-                                    "text": "For your 4-year-old Tata Nexon [2017-2023], we advise selecting an <strong>IDV of 3.1 lakh or more </strong>for maximum protection",
+                                    "text": "For your 6-year-old Hyundai Elite i20, we advise selecting an <strong>IDV of 2.7 lakh or more </strong>for maximum protection",
                                     "image": {
                                         "alt": "icon",
                                         "width": 24,
@@ -5099,7 +5097,7 @@
                                     "id": "footer_data",
                                     "data": {
                                         "props": {
-                                            "price": "4,400",
+                                            "price": "8,379",
                                             "styles": {},
                                             "gstText": "+ 18% GST",
                                             "is_visible": true
@@ -5178,7 +5176,7 @@
                 "base_path": "fresh-car/plans-coverage",
                 "host_name": "",
                 "query_params": {
-                    "ekey": "V1RNy4kfFc3gvCXyyhQz0w"
+                    "ekey": "vzbl4xHhb6TSS_MpA4aVOw"
                 }
             },
             "actions": {
@@ -5200,32 +5198,32 @@
                         "args": {
                             "edata": {
                                 "phone": "8335278236",
-                                "user_pincode_journey": 400615,
-                                "registration_number": "MH04KW1827",
-                                "vehicle_make": "Tata",
-                                "vehicle_model": "Nexon [2017-2023]",
-                                "variant_id": 13042,
-                                "vehicle_variant": "1.2 Revotron XE",
-                                "engine_cc": "1198",
+                                "user_pincode_journey": 402403,
+                                "registration_number": "MH12SE5466",
+                                "vehicle_make": "Hyundai",
+                                "vehicle_model": "Elite i20",
+                                "variant_id": 22781,
+                                "vehicle_variant": "Sportz Plus 1.2",
+                                "engine_cc": "1197",
                                 "fuel_type": "petrol",
-                                "registration_year": 2021,
-                                "registration_month": 9,
+                                "registration_year": 2019,
+                                "registration_month": 11,
                                 "is_commercial": false,
                                 "chassis_number": "MAXXXXXXXXXXXXXXX",
-                                "engine_number": "REXXXXXXXXXXXXXXX",
-                                "rto_zone": "MH-04",
+                                "engine_number": "G4XXXXXXXXXX",
+                                "rto_zone": "MH-12",
                                 "is_expired": false,
                                 "previous_policy_type": "comprehensive",
                                 "previous_policy_expiry_bucket": "+30-",
-                                "previous_insurer": "royal-sundaram",
-                                "previous_policy_expiry_date": "2026-11-05T05:30:00+05:30",
+                                "previous_insurer": "liberty",
+                                "previous_policy_expiry_date": "2026-11-26T05:30:00+05:30",
                                 "previous_ncb": 0,
                                 "last_year_claim_flag": "claimed",
-                                "proposal_id": "V1RNy4kfFc3gvCXyyhQz0w",
+                                "proposal_id": "vzbl4xHhb6TSS_MpA4aVOw",
                                 "current_ncb": 0,
                                 "is_inspection_reqd": false,
-                                "last_claim_year": 2025,
-                                "customer_name": "Sunny Gangaram Daki",
+                                "last_claim_year": 2023,
+                                "customer_name": "RAJESH SHAH",
                                 "journey_version": "v3",
                                 "logged_in": false,
                                 "asset_type": "car",
@@ -5245,23 +5243,21 @@
                                 "is_phone_number_autofilled": true,
                                 "is_pincode_autofilled": true,
                                 "is_rc_name_autofilled": true,
-                                "asset_age": 4,
-                                "plan_selected": "Comprehensive - Super Saver",
-                                "current_idv": 312750,
+                                "asset_age": 6,
+                                "plan_selected": "Comprehensive Plan",
+                                "current_idv": 266040,
                                 "lastyear_renewal_ncb_delta": 0,
                                 "eligible_for_previous_plan": false,
-                                "previous_policy_claims_count": 1,
+                                "previous_policy_claims_count": 2,
                                 "plans_offered": [
                                     "car_comprehensive",
-                                    "zero_dep",
-                                    "car_acko_garage_comprehensive_deductible",
                                     "car_tp",
                                     "zero_dep_deductible"
                                 ],
-                                "recommended_idv": 312750,
-                                "min_idv": 173750,
-                                "max_idv": 590750,
-                                "idv_selected": 312750,
+                                "recommended_idv": 266040,
+                                "min_idv": 147800,
+                                "max_idv": 474233,
+                                "idv_selected": 266040,
                                 "add_ons_offered": [
                                     "pa_owner_car",
                                     "engine_protect_car",
@@ -5275,11 +5271,11 @@
                                 "add_on_offered_count": 8,
                                 "add_ons_selected_count": 0,
                                 "add_ons_selected": [],
-                                "discounts_offered": [
-                                    "FASTAG500"
+                                "discounts_offered": [],
+                                "discounts_applied": [
+                                    "hidden_coupon"
                                 ],
-                                "discounts_applied": [],
-                                "total_discount_amount_applied": 0,
+                                "total_discount_amount_applied": 999,
                                 "experiments": [
                                     "tp-recommendation-fresh-carC"
                                 ]
@@ -5415,10 +5411,10 @@
                                                         "display": "none"
                                                     },
                                                     "idvData": {
-                                                        "min": 173750,
-                                                        "max": 590750,
-                                                        "recommended": 312750,
-                                                        "selected": 312750,
+                                                        "min": 147800,
+                                                        "max": 474233,
+                                                        "recommended": 266040,
+                                                        "selected": 266040,
                                                         "type": "recommended",
                                                         "year_wise": null
                                                     },
@@ -5461,10 +5457,10 @@
                                                 "row": 3,
                                                 "props": {
                                                     "idv": {
-                                                        "min": 173750,
-                                                        "max": 590750,
-                                                        "recommended": 312750,
-                                                        "selected": 312750,
+                                                        "min": 147800,
+                                                        "max": 474233,
+                                                        "recommended": 266040,
+                                                        "selected": 266040,
                                                         "type": "recommended",
                                                         "year_wise": null
                                                     },
@@ -5529,8 +5525,8 @@
                                                                                 "product": "car",
                                                                                 "action_name": "tap_btn_idv_edited",
                                                                                 "action_type": "tap_btn",
-                                                                                "initial_idv": 312750,
-                                                                                "recommended_idv": 312750
+                                                                                "initial_idv": 266040,
+                                                                                "recommended_idv": 266040
                                                                             },
                                                                             "odata": {
                                                                                 "journey": "fresh_car"
@@ -5578,9 +5574,9 @@
                                                 "display": "flex",
                                                 "flex-direction": "column"
                                             },
-                                            "fastagTitle": "FASTag plan with <strong> \u20b9500  recharge included </strong>",
-                                            "showFastag": true,
-                                            "fastagAmount": 500,
+                                            "fastagTitle": "FASTag plan with <strong> \u20b9undefined  recharge included </strong>",
+                                            "showFastag": false,
+                                            "fastagAmount": null,
                                             "is_visible": true
                                         },
                                         "iterableKey": "plans.covers"
@@ -5591,8 +5587,8 @@
                                             {
                                                 "args": {
                                                     "globalData": {
-                                                        "price": "7,595",
-                                                        "plan_id": "car_acko_garage_comprehensive_deductible",
+                                                        "price": "9,020",
+                                                        "plan_id": "car_comprehensive",
                                                         "category": "comp",
                                                         "coupon_length": 0
                                                     }
@@ -5602,7 +5598,7 @@
                                             {
                                                 "args": {
                                                     "payloadData": {
-                                                        "plan_id": "car_acko_garage_comprehensive_deductible",
+                                                        "plan_id": "car_comprehensive",
                                                         "display_name_sdui": "Comprehensive Plan"
                                                     }
                                                 },
@@ -5644,7 +5640,7 @@
                                                                 "args": {
                                                                     "component_id": "footer_data",
                                                                     "update_props": {
-                                                                        "price": "7,595",
+                                                                        "price": "9,020",
                                                                         "gstText": "+ 18% GST",
                                                                         "preText": null
                                                                     }
@@ -5689,7 +5685,7 @@
                                                                                 "args": {
                                                                                     "component_id": "footer_data",
                                                                                     "update_props": {
-                                                                                        "price": "7,595",
+                                                                                        "price": "9,020",
                                                                                         "gstText": "",
                                                                                         "preText": "Plan starts from"
                                                                                     }
@@ -5711,7 +5707,7 @@
                                                                                 "args": {
                                                                                     "component_id": "footer_data",
                                                                                     "update_props": {
-                                                                                        "price": "7,595",
+                                                                                        "price": "9,020",
                                                                                         "gstText": "+ 18% GST",
                                                                                         "preText": null
                                                                                     }
@@ -5770,13 +5766,13 @@
                                                                             }
                                                                         ]
                                                                     },
-                                                                    "value": 2
+                                                                    "value": 1
                                                                 },
                                                                 "type": "checkValueAndCall"
                                                             }
                                                         ]
                                                     },
-                                                    "value": "car_acko_garage_comprehensive_deductible"
+                                                    "value": "car_comprehensive"
                                                 },
                                                 "type": "checkValueAndCall"
                                             },
@@ -5885,7 +5881,7 @@
                                                                             }
                                                                         ]
                                                                     },
-                                                                    "value": "car_acko_garage_comprehensive_deductible"
+                                                                    "value": "car_comprehensive"
                                                                 },
                                                                 "type": "checkValueAndCall"
                                                             }
@@ -5911,7 +5907,7 @@
                                     },
                                     "children": [
                                         {
-                                            "id": "car_acko_garage_comprehensive_deductible_plan_1",
+                                            "id": "car_comprehensive_plan_1",
                                             "data": {
                                                 "props": {
                                                     "badge": {
@@ -5920,17 +5916,17 @@
                                                         "image": "https://storefront-consumer-assets.s3.ap-south-1.amazonaws.com/static/sdui-common/recommended_star.svg",
                                                         "is_visible": true
                                                     },
-                                                    "planId": "car_acko_garage_comprehensive_deductible",
-                                                    "premium": "7,595",
+                                                    "planId": "car_comprehensive",
+                                                    "premium": "9,020",
                                                     "category": "comp",
-                                                    "planName": "Comprehensive Plans",
+                                                    "planName": "Comprehensive Plan",
                                                     "isSelected": true,
                                                     "is_visible": true,
                                                     "description": "This plan covers theft and damage to your car from accidents, fire, and natural disasters. It also covers accidental damage caused by your car to others and their property.",
                                                     "showLearnMore": true,
                                                     "pseudoDiscount": "",
                                                     "strikeOffPrice": "",
-                                                    "variantsLength": 2
+                                                    "variantsLength": 1
                                                 }
                                             },
                                             "type": "plan_card",
@@ -5939,7 +5935,7 @@
                                                     {
                                                         "args": {
                                                             "edata": {
-                                                                "plan_id": "car_acko_garage_comprehensive_deductible",
+                                                                "plan_id": "car_comprehensive",
                                                                 "product": "car",
                                                                 "action_name": "tap_btn_plan_selected",
                                                                 "action_type": "tap_btn"
@@ -5954,8 +5950,8 @@
                                                     {
                                                         "args": {
                                                             "globalData": {
-                                                                "price": "7,595",
-                                                                "plan_id": "car_acko_garage_comprehensive_deductible",
+                                                                "price": "9,020",
+                                                                "plan_id": "car_comprehensive",
                                                                 "category": "comp"
                                                             }
                                                         },
@@ -5964,7 +5960,7 @@
                                                     {
                                                         "args": {
                                                             "payloadData": {
-                                                                "plan_id": "car_acko_garage_comprehensive_deductible",
+                                                                "plan_id": "car_comprehensive",
                                                                 "display_name_sdui": "Comprehensive Plan"
                                                             }
                                                         },
@@ -5974,7 +5970,7 @@
                                                         "args": {
                                                             "component_id": "footer_data",
                                                             "update_props": {
-                                                                "price": "7,595"
+                                                                "price": "9,020"
                                                             }
                                                         },
                                                         "type": "updateProps"
@@ -6023,7 +6019,7 @@
                                                                     }
                                                                 ]
                                                             },
-                                                            "value": "car_acko_garage_comprehensive_deductible"
+                                                            "value": "car_comprehensive"
                                                         },
                                                         "type": "checkValueAndCall"
                                                     },
@@ -6063,7 +6059,7 @@
                                                                         "args": {
                                                                             "component_id": "footer_data",
                                                                             "update_props": {
-                                                                                "price": "7,595",
+                                                                                "price": "9,020",
                                                                                 "gstText": "+ 18% GST",
                                                                                 "preText": null
                                                                             }
@@ -6108,7 +6104,7 @@
                                                                                         "args": {
                                                                                             "component_id": "footer_data",
                                                                                             "update_props": {
-                                                                                                "price": "7,595",
+                                                                                                "price": "9,020",
                                                                                                 "gstText": "",
                                                                                                 "preText": "Plan starting from"
                                                                                             }
@@ -6121,7 +6117,7 @@
                                                                                         "args": {
                                                                                             "component_id": "footer_data",
                                                                                             "update_props": {
-                                                                                                "price": "7,595",
+                                                                                                "price": "9,020",
                                                                                                 "gstText": "+ 18% GST",
                                                                                                 "preText": ""
                                                                                             }
@@ -6189,13 +6185,13 @@
                                                                                     }
                                                                                 ]
                                                                             },
-                                                                            "value": 2
+                                                                            "value": 1
                                                                         },
                                                                         "type": "checkValueAndCall"
                                                                     }
                                                                 ]
                                                             },
-                                                            "value": "car_acko_garage_comprehensive_deductible"
+                                                            "value": "car_comprehensive"
                                                         },
                                                         "type": "checkValueAndCall"
                                                     }
@@ -6203,7 +6199,7 @@
                                                 "learn_more_on_click": [
                                                     {
                                                         "args": {
-                                                            "ids": "car_acko_garage_comprehensive_deductible_covered_not_covered_addons_modal"
+                                                            "ids": "car_comprehensive_covered_not_covered_addons_modal"
                                                         },
                                                         "type": "submit_call"
                                                     },
@@ -6249,7 +6245,7 @@
                                             },
                                             "children": [
                                                 {
-                                                    "id": "car_acko_garage_comprehensive_deductible_benefits_section_divider",
+                                                    "id": "car_comprehensive_benefits_section_divider",
                                                     "data": {
                                                         "props": {
                                                             "is_visible": true
@@ -6258,7 +6254,7 @@
                                                     "type": "section_divider"
                                                 },
                                                 {
-                                                    "id": "car_acko_garage_comprehensive_deductible_benefits_container",
+                                                    "id": "car_comprehensive_benefits_container",
                                                     "data": {
                                                         "props": {
                                                             "benefits": [
@@ -6299,10 +6295,10 @@
                                                     }
                                                 },
                                                 {
-                                                    "id": "car_acko_garage_comprehensive_deductible_covered_not_covered_addons_modal",
+                                                    "id": "car_comprehensive_covered_not_covered_addons_modal",
                                                     "data": {
                                                         "props": {
-                                                            "addonId": "car_acko_garage_comprehensive_deductible",
+                                                            "addonId": "car_comprehensive",
                                                             "heading": "Comprehensive Plan",
                                                             "options": [
                                                                 {
@@ -6388,8 +6384,8 @@
                                                                             "title": "Save yourself from costly engine repairs",
                                                                             "image": "https://storefront-consumer-assets.s3.ap-south-1.amazonaws.com/static/sdui-plans/upgrade/engine_protect.svg",
                                                                             "price": {
-                                                                                "net_premium": 782,
-                                                                                "gross_premium": 923,
+                                                                                "net_premium": 665,
+                                                                                "gross_premium": 785,
                                                                                 "basic_net_premium": null,
                                                                                 "old_net_premium": null,
                                                                                 "old_gross_premium": null,
@@ -6398,7 +6394,7 @@
                                                                                     "sgst": null,
                                                                                     "utgst": null,
                                                                                     "igst": null,
-                                                                                    "gst": 141
+                                                                                    "gst": 120
                                                                                 },
                                                                                 "gst_percentage": null,
                                                                                 "net_strike_through_premium": null,
@@ -6418,11 +6414,11 @@
                                                                                 "text": "Recommended for you",
                                                                                 "type": "PREMIUM"
                                                                             },
-                                                                            "min_variant_price": 782,
+                                                                            "min_variant_price": 665,
                                                                             "assured_accessories": null,
                                                                             "sum_insured_slabs": null,
                                                                             "sum_assured_value": 0,
-                                                                            "display_net_premium": "782"
+                                                                            "display_net_premium": "665"
                                                                         },
                                                                         {
                                                                             "id": "pa_owner_car",
@@ -6696,8 +6692,8 @@
                                                                             "title": "Save on repair extras",
                                                                             "image": "https://storefront-consumer-assets.s3.ap-south-1.amazonaws.com/static/sdui-plans/upgrade/consumables.svg",
                                                                             "price": {
-                                                                                "net_premium": 135,
-                                                                                "gross_premium": 159,
+                                                                                "net_premium": 213,
+                                                                                "gross_premium": 251,
                                                                                 "basic_net_premium": null,
                                                                                 "old_net_premium": null,
                                                                                 "old_gross_premium": null,
@@ -6706,7 +6702,7 @@
                                                                                     "sgst": null,
                                                                                     "utgst": null,
                                                                                     "igst": null,
-                                                                                    "gst": 24
+                                                                                    "gst": 38
                                                                                 },
                                                                                 "gst_percentage": null,
                                                                                 "net_strike_through_premium": null,
@@ -6721,11 +6717,11 @@
                                                                             "priority": 1,
                                                                             "variants": [],
                                                                             "variant_id": null,
-                                                                            "min_variant_price": 135,
+                                                                            "min_variant_price": 213,
                                                                             "assured_accessories": null,
                                                                             "sum_insured_slabs": null,
                                                                             "sum_assured_value": 0,
-                                                                            "display_net_premium": "135"
+                                                                            "display_net_premium": "213"
                                                                         },
                                                                         {
                                                                             "id": "legal_liability_car",
@@ -6856,7 +6852,7 @@
                                                         "on_click": [
                                                             {
                                                                 "args": {
-                                                                    "reverseIds": "car_acko_garage_comprehensive_deductible_covered_not_covered_addons_modal"
+                                                                    "reverseIds": "car_comprehensive_covered_not_covered_addons_modal"
                                                                 },
                                                                 "type": "submit_call"
                                                             }
@@ -6864,7 +6860,7 @@
                                                         "on_close": [
                                                             {
                                                                 "args": {
-                                                                    "reverseIds": "car_acko_garage_comprehensive_deductible_covered_not_covered_addons_modal"
+                                                                    "reverseIds": "car_comprehensive_covered_not_covered_addons_modal"
                                                                 },
                                                                 "type": "submit_call"
                                                             }
@@ -6872,7 +6868,7 @@
                                                     }
                                                 },
                                                 {
-                                                    "id": "car_acko_garage_comprehensive_deductible_plan_banner",
+                                                    "id": "car_comprehensive_plan_banner",
                                                     "data": {
                                                         "row": 3,
                                                         "props": {
@@ -7033,7 +7029,7 @@
                                                         "is_visible": true
                                                     },
                                                     "planId": "zero_dep_deductible",
-                                                    "premium": "9,208",
+                                                    "premium": "12,454",
                                                     "category": "zd",
                                                     "planName": "Zero Depreciation Plans",
                                                     "isSelected": false,
@@ -7066,7 +7062,7 @@
                                                     {
                                                         "args": {
                                                             "globalData": {
-                                                                "price": "9,208",
+                                                                "price": "12,454",
                                                                 "plan_id": "zero_dep_deductible",
                                                                 "category": "zd"
                                                             }
@@ -7086,7 +7082,7 @@
                                                         "args": {
                                                             "component_id": "footer_data",
                                                             "update_props": {
-                                                                "price": "9,208"
+                                                                "price": "12,454"
                                                             }
                                                         },
                                                         "type": "updateProps"
@@ -7175,7 +7171,7 @@
                                                                         "args": {
                                                                             "component_id": "footer_data",
                                                                             "update_props": {
-                                                                                "price": "9,208",
+                                                                                "price": "12,454",
                                                                                 "gstText": "+ 18% GST",
                                                                                 "preText": null
                                                                             }
@@ -7220,7 +7216,7 @@
                                                                                         "args": {
                                                                                             "component_id": "footer_data",
                                                                                             "update_props": {
-                                                                                                "price": "9,208",
+                                                                                                "price": "12,454",
                                                                                                 "gstText": "",
                                                                                                 "preText": "Plan starting from"
                                                                                             }
@@ -7233,7 +7229,7 @@
                                                                                         "args": {
                                                                                             "component_id": "footer_data",
                                                                                             "update_props": {
-                                                                                                "price": "9,208",
+                                                                                                "price": "12,454",
                                                                                                 "gstText": "+ 18% GST",
                                                                                                 "preText": ""
                                                                                             }
@@ -7505,8 +7501,8 @@
                                                                             "title": "Save yourself from costly engine repairs",
                                                                             "image": "https://storefront-consumer-assets.s3.ap-south-1.amazonaws.com/static/sdui-plans/upgrade/engine_protect.svg",
                                                                             "price": {
-                                                                                "net_premium": 782,
-                                                                                "gross_premium": 923,
+                                                                                "net_premium": 665,
+                                                                                "gross_premium": 785,
                                                                                 "basic_net_premium": null,
                                                                                 "old_net_premium": null,
                                                                                 "old_gross_premium": null,
@@ -7515,7 +7511,7 @@
                                                                                     "sgst": null,
                                                                                     "utgst": null,
                                                                                     "igst": null,
-                                                                                    "gst": 141
+                                                                                    "gst": 120
                                                                                 },
                                                                                 "gst_percentage": null,
                                                                                 "net_strike_through_premium": null,
@@ -7535,11 +7531,11 @@
                                                                                 "text": "Recommended for you",
                                                                                 "type": "PREMIUM"
                                                                             },
-                                                                            "min_variant_price": 782,
+                                                                            "min_variant_price": 665,
                                                                             "assured_accessories": null,
                                                                             "sum_insured_slabs": null,
                                                                             "sum_assured_value": 0,
-                                                                            "display_net_premium": "782"
+                                                                            "display_net_premium": "665"
                                                                         },
                                                                         {
                                                                             "id": "pa_owner_car",
@@ -7813,8 +7809,8 @@
                                                                             "title": "Save on repair extras",
                                                                             "image": "https://storefront-consumer-assets.s3.ap-south-1.amazonaws.com/static/sdui-plans/upgrade/consumables.svg",
                                                                             "price": {
-                                                                                "net_premium": 148,
-                                                                                "gross_premium": 175,
+                                                                                "net_premium": 213,
+                                                                                "gross_premium": 251,
                                                                                 "basic_net_premium": null,
                                                                                 "old_net_premium": null,
                                                                                 "old_gross_premium": null,
@@ -7823,7 +7819,7 @@
                                                                                     "sgst": null,
                                                                                     "utgst": null,
                                                                                     "igst": null,
-                                                                                    "gst": 27
+                                                                                    "gst": 38
                                                                                 },
                                                                                 "gst_percentage": null,
                                                                                 "net_strike_through_premium": null,
@@ -7838,11 +7834,11 @@
                                                                             "priority": 1,
                                                                             "variants": [],
                                                                             "variant_id": null,
-                                                                            "min_variant_price": 148,
+                                                                            "min_variant_price": 213,
                                                                             "assured_accessories": null,
                                                                             "sum_insured_slabs": null,
                                                                             "sum_assured_value": 0,
-                                                                            "display_net_premium": "148"
+                                                                            "display_net_premium": "213"
                                                                         },
                                                                         {
                                                                             "id": "legal_liability_car",
@@ -9110,7 +9106,7 @@
                             "id": "idv_message",
                             "data": {
                                 "props": {
-                                    "text": "For your 4-year-old Tata Nexon [2017-2023], we advise selecting an <strong>IDV of 3.1 lakh or more </strong>for maximum protection",
+                                    "text": "For your 6-year-old Hyundai Elite i20, we advise selecting an <strong>IDV of 2.7 lakh or more </strong>for maximum protection",
                                     "image": {
                                         "alt": "icon",
                                         "width": 24,
@@ -9132,10 +9128,10 @@
                             "data": {
                                 "props": {
                                     "idv": {
-                                        "min": 173750,
-                                        "max": 590750,
-                                        "recommended": 312750,
-                                        "selected": 312750,
+                                        "min": 147800,
+                                        "max": 474233,
+                                        "recommended": 266040,
+                                        "selected": 266040,
                                         "type": "recommended",
                                         "year_wise": null
                                     },
@@ -9173,8 +9169,8 @@
                                                                 "product": "car",
                                                                 "action_name": "tap_btn_idv_edited",
                                                                 "action_type": "tap_btn",
-                                                                "initial_idv": 312750,
-                                                                "recommended_idv": 312750
+                                                                "initial_idv": 266040,
+                                                                "recommended_idv": 266040
                                                             },
                                                             "odata": {
                                                                 "journey": "fresh_car"
@@ -9257,7 +9253,7 @@
                             "id": "idv_message",
                             "data": {
                                 "props": {
-                                    "text": "For your 4-year-old Tata Nexon [2017-2023], we advise selecting an <strong>IDV of 3.1 lakh or more </strong>for maximum protection",
+                                    "text": "For your 6-year-old Hyundai Elite i20, we advise selecting an <strong>IDV of 2.7 lakh or more </strong>for maximum protection",
                                     "image": {
                                         "alt": "icon",
                                         "width": 24,
@@ -9510,7 +9506,7 @@
                                     "id": "footer_data",
                                     "data": {
                                         "props": {
-                                            "price": "7,595",
+                                            "price": "9,020",
                                             "styles": {},
                                             "gstText": "+ 18% GST",
                                             "is_visible": true
@@ -9585,5 +9581,5 @@
             "current_node": "plan_selection_node"
         }
     },
-    "proposal_ekey": "V1RNy4kfFc3gvCXyyhQz0w"
+    "proposal_ekey": "vzbl4xHhb6TSS_MpA4aVOw"
 }
