@@ -1,0 +1,24 @@
+{
+    "ProposalId": "epn_5murf8XaNvpewa4kQT",
+    "BasicPremium": 543,
+    "Gst": 0,
+    "TotalPremium": 543,
+    "PlanCode": 9110,
+    "PlanName": "PP_5L_1Y_AD",
+    "Covers": [
+        {
+            "Cover": "Death resulting from Accident",
+            "SumInsured": 500000
+        },
+        {
+            "Cover": "Permanent Total Disablement resulting from Accident",
+            "SumInsured": 500000
+        }
+    ],
+    "ErrorId": 0,
+    "Success": true,
+    "StatusCode": 0,
+    "TechnicalError": null,
+    "DisplayMessage": null,
+    "CorelationId": "744669a6-6aae-7cc8-1695-a32972c93d2c"
+}

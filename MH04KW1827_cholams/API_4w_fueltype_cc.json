@@ -1,0 +1,58 @@
+{
+    "status": 0,
+    "txt": "",
+    "data": [
+        {
+            "fuel": "DIESEL",
+            "cubic_capacity": "1497"
+        },
+        {
+            "fuel": "PETROL",
+            "cubic_capacity": "1199"
+        },
+        {
+            "fuel": "PETROL",
+            "cubic_capacity": "1497"
+        },
+        {
+            "fuel": "PETROL/CNG",
+            "cubic_capacity": "1199"
+        },
+        {
+            "fuel": "DIESEL",
+            "cubic_capacity": "1199"
+        },
+        {
+            "fuel": "CNG KIT",
+            "cubic_capacity": "1199"
+        },
+        {
+            "fuel": "BUILT IN CNG KIT",
+            "cubic_capacity": "1199"
+        },
+        {
+            "fuel": "PETROL",
+            "cubic_capacity": "1198"
+        },
+        {
+            "fuel": "PETROL/CNG",
+            "cubic_capacity": "1198"
+        },
+        {
+            "fuel": "PETROL",
+            "cubic_capacity": "1197"
+        },
+        {
+            "fuel": "DIESEL",
+            "cubic_capacity": "1496"
+        },
+        {
+            "fuel": "DIESEL",
+            "cubic_capacity": "1498"
+        },
+        {
+            "fuel": "DIESEL",
+            "cubic_capacity": "1499"
+        }
+    ]
+}
