@@ -2,7 +2,11 @@ import asyncio
 import json
 from typing import Dict, List, Any
 from playwright.async_api import async_playwright, Page
-from icic_bs4_scraper import scrape_icic_plans
+from icic_bs4_scraper import (
+    extract_car_details,
+    scrape_icic_plan_premium,
+    scrape_icic_plans,
+)
 
 HOME_URL = "https://www.icicilombard.com/"
 CAR_NUMBER = "MH04KW1827"
@@ -86,6 +90,10 @@ async def click_through_plan_types_and_buttons(page: Page) -> List[Dict[str, Any
     """
     all_scraped_data = []
 
+    car_data = await extract_car_details(page)
+
+    all_scraped_data["car_details"] = car_data
+
     print("\n>>> Locating plan type radio buttons...")
 
     # Count them (NEVER store node handles!)
@@ -159,7 +167,7 @@ async def click_through_plan_types_and_buttons(page: Page) -> List[Dict[str, Any
                 print(f">>> Clicking plan type: {label_text}")
                 await radio_input.click(force=True)
                 await page.wait_for_load_state("networkidle", timeout=15000)
-                await asyncio.sleep(5)
+                await asyncio.sleep(2)
         except Exception as e:
             print(f">>> Failed to select plan type '{label_text}': {e}")
             continue
@@ -178,6 +186,10 @@ async def click_through_plan_types_and_buttons(page: Page) -> List[Dict[str, Any
         )
 
         button_count = len(plan_buttons)
+        html = await page.content()
+
+        scraped_plans = scrape_icic_plans(html)
+        all_scraped_data.append(scraped_plans)
 
         for btn_idx in range(button_count):
 
@@ -202,16 +214,29 @@ async def click_through_plan_types_and_buttons(page: Page) -> List[Dict[str, Any
             try:
                 await button.click()
                 await page.wait_for_load_state("networkidle", timeout=15000)
-                await asyncio.sleep(1)
+                await asyncio.sleep(2)
             except Exception as e:
                 print(f">>> Error clicking plan button: {e}")
                 continue
 
+            # Click all <a> tags inside <span.down-arrow> to reveal add cover details, if present
+            try:
+                down_arrows = await page.query_selector_all(
+                    "span.down-arrow a.js_showaddCover"
+                )
+                for arrow in down_arrows:
+                    try:
+                        await arrow.click()
+                        await asyncio.sleep(1)
+                    except Exception as e:
+                        print(f"Could not click one down-arrow: {e}")
+            except Exception as e:
+                print(f"Error finding down-arrow to show add cover: {e}")
             # -----------------------------
             # SCRAPE HTML
             # -----------------------------
-            html = await page.content()
-            scraped = scrape_icic_plans(html)
+
+            premium_data = scrape_icic_plan_premium(html)
 
             all_scraped_data.append(
                 {
@@ -219,7 +244,7 @@ async def click_through_plan_types_and_buttons(page: Page) -> List[Dict[str, Any
                     "plan_type_index": radio_idx,
                     "button_index": btn_idx,
                     "button_text": button_text,
-                    "scraped_data": scraped,
+                    "premium": premium_data,
                 }
             )
 

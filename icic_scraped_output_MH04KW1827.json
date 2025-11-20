@@ -1,0 +1,469 @@
+[
+    {
+        "plan_type": "Comprehensive",
+        "plan_type_index": 0,
+        "button_index": 0,
+        "button_text": "No Frills, just basics\n\nMust-have covers for your ",
+        "scraped_data": {
+            "plans": [
+                {
+                    "title": "No Frills, just basics",
+                    "premium": "₹5,142",
+                    "discount": "₹12,487",
+                    "policy_year": "1 year policy",
+                    "benefits": [
+                        "Road Side Assistance",
+                        "Car Damages",
+                        "Third Party Liabilities Cover"
+                    ]
+                },
+                {
+                    "title": "Zero Dep, zero worries",
+                    "premium": "₹8,303",
+                    "discount": "₹16,217",
+                    "policy_year": "1 year policy",
+                    "benefits": [
+                        "Road Side Assistance",
+                        "Zero Depreciation",
+                        "Consumable cover",
+                        "Car Damages",
+                        "Third Party Liabilities Cover",
+                        "Accident Cover for Passengers",
+                        "SmartSaver Plus"
+                    ]
+                },
+                {
+                    "title": "Smart Cover, better pricing",
+                    "premium": "₹11,406",
+                    "discount": "₹19,878",
+                    "policy_year": "1 year policy",
+                    "benefits": [
+                        "Road Side Assistance",
+                        "Zero Depreciation",
+                        "Consumable cover",
+                        "Loss of Personal Belongings",
+                        "Key Protect",
+                        "Car Damages",
+                        "Third Party Liabilities Cover",
+                        "Accident Cover for Passengers",
+                        "Return To Invoice",
+                        "SmartSaver Plus",
+                        "Emergency Medical Expenses"
+                    ]
+                }
+            ],
+            "premium_summary": {
+                "base_premium": "₹4,987",
+                "additional_covers": "",
+                "sub_total": "₹ 750",
+                "discounts": "",
+                "net_premium": null,
+                "total_premium": "₹ 5,885",
+                "gst": "+ (18%) GST",
+                "additional_covers_breakdown": [
+                    {
+                        "name": "Road Side Assistance",
+                        "price": "₹ 199"
+                    },
+                    {
+                        "name": "Personal Protect Cover",
+                        "price": "₹ 543"
+                    },
+                    {
+                        "name": "Compulsory PA Cover for owner/driver",
+                        "price": "₹ 750"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "plan_type": "Comprehensive",
+        "plan_type_index": 0,
+        "button_index": 1,
+        "button_text": "Recommended\nZero Dep, zero worries\n\nStay protected",
+        "scraped_data": {
+            "plans": [
+                {
+                    "title": "No Frills, just basics",
+                    "premium": "₹5,142",
+                    "discount": "₹12,487",
+                    "policy_year": "1 year policy",
+                    "benefits": [
+                        "Road Side Assistance",
+                        "Car Damages",
+                        "Third Party Liabilities Cover"
+                    ]
+                },
+                {
+                    "title": "Zero Dep, zero worries",
+                    "premium": "₹8,303",
+                    "discount": "₹16,217",
+                    "policy_year": "1 year policy",
+                    "benefits": [
+                        "Road Side Assistance",
+                        "Zero Depreciation",
+                        "Consumable cover",
+                        "Car Damages",
+                        "Third Party Liabilities Cover",
+                        "Accident Cover for Passengers",
+                        "SmartSaver Plus"
+                    ]
+                },
+                {
+                    "title": "Smart Cover, better pricing",
+                    "premium": "₹11,406",
+                    "discount": "₹19,878",
+                    "policy_year": "1 year policy",
+                    "benefits": [
+                        "Road Side Assistance",
+                        "Zero Depreciation",
+                        "Consumable cover",
+                        "Loss of Personal Belongings",
+                        "Key Protect",
+                        "Car Damages",
+                        "Third Party Liabilities Cover",
+                        "Accident Cover for Passengers",
+                        "Return To Invoice",
+                        "SmartSaver Plus",
+                        "Emergency Medical Expenses"
+                    ]
+                }
+            ],
+            "premium_summary": {
+                "base_premium": "₹4,987",
+                "additional_covers": "",
+                "sub_total": "₹ 9,640",
+                "discounts": "",
+                "net_premium": "₹ 9,046",
+                "total_premium": "₹ 9,046",
+                "gst": "+ (18%) GST",
+                "additional_covers_breakdown": []
+            }
+        }
+    },
+    {
+        "plan_type": "Comprehensive",
+        "plan_type_index": 0,
+        "button_index": 2,
+        "button_text": "Smart Cover, better pricing\n\nFair prices, based on",
+        "scraped_data": {
+            "plans": [
+                {
+                    "title": "No Frills, just basics",
+                    "premium": "₹5,142",
+                    "discount": "₹12,487",
+                    "policy_year": "1 year policy",
+                    "benefits": [
+                        "Road Side Assistance",
+                        "Car Damages",
+                        "Third Party Liabilities Cover"
+                    ]
+                },
+                {
+                    "title": "Zero Dep, zero worries",
+                    "premium": "₹8,303",
+                    "discount": "₹16,217",
+                    "policy_year": "1 year policy",
+                    "benefits": [
+                        "Road Side Assistance",
+                        "Zero Depreciation",
+                        "Consumable cover",
+                        "Car Damages",
+                        "Third Party Liabilities Cover",
+                        "Accident Cover for Passengers",
+                        "SmartSaver Plus"
+                    ]
+                },
+                {
+                    "title": "Smart Cover, better pricing",
+                    "premium": "₹11,406",
+                    "discount": "₹19,878",
+                    "policy_year": "1 year policy",
+                    "benefits": [
+                        "Road Side Assistance",
+                        "Zero Depreciation",
+                        "Consumable cover",
+                        "Loss of Personal Belongings",
+                        "Key Protect",
+                        "Car Damages",
+                        "Third Party Liabilities Cover",
+                        "Accident Cover for Passengers",
+                        "Return To Invoice",
+                        "SmartSaver Plus",
+                        "Emergency Medical Expenses"
+                    ]
+                }
+            ],
+            "premium_summary": {
+                "base_premium": "₹4,987",
+                "additional_covers": "",
+                "sub_total": "₹ 700",
+                "discounts": "",
+                "net_premium": null,
+                "total_premium": "₹ 12,149",
+                "gst": "+ (18%) GST",
+                "additional_covers_breakdown": [
+                    {
+                        "name": "Loss of Personal Belongings",
+                        "price": "₹ 500"
+                    },
+                    {
+                        "name": "Key Protect",
+                        "price": "₹ 499"
+                    },
+                    {
+                        "name": "Road Side Assistance",
+                        "price": "₹ 700"
+                    },
+                    {
+                        "name": "Zero Depreciation",
+                        "price": "₹ 2,108"
+                    },
+                    {
+                        "name": "Consumables",
+                        "price": "₹ 703"
+                    },
+                    {
+                        "name": "Return to invoice",
+                        "price": "₹ 1,054"
+                    },
+                    {
+                        "name": "Personal Protect Cover",
+                        "price": "₹ 543"
+                    },
+                    {
+                        "name": "Compulsory PA Cover for owner/driver",
+                        "price": "₹ 750"
+                    },
+                    {
+                        "name": "Accident Cover for Passengers",
+                        "price": "₹ 500"
+                    },
+                    {
+                        "name": "Smart Saver Plus",
+                        "price": "₹ 100"
+                    },
+                    {
+                        "name": "Emergency Medical Expenses",
+                        "price": "₹ 299"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "plan_type": "Own Damage",
+        "plan_type_index": 1,
+        "button_index": 0,
+        "button_text": "No Frills, just basics\n\nMust-have covers for your ",
+        "scraped_data": {
+            "plans": [
+                {
+                    "title": "No Frills, just basics",
+                    "premium": "₹1,301",
+                    "discount": "₹7,887",
+                    "policy_year": "1 year policy",
+                    "benefits": [
+                        "Road Side Assistance",
+                        "Car Damages",
+                        "Standalone Personal Accident Cover"
+                    ]
+                },
+                {
+                    "title": "Zero Dep, zero worries",
+                    "premium": "₹4,212",
+                    "discount": "₹11,322",
+                    "policy_year": "1 year policy",
+                    "benefits": [
+                        "Road Side Assistance",
+                        "Zero Depreciation",
+                        "Consumable cover",
+                        "Car Damages",
+                        "Standalone Personal Accident Cover",
+                        "SmartSaver Plus"
+                    ]
+                },
+                {
+                    "title": "Smart Cover, better pricing",
+                    "premium": "₹7,065",
+                    "discount": "₹14,689",
+                    "policy_year": "1 year policy",
+                    "benefits": [
+                        "Road Side Assistance",
+                        "Zero Depreciation",
+                        "Consumable cover",
+                        "Loss of Personal Belongings",
+                        "Key Protect",
+                        "Car Damages",
+                        "Standalone Personal Accident Cover",
+                        "Return To Invoice",
+                        "SmartSaver Plus",
+                        "Emergency Medical Expenses"
+                    ]
+                }
+            ],
+            "premium_summary": {
+                "base_premium": "₹1,521",
+                "additional_covers": "",
+                "sub_total": "₹ 2,638",
+                "discounts": "",
+                "net_premium": "₹ 2,044",
+                "total_premium": "₹ 2,044",
+                "gst": "+ (18%) GST",
+                "additional_covers_breakdown": []
+            }
+        }
+    },
+    {
+        "plan_type": "Own Damage",
+        "plan_type_index": 1,
+        "button_index": 1,
+        "button_text": "Recommended\nZero Dep, zero worries\n\nStay protected",
+        "scraped_data": {
+            "plans": [
+                {
+                    "title": "No Frills, just basics",
+                    "premium": "₹1,301",
+                    "discount": "₹7,887",
+                    "policy_year": "1 year policy",
+                    "benefits": [
+                        "Road Side Assistance",
+                        "Car Damages",
+                        "Standalone Personal Accident Cover"
+                    ]
+                },
+                {
+                    "title": "Zero Dep, zero worries",
+                    "premium": "₹4,212",
+                    "discount": "₹11,322",
+                    "policy_year": "1 year policy",
+                    "benefits": [
+                        "Road Side Assistance",
+                        "Zero Depreciation",
+                        "Consumable cover",
+                        "Car Damages",
+                        "Standalone Personal Accident Cover",
+                        "SmartSaver Plus"
+                    ]
+                },
+                {
+                    "title": "Smart Cover, better pricing",
+                    "premium": "₹7,065",
+                    "discount": "₹14,689",
+                    "policy_year": "1 year policy",
+                    "benefits": [
+                        "Road Side Assistance",
+                        "Zero Depreciation",
+                        "Consumable cover",
+                        "Loss of Personal Belongings",
+                        "Key Protect",
+                        "Car Damages",
+                        "Standalone Personal Accident Cover",
+                        "Return To Invoice",
+                        "SmartSaver Plus",
+                        "Emergency Medical Expenses"
+                    ]
+                }
+            ],
+            "premium_summary": {
+                "base_premium": "₹1,521",
+                "additional_covers": "",
+                "sub_total": "₹ 703",
+                "discounts": "",
+                "net_premium": null,
+                "total_premium": "₹ 4,955",
+                "gst": "+ (18%) GST",
+                "additional_covers_breakdown": [
+                    {
+                        "name": "Road Side Assistance",
+                        "price": "₹ 199"
+                    },
+                    {
+                        "name": "Zero Depreciation",
+                        "price": "₹ 2,108"
+                    },
+                    {
+                        "name": "Consumables",
+                        "price": "₹ 703"
+                    },
+                    {
+                        "name": "Standalone Personal Accident Cover",
+                        "price": "₹ 375"
+                    },
+                    {
+                        "name": "Personal Protect Cover",
+                        "price": "₹ 543"
+                    },
+                    {
+                        "name": "Smart Saver Plus",
+                        "price": "₹ 100"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "plan_type": "Own Damage",
+        "plan_type_index": 1,
+        "button_index": 2,
+        "button_text": "Smart Cover, better pricing\n\nFair prices, based on",
+        "scraped_data": {
+            "plans": [
+                {
+                    "title": "No Frills, just basics",
+                    "premium": "₹1,301",
+                    "discount": "₹7,887",
+                    "policy_year": "1 year policy",
+                    "benefits": [
+                        "Road Side Assistance",
+                        "Car Damages",
+                        "Standalone Personal Accident Cover"
+                    ]
+                },
+                {
+                    "title": "Zero Dep, zero worries",
+                    "premium": "₹4,212",
+                    "discount": "₹11,322",
+                    "policy_year": "1 year policy",
+                    "benefits": [
+                        "Road Side Assistance",
+                        "Zero Depreciation",
+                        "Consumable cover",
+                        "Car Damages",
+                        "Standalone Personal Accident Cover",
+                        "SmartSaver Plus"
+                    ]
+                },
+                {
+                    "title": "Smart Cover, better pricing",
+                    "premium": "₹7,065",
+                    "discount": "₹14,689",
+                    "policy_year": "1 year policy",
+                    "benefits": [
+                        "Road Side Assistance",
+                        "Zero Depreciation",
+                        "Consumable cover",
+                        "Loss of Personal Belongings",
+                        "Key Protect",
+                        "Car Damages",
+                        "Standalone Personal Accident Cover",
+                        "Return To Invoice",
+                        "SmartSaver Plus",
+                        "Emergency Medical Expenses"
+                    ]
+                }
+            ],
+            "premium_summary": {
+                "base_premium": "₹1,521",
+                "additional_covers": "",
+                "sub_total": "₹ 8,402",
+                "discounts": "",
+                "net_premium": "₹ 7,808",
+                "total_premium": "₹ 7,808",
+                "gst": "+ (18%) GST",
+                "additional_covers_breakdown": []
+            }
+        }
+    }
+]
