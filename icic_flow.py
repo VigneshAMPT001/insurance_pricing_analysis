@@ -3,13 +3,14 @@ import json
 from typing import Dict, List, Any
 from playwright.async_api import async_playwright, Page
 from icic_bs4_scraper import (
-    extract_car_details,
+    extract_idv_values,
+    extract_icici_car_details,
     scrape_icic_plan_premium,
     scrape_icic_plans,
 )
 
 HOME_URL = "https://www.icicilombard.com/"
-CAR_NUMBER = "MH04KW1827"
+CAR_NUMBER = "MH12SE5466"
 MOBILE = "8534675225"
 EMAIL = "surbhi55@gmail.com"
 
@@ -88,14 +89,11 @@ async def click_through_plan_types_and_buttons(page: Page) -> List[Dict[str, Any
     - For each plan type, iterates plan buttons
     - Extracts HTML for every combination
     """
-    all_scraped_data = []
-
-    car_data = await extract_car_details(page)
-
-    all_scraped_data["car_details"] = car_data
+    plans = []
+    premiums = []
+    scraped_plans = {}
 
     print("\n>>> Locating plan type radio buttons...")
-
     # Count them (NEVER store node handles!)
     total_radio_groups = await page.locator("div.il-radio-group").count()
     print(f">>> Total plan types found = {total_radio_groups}")
@@ -138,6 +136,36 @@ async def click_through_plan_types_and_buttons(page: Page) -> List[Dict[str, Any
     # ----------------------------------------------------------------------
     # OUTER LOOP: PLAN TYPES
     # ----------------------------------------------------------------------
+
+    # Click all <a> tags inside <span.down-arrow> to reveal add cover details, if present
+    try:
+        down_arrows = await page.query_selector_all("span.down-arrow a.js_showaddCover")
+        for arrow in down_arrows:
+            try:
+                await arrow.click(force=True)
+                await asyncio.sleep(5)
+            except Exception as e:
+                print(f"Could not click one down-arrow: {e}")
+    except Exception as e:
+        print(f"Error finding down-arrow to show add cover: {e}")
+
+    try:
+        popup_selector = "div.car-panel-content.bg-white.active"
+        ok_button_selector = "a.ui-close-slide.triggerClick.ng-star-inserted"
+
+        # Check if popup exists & is visible
+        if await page.locator(popup_selector).is_visible(timeout=3000):
+            print(">>> 'Vehicle Inspection' popup detected. Clicking Ok to proceed...")
+
+            await page.locator(ok_button_selector).click(force=True)
+
+            # Wait for popup to disappear
+            await page.wait_for_selector(popup_selector, state="hidden", timeout=10000)
+            print(">>> Vehicle Inspection popup dismissed.")
+
+    except Exception as e:
+        print(f">>> No Vehicle Inspection popup detected or error occurred: {e}")
+
     for radio_idx in range(total_radio_groups):
 
         # -------- RE-QUERY fresh locator (DOM-safe) ----------
@@ -167,10 +195,15 @@ async def click_through_plan_types_and_buttons(page: Page) -> List[Dict[str, Any
                 print(f">>> Clicking plan type: {label_text}")
                 await radio_input.click(force=True)
                 await page.wait_for_load_state("networkidle", timeout=15000)
-                await asyncio.sleep(2)
+                await asyncio.sleep(5)
         except Exception as e:
             print(f">>> Failed to select plan type '{label_text}': {e}")
             continue
+
+        html_plan_details = await page.content()
+
+        scraped_plans[label_text] = scrape_icic_plans(html_plan_details)
+        plans.append(scraped_plans)
 
         # ----------------------------------------------------------------------
         # INNER LOOP: CLICK EACH PLAN BUTTON FOR THIS PLAN TYPE
@@ -186,10 +219,6 @@ async def click_through_plan_types_and_buttons(page: Page) -> List[Dict[str, Any
         )
 
         button_count = len(plan_buttons)
-        html = await page.content()
-
-        scraped_plans = scrape_icic_plans(html)
-        all_scraped_data.append(scraped_plans)
 
         for btn_idx in range(button_count):
 
@@ -214,31 +243,19 @@ async def click_through_plan_types_and_buttons(page: Page) -> List[Dict[str, Any
             try:
                 await button.click()
                 await page.wait_for_load_state("networkidle", timeout=15000)
-                await asyncio.sleep(2)
+                await asyncio.sleep(5)
             except Exception as e:
                 print(f">>> Error clicking plan button: {e}")
                 continue
 
-            # Click all <a> tags inside <span.down-arrow> to reveal add cover details, if present
-            try:
-                down_arrows = await page.query_selector_all(
-                    "span.down-arrow a.js_showaddCover"
-                )
-                for arrow in down_arrows:
-                    try:
-                        await arrow.click()
-                        await asyncio.sleep(1)
-                    except Exception as e:
-                        print(f"Could not click one down-arrow: {e}")
-            except Exception as e:
-                print(f"Error finding down-arrow to show add cover: {e}")
             # -----------------------------
             # SCRAPE HTML
             # -----------------------------
+            html_premium_expanded = await page.content()
 
-            premium_data = scrape_icic_plan_premium(html)
+            premium_data = scrape_icic_plan_premium(html_premium_expanded)
 
-            all_scraped_data.append(
+            premiums.append(
                 {
                     "plan_type": label_text,
                     "plan_type_index": radio_idx,
@@ -250,7 +267,36 @@ async def click_through_plan_types_and_buttons(page: Page) -> List[Dict[str, Any
 
             print(f">>> ✔ Scraped: {label_text} - {button_text}")
 
-    return all_scraped_data
+    plan_data = {"plans": plans, "premiums": premiums}
+    return plan_data
+
+
+def handle_response(response):
+    url = response.url.lower()
+
+    if any(k in url for k in KEYWORDS):
+        print(f"\n>>> Captured API: {response.url}")
+
+        async def save_json():
+            try:
+                data = await response.json()
+
+                # Save individual file
+                fname = response.url.split("/")[-1].replace("?", "_")[:50]
+                if not fname.endswith(".json"):
+                    fname += ".json"
+
+                with open(f"api_{fname}", "w") as f:
+                    json.dump(data, f, indent=4)
+
+                print(f"Saved → api_{fname}")
+
+                # api_responses.append({"api": response.url, "data": data})
+
+            except:
+                pass
+
+        asyncio.create_task(save_json())
 
 
 async def run():
@@ -268,32 +314,6 @@ async def run():
         # ------------------------------------------------------
         # LISTEN FOR **ALL NETWORK RESPONSES**
         # ------------------------------------------------------
-        def handle_response(response):
-            url = response.url.lower()
-
-            if any(k in url for k in KEYWORDS):
-                print(f"\n>>> Captured API: {response.url}")
-
-                async def save_json():
-                    try:
-                        data = await response.json()
-
-                        # Save individual file
-                        fname = response.url.split("/")[-1].replace("?", "_")[:50]
-                        if not fname.endswith(".json"):
-                            fname += ".json"
-
-                        with open(f"api_{fname}", "w") as f:
-                            json.dump(data, f, indent=4)
-
-                        print(f"Saved → api_{fname}")
-
-                        # api_responses.append({"api": response.url, "data": data})
-
-                    except:
-                        pass
-
-                asyncio.create_task(save_json())
 
         # context.on("response", handle_response)
 
@@ -337,29 +357,45 @@ async def run():
                 print(">>> Vehicle Inspection popup dismissed.")
         except Exception as e:
             print(f">>> No Vehicle Inspection popup detected or error occurred: {e}")
+
+        html_car_details = await page.content()
+
+        car_details = extract_icici_car_details(html_car_details)
+        # --- Min/Max IDV ---
+        recommended, min_idv, max_idv = extract_idv_values(html_car_details)
+        car_details["idv"] = recommended
+        car_details["idv_min"] = min_idv
+        car_details["idv_max"] = max_idv
+
+        print("Recommended IDV:", recommended)
+        print("Min IDV:", min_idv)
+        print("Max IDV:", max_idv)
+
         # ------------------------------------------------------
         # CLICK THROUGH PLAN TYPES AND BUTTONS
         # ------------------------------------------------------
         print(">>> Starting plan type and button clicking flow...")
-        all_scraped_data = await click_through_plan_types_and_buttons(page)
+        plans = await click_through_plan_types_and_buttons(page)
+
+        car_details["plans_offered"] = plans
 
         # ------------------------------------------------------
         # SAVE ALL SCRAPED DATA
         # ------------------------------------------------------
-        output_file = f"icic_scraped_output_{CAR_NUMBER}.json"
+        output_file = f"icic_scraped_output_{CAR_NUMBER}_fixed.json"
         with open(output_file, "w", encoding="utf-8") as f:
-            json.dump(all_scraped_data, f, indent=4, ensure_ascii=False)
+            json.dump(car_details, f, indent=4, ensure_ascii=False)
         print(f">>> All scraped data saved to: {output_file} ✔")
-        print(f">>> Total plan type combinations scraped: {len(all_scraped_data)}")
+        # print(f">>> Total plan type combinations scraped: {len(all_scraped_data)}")
 
         # ------------------------------------------------------
         # SAVE HTML FOR BS4 SCRAPING (FINAL STATE)
         # ------------------------------------------------------
-        # print(">>> Saving final HTML page for bs4 scraping...")
-        # html_content = await page.content()
-        # with open("icic_quote_page.html", "w", encoding="utf-8") as f:
-        #     f.write(html_content)
-        # print(">>> HTML saved → icic_quote_page.html ✔")
+        print(">>> Saving final HTML page for bs4 scraping...")
+        html_content = await page.content()
+        with open(f"{output_file.strip(".json")}.html", "w", encoding="utf-8") as f:
+            f.write(html_content)
+        print(">>> HTML saved → icic_quote_page.html ✔")
 
         # ------------------------------------------------------
         # SAVE MASTER JSON

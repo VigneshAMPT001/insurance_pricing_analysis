@@ -3,65 +3,151 @@ BeautifulSoup4 scraper for ICICI Lombard quote page.
 Takes HTML content as input and extracts plan/premium information.
 """
 
-import json
+import json, re
 from typing import Dict, List, Optional, Any
 from bs4 import BeautifulSoup
 
 
-async def extract_car_details(page):
-    def get_text(selector):
-        el = page.locator(selector)
-        return el.inner_text().strip() if el and el.count() > 0 else None
+from bs4 import BeautifulSoup
+import re
 
-    car_details = {}
 
-    # Manufacturer & Model
-    car_details["manufacturer"] = get_text("app-vehicle-details h3[notranslate]")
-    car_details["model"] = get_text(
-        "app-vehicle-details .car-model-wrap p[notranslate]"
-    )
+def extract_idv_values(html: str):
+    """
+    Extract recommended IDV, minimum IDV, and maximum IDV from the IDV popup HTML.
+    Returns integers: (recommended, min_idv, max_idv)
+    If any value cannot be found, returns None for that field.
+    """
 
-    # City
-    car_details["city_of_registration"] = get_text(
-        "app-vehicle-details ul.car-model-breakup li:nth-child(1) span"
-    )
+    def to_int(s):
+        if not s:
+            return None
+        s = re.sub(r"[^\d]", "", s)
+        return int(s) if s else None
 
-    # Expand section fields
-    details_list = page.locator(
-        "app-vehicle-details .slide-breakup ul.car-model-breakup li"
-    )
+    soup = BeautifulSoup(html, "html.parser")
 
-    for i in range(await details_list.count()):
-        item = details_list.nth(i)
-        label = (await item.locator("p").inner_text()).strip().lower()
+    # ---- Step 1: Identify popup ----
+    popup = soup.find("div", {"id": "idvPopup"})
+    if not popup:
+        popup = soup.find("div", class_=lambda c: c and "popoverlay" in c)
 
-        value_el = item.locator("span")
-        value = (
-            (await value_el.inner_text()).strip()
-            if await value_el.count() > 0
-            else None
+    if not popup:
+        return None, None, None
+
+    # ---- Step 2: Extract recommended IDV ----
+    recommended_text = None
+
+    rec = popup.select_one("span.idv-pre")
+    if rec:
+        recommended_text = rec.get_text(strip=True)
+    else:
+        # fallback: find label "Recommended IDV" then next span
+        label = popup.find(
+            lambda tag: tag.name == "span"
+            and tag.get_text(strip=True) == "Recommended IDV"
+        )
+        if label:
+            sib = label.find_next_sibling("span")
+            if sib:
+                recommended_text = sib.get_text(strip=True)
+
+    # ---- Step 3: Extract min/max IDV ----
+    min_text, max_text = None, None
+
+    # try primary selector: span containing phrase
+    range_span = None
+    candidates = popup.find_all("span", class_=lambda c: c and "ng-star-inserted" in c)
+
+    for sp in candidates:
+        txt = sp.get_text(" ", strip=True)
+        if "Enter an IDV between" in txt:
+            range_span = sp
+            break
+
+    # fallback phrase-only search
+    if not range_span:
+        range_span = popup.find(
+            lambda tag: tag.name == "span"
+            and "Enter an IDV between" in tag.get_text(" ", strip=True)
         )
 
-        if "first registration" in label:
-            car_details["first_registration_date"] = value
-        elif "previous" in label and "end date" in label:
-            car_details["previous_policy_end_date"] = value
-        elif "claims in last" in label:
-            car_details["claims_last_year"] = value
-        elif "ncb" in label:
-            car_details["previous_ncb"] = value
-        elif "registered under" in label:
-            car_details["registered_under"] = value
-        elif "previous policy type" in label:
-            car_details["previous_policy_type"] = value
+    # extract min/max numbers
+    if range_span:
+        numbers = re.findall(r"₹\s*[\d,]+", range_span.get_text(" ", strip=True))
+        if len(numbers) >= 2:
+            min_text, max_text = numbers[0], numbers[1]
+        else:
+            # deeper fallback: cursorpointer spans
+            inner = range_span.find_all(
+                "span", class_=lambda c: c and "cursorpointer" in c
+            )
+            if len(inner) >= 2:
+                min_text = inner[0].get_text(strip=True)
+                max_text = inner[1].get_text(strip=True)
 
-    # Ownership flag checkbox
-    ownership_el = page.locator("input#vehicleownd")
-    if await ownership_el.count() > 0:
-        is_checked = await ownership_el.is_checked()
-        car_details["no_change_of_ownership"] = is_checked
+    # ---- Convert to integers ----
+    recommended = to_int(recommended_text)
+    min_idv = to_int(min_text)
+    max_idv = to_int(max_text)
 
-    return car_details
+    return recommended, min_idv, max_idv
+
+
+def extract_icici_car_details(html):
+    soup = BeautifulSoup(html, "html.parser")
+
+    vehicle_section = soup.find("app-vehicle-details")
+    if vehicle_section is None:
+        return {}
+
+    data = {}
+
+    # Manufacturer + Model
+    manu = vehicle_section.find("h3")
+    model = vehicle_section.find("p", attrs={"notranslate": True})
+
+    data["manufacturer"] = manu.get_text(strip=True) if manu else None
+    data["model"] = model.get_text(strip=True) if model else None
+
+    # City
+    city_el = vehicle_section.select_one("ul.car-model-breakup li span")
+    data["city_of_registration"] = city_el.get_text(strip=True) if city_el else None
+
+    # Expand block items
+    expanded_section = vehicle_section.select_one(".slide-breakup ul.car-model-breakup")
+    if expanded_section:
+        for li in expanded_section.find_all("li"):
+            label_el = li.find("p")
+            value_el = li.find("span")
+
+            if not label_el or not value_el:
+                continue
+
+            label = label_el.get_text(strip=True).lower()
+            value = value_el.get_text(strip=True)
+
+            if "first registration" in label:
+                data["first_registration_date"] = value
+            elif "previous" in label and "end date" in label:
+                data["previous_policy_end_date"] = value
+            elif "claims in last" in label:
+                data["claims_last_year"] = value
+            elif "ncb" in label:
+                data["previous_ncb"] = value
+            elif "registered under" in label:
+                data["registered_under"] = value
+            elif "previous policy type" in label:
+                data["previous_policy_type"] = value
+
+    # Ownership flag (checkbox)
+    checkbox = vehicle_section.find("input", id="vehicleownd")
+    if checkbox:
+        data["no_change_of_ownership"] = checkbox.has_attr("checked")
+    else:
+        data["no_change_of_ownership"] = None
+
+    return data
 
 
 def extract_plans_from_cards(soup: BeautifulSoup) -> List[Dict[str, Any]]:
@@ -160,66 +246,83 @@ def extract_plans_from_cards(soup: BeautifulSoup) -> List[Dict[str, Any]]:
 
 
 def extract_premium_summary(soup: BeautifulSoup) -> Dict[str, Optional[str]]:
-    """
-    Extract premium summary information from the page.
-
-    Args:
-        soup: BeautifulSoup object containing parsed HTML
-
-    Returns:
-        Dictionary with premium summary and additional covers breakdown
-    """
     summary = {}
 
-    # --- Base Premium ---
-    base = soup.select_one(".basic-premium li:nth-child(1) span")
+    # ---------- Base Premium ----------
+    base = soup.select_one(".basic-premium > li:nth-child(1) span")
     summary["base_premium"] = base.get_text(strip=True) if base else None
 
-    # --- Additional Covers Total (Single Value) ---
-    add = soup.select_one(".basic-premium li:nth-child(2) span")
-    summary["additional_covers"] = add.get_text(strip=True) if add else None
+    # ---------- Additional Covers (Total Value) ----------
+    add_total = soup.select_one(".basic-premium > li:nth-child(2) span")
+    summary["additional_covers"] = add_total.get_text(strip=True) if add_total else None
 
-    # --- Sub Total ---
-    subtotal = soup.select_one(".basic-premium li:nth-child(3) span")
-    summary["sub_total"] = subtotal.get_text(strip=True) if subtotal else None
+    # ---------- Additional Covers Breakdown ----------
+    summary["additional_covers_breakdown"] = []
+    add_breakdown_ul = soup.select_one(".basic-premium .add-premium-details")
 
-    # --- Discounts ---
-    discounts = soup.select_one(".additional-premium li:nth-child(1) span")
+    if add_breakdown_ul:
+        for li in add_breakdown_ul.select("li"):
+            name = li.select_one("p")
+            price = li.select_one("span")
+            summary["additional_covers_breakdown"].append(
+                {
+                    "name": name.get_text(strip=True) if name else None,
+                    "price": price.get_text(strip=True) if price else None,
+                }
+            )
+
+    # ---------- Sub Total ----------
+    sub_total = soup.select_one(".basic-premium > li:nth-child(3) span")
+    summary["sub_total"] = sub_total.get_text(strip=True) if sub_total else None
+
+    # ---------- Discounts (Total) ----------
+    discounts = soup.select_one(".additional-premium > li:nth-child(1) span")
     summary["discounts"] = discounts.get_text(strip=True) if discounts else None
 
-    # --- Net Premium ---
-    net = soup.select_one(".additional-premium li:nth-child(2) span")
+    # ---------- Discount Breakdown ----------
+    summary["discount_breakdown"] = []
+    discount_breakdown_ul = soup.select_one(".additional-premium .add-premium-details")
+
+    if discount_breakdown_ul:
+        for li in discount_breakdown_ul.select("li"):
+            name = li.select_one("p")
+            price = li.select_one("span")
+            summary["discount_breakdown"].append(
+                {
+                    "name": name.get_text(strip=True) if name else None,
+                    "price": price.get_text(strip=True) if price else None,
+                }
+            )
+
+    # ---------- Net Premium ----------
+    net = soup.select_one(".additional-premium > li:nth-child(2) span")
     summary["net_premium"] = net.get_text(strip=True) if net else None
 
-    # --- Total Premium + GST ---
-    total_span = soup.select_one(".total-premium li span")
-    if total_span:
-        total_text = total_span.get_text(" ", strip=True)
-        parts = total_text.split("+")
-        summary["total_premium"] = parts[0].strip()
+    # ---------- Total Premium ----------
+    total = soup.select_one(".total-premium li span")
+    if total:
+        # Extract numeric part before GST
+        premium_raw = total.get_text(" ", strip=True)
+        summary["total_premium"] = premium_raw.split("+")[0].strip()
 
-        gst_tag = total_span.select_one("sub.tp-gst")
-        summary["gst"] = gst_tag.get_text(strip=True) if gst_tag else None
+        # Extract GST
+        gst_tag = total.select_one("sub.tp-gst")
+        if gst_tag:
+            gst_text = gst_tag.get_text(strip=True)
+            # Clean "+ (18%) GST" → "18%"
+            gst_clean = (
+                gst_text.replace("+", "")
+                .replace("GST", "")
+                .replace("(", "")
+                .replace(")", "")
+                .strip()
+            )
+            summary["gst"] = gst_clean
+        else:
+            summary["gst"] = None
     else:
         summary["total_premium"] = None
         summary["gst"] = None
-
-    # --- Additional Covers Breakdown ---
-    summary["additional_covers_breakdown"] = []
-    add_ul = soup.select_one("ul.add-premium-details")
-
-    if add_ul:
-        for li in add_ul.select("li"):
-            name_tag = li.select_one("p.greyTxt")
-            price_tag = li.select_one("span.greyTxt")
-
-            name = name_tag.get_text(strip=True) if name_tag else None
-            price = price_tag.get_text(strip=True) if price_tag else None
-
-            if name or price:
-                summary["additional_covers_breakdown"].append(
-                    {"name": name, "price": price}
-                )
 
     return summary
 
@@ -236,15 +339,10 @@ def scrape_icic_plans(html_content: str) -> Dict[str, Any]:
     """
     soup = BeautifulSoup(html_content, "html.parser")
 
-    scraped_data = {
-        "plans": [],
-        "premium_summary": {},
-    }
-
     # -------------------------------------------------------------
     # EXTRACT PLANS FROM CARDS
     # -------------------------------------------------------------
-    scraped_data["plans"] = extract_plans_from_cards(soup)
+    scraped_data = extract_plans_from_cards(soup)
 
     return scraped_data
 

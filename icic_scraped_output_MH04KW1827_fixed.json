@@ -8,6 +8,9 @@
     "previous_ncb": "35 %",
     "registered_under": "Individual",
     "previous_policy_type": "Comprehensive Package",
+    "idv": null,
+    "idv_min": null,
+    "idv_max": null,
     "no_change_of_ownership": true,
     "plans_offered": {
         "plans": [
@@ -210,12 +213,26 @@
                     "premium_summary": {
                         "base_premium": "₹4,987",
                         "additional_covers": "",
-                        "sub_total": "₹ 9,640",
+                        "additional_covers_breakdown": [
+                            {
+                                "name": "Road Side Assistance",
+                                "price": "₹ 199"
+                            },
+                            {
+                                "name": "Personal Protect Cover",
+                                "price": "₹ 543"
+                            },
+                            {
+                                "name": "Compulsory PA Cover for owner/driver",
+                                "price": "₹ 750"
+                            }
+                        ],
+                        "sub_total": null,
                         "discounts": "",
-                        "net_premium": "₹ 9,046",
-                        "total_premium": "₹ 9,046",
-                        "gst": "+ (18%) GST",
-                        "additional_covers_breakdown": []
+                        "discount_breakdown": [],
+                        "net_premium": "₹ 5,885",
+                        "total_premium": "₹ 5,885",
+                        "gst": "18%"
                     }
                 }
             },
@@ -228,12 +245,42 @@
                     "premium_summary": {
                         "base_premium": "₹4,987",
                         "additional_covers": "",
-                        "sub_total": "₹ 9,640",
+                        "additional_covers_breakdown": [
+                            {
+                                "name": "Road Side Assistance",
+                                "price": "₹ 199"
+                            },
+                            {
+                                "name": "Zero Depreciation",
+                                "price": "₹ 2,108"
+                            },
+                            {
+                                "name": "Consumables",
+                                "price": "₹ 703"
+                            },
+                            {
+                                "name": "Personal Protect Cover",
+                                "price": "₹ 543"
+                            },
+                            {
+                                "name": "Compulsory PA Cover for owner/driver",
+                                "price": "₹ 750"
+                            },
+                            {
+                                "name": "Accident Cover for Passengers",
+                                "price": "₹ 250"
+                            },
+                            {
+                                "name": "Smart Saver Plus",
+                                "price": "₹ 100"
+                            }
+                        ],
+                        "sub_total": null,
                         "discounts": "",
+                        "discount_breakdown": [],
                         "net_premium": "₹ 9,046",
                         "total_premium": "₹ 9,046",
-                        "gst": "+ (18%) GST",
-                        "additional_covers_breakdown": []
+                        "gst": "18%"
                     }
                 }
             },
@@ -246,12 +293,58 @@
                     "premium_summary": {
                         "base_premium": "₹4,987",
                         "additional_covers": "",
-                        "sub_total": "₹ 9,640",
+                        "additional_covers_breakdown": [
+                            {
+                                "name": "Loss of Personal Belongings",
+                                "price": "₹ 500"
+                            },
+                            {
+                                "name": "Key Protect",
+                                "price": "₹ 499"
+                            },
+                            {
+                                "name": "Road Side Assistance",
+                                "price": "₹ 700"
+                            },
+                            {
+                                "name": "Zero Depreciation",
+                                "price": "₹ 2,108"
+                            },
+                            {
+                                "name": "Consumables",
+                                "price": "₹ 703"
+                            },
+                            {
+                                "name": "Return to invoice",
+                                "price": "₹ 1,054"
+                            },
+                            {
+                                "name": "Personal Protect Cover",
+                                "price": "₹ 543"
+                            },
+                            {
+                                "name": "Compulsory PA Cover for owner/driver",
+                                "price": "₹ 750"
+                            },
+                            {
+                                "name": "Accident Cover for Passengers",
+                                "price": "₹ 500"
+                            },
+                            {
+                                "name": "Smart Saver Plus",
+                                "price": "₹ 100"
+                            },
+                            {
+                                "name": "Emergency Medical Expenses",
+                                "price": "₹ 299"
+                            }
+                        ],
+                        "sub_total": null,
                         "discounts": "",
-                        "net_premium": "₹ 9,046",
-                        "total_premium": "₹ 9,046",
-                        "gst": "+ (18%) GST",
-                        "additional_covers_breakdown": []
+                        "discount_breakdown": [],
+                        "net_premium": "₹ 12,149",
+                        "total_premium": "₹ 12,149",
+                        "gst": "18%"
                     }
                 }
             },
@@ -262,59 +355,28 @@
                 "button_text": "No Frills, just basics\n\nMust-have covers for your ",
                 "premium": {
                     "premium_summary": {
-                        "base_premium": "₹4,987",
+                        "base_premium": "₹1,521",
                         "additional_covers": "",
-                        "sub_total": "₹ 700",
-                        "discounts": "",
-                        "net_premium": null,
-                        "total_premium": "₹ 12,149",
-                        "gst": "+ (18%) GST",
                         "additional_covers_breakdown": [
                             {
-                                "name": "Loss of Personal Belongings",
-                                "price": "₹ 500"
-                            },
-                            {
-                                "name": "Key Protect",
-                                "price": "₹ 499"
-                            },
-                            {
                                 "name": "Road Side Assistance",
-                                "price": "₹ 700"
+                                "price": "₹ 199"
                             },
                             {
-                                "name": "Zero Depreciation",
-                                "price": "₹ 2,108"
-                            },
-                            {
-                                "name": "Consumables",
-                                "price": "₹ 703"
-                            },
-                            {
-                                "name": "Return to invoice",
-                                "price": "₹ 1,054"
+                                "name": "Standalone Personal Accident Cover",
+                                "price": "₹ 375"
                             },
                             {
                                 "name": "Personal Protect Cover",
                                 "price": "₹ 543"
-                            },
-                            {
-                                "name": "Compulsory PA Cover for owner/driver",
-                                "price": "₹ 750"
-                            },
-                            {
-                                "name": "Accident Cover for Passengers",
-                                "price": "₹ 500"
-                            },
-                            {
-                                "name": "Smart Saver Plus",
-                                "price": "₹ 100"
-                            },
-                            {
-                                "name": "Emergency Medical Expenses",
-                                "price": "₹ 299"
                             }
-                        ]
+                        ],
+                        "sub_total": null,
+                        "discounts": "",
+                        "discount_breakdown": [],
+                        "net_premium": "₹ 2,044",
+                        "total_premium": "₹ 2,044",
+                        "gst": "18%"
                     }
                 }
             },
@@ -325,25 +387,12 @@
                 "button_text": "Recommended\nZero Dep, zero worries\n\nStay protected",
                 "premium": {
                     "premium_summary": {
-                        "base_premium": "₹4,987",
+                        "base_premium": "₹1,521",
                         "additional_covers": "",
-                        "sub_total": "₹ 700",
-                        "discounts": "",
-                        "net_premium": null,
-                        "total_premium": "₹ 12,149",
-                        "gst": "+ (18%) GST",
                         "additional_covers_breakdown": [
                             {
-                                "name": "Loss of Personal Belongings",
-                                "price": "₹ 500"
-                            },
-                            {
-                                "name": "Key Protect",
-                                "price": "₹ 499"
-                            },
-                            {
                                 "name": "Road Side Assistance",
-                                "price": "₹ 700"
+                                "price": "₹ 199"
                             },
                             {
                                 "name": "Zero Depreciation",
@@ -354,30 +403,24 @@
                                 "price": "₹ 703"
                             },
                             {
-                                "name": "Return to invoice",
-                                "price": "₹ 1,054"
+                                "name": "Standalone Personal Accident Cover",
+                                "price": "₹ 375"
                             },
                             {
                                 "name": "Personal Protect Cover",
                                 "price": "₹ 543"
                             },
                             {
-                                "name": "Compulsory PA Cover for owner/driver",
-                                "price": "₹ 750"
-                            },
-                            {
-                                "name": "Accident Cover for Passengers",
-                                "price": "₹ 500"
-                            },
-                            {
                                 "name": "Smart Saver Plus",
                                 "price": "₹ 100"
-                            },
-                            {
-                                "name": "Emergency Medical Expenses",
-                                "price": "₹ 299"
                             }
-                        ]
+                        ],
+                        "sub_total": null,
+                        "discounts": "",
+                        "discount_breakdown": [],
+                        "net_premium": "₹ 4,955",
+                        "total_premium": "₹ 4,955",
+                        "gst": "18%"
                     }
                 }
             },
@@ -388,13 +431,8 @@
                 "button_text": "Smart Cover, better pricing\n\nFair prices, based on",
                 "premium": {
                     "premium_summary": {
-                        "base_premium": "₹4,987",
+                        "base_premium": "₹1,521",
                         "additional_covers": "",
-                        "sub_total": "₹ 700",
-                        "discounts": "",
-                        "net_premium": null,
-                        "total_premium": "₹ 12,149",
-                        "gst": "+ (18%) GST",
                         "additional_covers_breakdown": [
                             {
                                 "name": "Loss of Personal Belongings",
@@ -417,20 +455,16 @@
                                 "price": "₹ 703"
                             },
                             {
+                                "name": "Standalone Personal Accident Cover",
+                                "price": "₹ 375"
+                            },
+                            {
                                 "name": "Return to invoice",
                                 "price": "₹ 1,054"
                             },
                             {
                                 "name": "Personal Protect Cover",
                                 "price": "₹ 543"
-                            },
-                            {
-                                "name": "Compulsory PA Cover for owner/driver",
-                                "price": "₹ 750"
-                            },
-                            {
-                                "name": "Accident Cover for Passengers",
-                                "price": "₹ 500"
                             },
                             {
                                 "name": "Smart Saver Plus",
@@ -440,7 +474,13 @@
                                 "name": "Emergency Medical Expenses",
                                 "price": "₹ 299"
                             }
-                        ]
+                        ],
+                        "sub_total": null,
+                        "discounts": "",
+                        "discount_breakdown": [],
+                        "net_premium": "₹ 7,808",
+                        "total_premium": "₹ 7,808",
+                        "gst": "18%"
                     }
                 }
             }
