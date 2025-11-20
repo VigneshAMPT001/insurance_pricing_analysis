@@ -10,7 +10,7 @@ from icic_bs4_scraper import (
 )
 
 HOME_URL = "https://www.icicilombard.com/"
-CAR_NUMBER = "MH12SE5466"
+CAR_NUMBER = "MH12VZ2302"
 MOBILE = "8534675225"
 EMAIL = "surbhi55@gmail.com"
 
@@ -361,11 +361,18 @@ async def run():
         html_car_details = await page.content()
 
         car_details = extract_icici_car_details(html_car_details)
+
         # --- Min/Max IDV ---
-        recommended, min_idv, max_idv = extract_idv_values(html_car_details)
+        edit_button = page.locator(
+            "div.idv-range-slider", has_text="Insured declared value"
+        ).locator("a.link-btn")
+        await edit_button.click(force=True)
+        html_idv_popup = await page.content()
+        recommended, min_idv, max_idv = extract_idv_values(html_idv_popup)
         car_details["idv"] = recommended
         car_details["idv_min"] = min_idv
         car_details["idv_max"] = max_idv
+        await page.locator("#idvPopup a.close.js-popup-close.triggerClick").click()
 
         print("Recommended IDV:", recommended)
         print("Min IDV:", min_idv)
@@ -386,7 +393,6 @@ async def run():
         with open(output_file, "w", encoding="utf-8") as f:
             json.dump(car_details, f, indent=4, ensure_ascii=False)
         print(f">>> All scraped data saved to: {output_file} ✔")
-        # print(f">>> Total plan type combinations scraped: {len(all_scraped_data)}")
 
         # ------------------------------------------------------
         # SAVE HTML FOR BS4 SCRAPING (FINAL STATE)

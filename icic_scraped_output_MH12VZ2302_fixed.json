@@ -7,10 +7,10 @@
     "claims_last_year": "0",
     "previous_ncb": "20 %",
     "registered_under": "Individual",
-    "idv": null,
-    "idv_min": null,
-    "idv_max": null,
     "no_change_of_ownership": true,
+    "idv": 605479,
+    "idv_min": 605479,
+    "idv_max": 1007153,
     "plans_offered": {
         "plans": [
             {
@@ -64,8 +64,8 @@
                 "Own Damage": [
                     {
                         "title": "No Frills, just basics",
-                        "premium": "₹6,056",
-                        "discount": "₹22,309",
+                        "premium": "₹2,215",
+                        "discount": "₹17,709",
                         "policy_year": "1 year policy",
                         "benefits": [
                             "Road Side Assistance",
@@ -75,8 +75,8 @@
                     },
                     {
                         "title": "Zero Dep, zero worries",
-                        "premium": "₹10,038",
-                        "discount": "₹27,007",
+                        "premium": "₹5,947",
+                        "discount": "₹22,113",
                         "policy_year": "1 year policy",
                         "benefits": [
                             "Road Side Assistance",
@@ -89,8 +89,8 @@
                     },
                     {
                         "title": "Smart Cover, better pricing",
-                        "premium": "₹13,298",
-                        "discount": "₹30,854",
+                        "premium": "₹8,957",
+                        "discount": "₹25,664",
                         "policy_year": "1 year policy",
                         "benefits": [
                             "Road Side Assistance",
@@ -158,8 +158,8 @@
                 "Own Damage": [
                     {
                         "title": "No Frills, just basics",
-                        "premium": "₹6,056",
-                        "discount": "₹22,309",
+                        "premium": "₹2,215",
+                        "discount": "₹17,709",
                         "policy_year": "1 year policy",
                         "benefits": [
                             "Road Side Assistance",
@@ -169,8 +169,8 @@
                     },
                     {
                         "title": "Zero Dep, zero worries",
-                        "premium": "₹10,038",
-                        "discount": "₹27,007",
+                        "premium": "₹5,947",
+                        "discount": "₹22,113",
                         "policy_year": "1 year policy",
                         "benefits": [
                             "Road Side Assistance",
@@ -183,8 +183,8 @@
                     },
                     {
                         "title": "Smart Cover, better pricing",
-                        "premium": "₹13,298",
-                        "discount": "₹30,854",
+                        "premium": "₹8,957",
+                        "discount": "₹25,664",
                         "policy_year": "1 year policy",
                         "benefits": [
                             "Road Side Assistance",

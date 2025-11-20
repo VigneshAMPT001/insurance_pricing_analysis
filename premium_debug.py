@@ -178,7 +178,7 @@ def extract_idv_values(html: str):
 
 
 if __name__ == "__main__":
-    html_file = "icic_scraped_output_MH49BB1307_fixed.html"
+    html_file = "icic_scraped_output_MH12VZ2302_fixed.html"
     with open(html_file, "r", encoding="utf-8") as f:
         html_content = f.read()
 
