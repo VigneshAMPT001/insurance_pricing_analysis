@@ -55,7 +55,6 @@ async def run():
 
                 asyncio.create_task(save_json())
 
-        context.on("response", handle_response)
 
         # ------------------------------------------------------
         # START QUOTE PROCESS → THIS TRIGGERS MANY APIS
@@ -70,6 +69,8 @@ async def run():
 
         print(">>> Clicking Get Quote")
         await page.locator("#car-get-quote").click()
+        
+        context.on("response", handle_response)
 
         # ------------------------------------------------------
         # WAIT FOR ALL PREMIUM API CALLS TO FIRE
