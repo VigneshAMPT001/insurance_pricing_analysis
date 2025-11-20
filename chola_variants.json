@@ -1,0 +1,598 @@
+{
+    "status": 0,
+    "txt": "",
+    "data": [
+        {
+            "variant": "1.2 CREATIVE PLUS AT DT BSVI",
+            "model_code": "1120243"
+        },
+        {
+            "variant": "1.2 FEARLESS PR DT BSVI",
+            "model_code": "1120245"
+        },
+        {
+            "variant": "1.2 CREATIVE PLUS AT BSVI",
+            "model_code": "1120242"
+        },
+        {
+            "variant": "1.2 FEARLESS DT BSVI",
+            "model_code": "1120244"
+        },
+        {
+            "variant": "1.2 CREATIVE PLUS DCA BSVI",
+            "model_code": "1120246"
+        },
+        {
+            "variant": "1.2 CREATIVE PLUS DT DCA BSVI",
+            "model_code": "1120247"
+        },
+        {
+            "variant": "1.2 CREATIVE PLUS S AT BSVI",
+            "model_code": "1120248"
+        },
+        {
+            "variant": "1.2 CREATIVE PLUS S AT DT BSVI",
+            "model_code": "1120249"
+        },
+        {
+            "variant": "1.2 FEARLESS PLUS DT BSVI",
+            "model_code": "1120250"
+        },
+        {
+            "variant": "1.2 FEARLESS PR PLUS DT BSVI",
+            "model_code": "1120252"
+        },
+        {
+            "variant": "1.2 FEARLESS S DT BSVI",
+            "model_code": "1120251"
+        },
+        {
+            "variant": "1.2 CREATIVE PLUS S DCA BSVI",
+            "model_code": "1120254"
+        },
+        {
+            "variant": "1.2 CREATIVE PLUS S DT DCA BSVI",
+            "model_code": "1120255"
+        },
+        {
+            "variant": "1.2 FEARLESS PLUS S DT BSVI",
+            "model_code": "1120256"
+        },
+        {
+            "variant": "1.2 FEARLESS PR PLUS S DT BSVI",
+            "model_code": "1120257"
+        },
+        {
+            "variant": "1.2 FEARLESS PR DT DCA BSVI",
+            "model_code": "1120258"
+        },
+        {
+            "variant": "1.2 FEARLESS S DT DCA BSVI",
+            "model_code": "1120260"
+        },
+        {
+            "variant": "1.2 FEARLESS PLUS DT DCA BSVI",
+            "model_code": "1120259"
+        },
+        {
+            "variant": "1.2 FEARLESS PR PLUS DT DCA BSVI",
+            "model_code": "1120261"
+        },
+        {
+            "variant": "1.2 FEARLESS PR S DT BSVI",
+            "model_code": "1120262"
+        },
+        {
+            "variant": "1.2 FEARLESS PLUS S DT DCA BSVI",
+            "model_code": "1120263"
+        },
+        {
+            "variant": "1.2 FEARLESS PR PLUS S DT DCA BSVI",
+            "model_code": "1120264"
+        },
+        {
+            "variant": "1.5 XZA PLUS PREMIUM JET BSVI",
+            "model_code": "1119531"
+        },
+        {
+            "variant": "1.2 SMART BSVI",
+            "model_code": "1120226"
+        },
+        {
+            "variant": "1.2 SMART PLUS BSVI",
+            "model_code": "1120227"
+        },
+        {
+            "variant": "1.2 PURE BSVI",
+            "model_code": "1120228"
+        },
+        {
+            "variant": "1.2 SMART PLUS S BSVI",
+            "model_code": "1120229"
+        },
+        {
+            "variant": "1.2 PURE S BSVI",
+            "model_code": "1120230"
+        },
+        {
+            "variant": "1.2 CREATIVE BSVI",
+            "model_code": "1120231"
+        },
+        {
+            "variant": "1.2 CREATIVE DT BSVI",
+            "model_code": "1120232"
+        },
+        {
+            "variant": "1.2 CREATIVE AT BSVI",
+            "model_code": "1120233"
+        },
+        {
+            "variant": "1.2 CREATIVE AT DT BSVI",
+            "model_code": "1120234"
+        },
+        {
+            "variant": "1.2 CREATIVE PLUS BSVI",
+            "model_code": "1120235"
+        },
+        {
+            "variant": "1.2 CREATIVE PLUS DT BSVI",
+            "model_code": "1120236"
+        },
+        {
+            "variant": "1.2 FEARLESS MT BSVI",
+            "model_code": "1136828"
+        },
+        {
+            "variant": "1.2 CREATIVE DCA BSVI",
+            "model_code": "1120237"
+        },
+        {
+            "variant": "1.2 CREATIVE DT DCA BSVI",
+            "model_code": "1120238"
+        },
+        {
+            "variant": "1.2 CREATIVE PLUS S DT BSVI",
+            "model_code": "1120240"
+        },
+        {
+            "variant": "1.2 CREATIVE PLUS S BSVI",
+            "model_code": "1120239"
+        },
+        {
+            "variant": "1.2 FEARLESS DT DCA BSVI",
+            "model_code": "1120241"
+        },
+        {
+            "variant": "1.2 CREATIVE S PLUS DK BSVI",
+            "model_code": "1144533"
+        },
+        {
+            "variant": "1.2 CREATIVE PLUS S AT DK BSVI",
+            "model_code": "1144535"
+        },
+        {
+            "variant": "1.2 XZA PLUS LUXS JET BSVI",
+            "model_code": "1149834"
+        },
+        {
+            "variant": "1.2 XZ PLUS LUXS JET BSVI",
+            "model_code": "1149835"
+        },
+        {
+            "variant": "1.2 FEARLESS DARK BSVI",
+            "model_code": "1145325"
+        },
+        {
+            "variant": "1.2 CREATIVE AT DK BSVI",
+            "model_code": "1149033"
+        },
+        {
+            "variant": "1.2 CREATIVE DCA DK BSVI",
+            "model_code": "1149034"
+        },
+        {
+            "variant": "1.2 CREATIVE DK BSVI",
+            "model_code": "1149035"
+        },
+        {
+            "variant": "1.5 FEARFLESS PR PLUS S DCA BSVI",
+            "model_code": "1149037"
+        },
+        {
+            "variant": "XZA PLUS PERTOL JET",
+            "model_code": "1149038"
+        },
+        {
+            "variant": "NEXON   1.2 XZA PLUS LUXS BSVI",
+            "model_code": "1149027"
+        },
+        {
+            "variant": "1.2 CREATIVE PLUS DK BSVI",
+            "model_code": "1144732"
+        },
+        {
+            "variant": "1.2 FEARFLESS PLUS S DK BSVI",
+            "model_code": "1144735"
+        },
+        {
+            "variant": "1.2 CREATIVE PLUS PS REVOTRON 6MT DT",
+            "model_code": "1190027"
+        },
+        {
+            "variant": "1.2 CREATIVE PLUS PS REVOTRON 6MT DK",
+            "model_code": "1190028"
+        },
+        {
+            "variant": "1.2 CREATIVE PLUS PS REVOTRON 7DCA DT",
+            "model_code": "1190029"
+        },
+        {
+            "variant": "1.2 CREATIVE PLUS PS REVOTRON 7DCA DK",
+            "model_code": "1190030"
+        },
+        {
+            "variant": "1.2 FEARLESS PLUS PS DCA DK",
+            "model_code": "1169732"
+        },
+        {
+            "variant": "FEARLESS PLUS 1.2 REVOTRON PETROL 6MT",
+            "model_code": "1173130"
+        },
+        {
+            "variant": "1.2 PURE PLUS BSVI",
+            "model_code": "1181329"
+        },
+        {
+            "variant": "1.2 PURE PLUS S",
+            "model_code": "1181126"
+        },
+        {
+            "variant": "PURE PLUS S MT",
+            "model_code": "1181128"
+        },
+        {
+            "variant": "1.2 PURE PLUS",
+            "model_code": "1181129"
+        },
+        {
+            "variant": "XZ PLUS",
+            "model_code": "24759"
+        },
+        {
+            "variant": "XM PETROL",
+            "model_code": "25015"
+        },
+        {
+            "variant": "XZA PLUS PERTOL",
+            "model_code": "53085"
+        },
+        {
+            "variant": "XZ PETROL",
+            "model_code": "685136"
+        },
+        {
+            "variant": "XE PETROL",
+            "model_code": "24841"
+        },
+        {
+            "variant": "XT PLUS",
+            "model_code": "1000559"
+        },
+        {
+            "variant": "XMA PETROL",
+            "model_code": "999406"
+        },
+        {
+            "variant": "KRAZ PLUS PETROL",
+            "model_code": "1001238"
+        },
+        {
+            "variant": "KRAZ MT PETROL",
+            "model_code": "1001240"
+        },
+        {
+            "variant": "KRAZ PLUS AMT PETROL",
+            "model_code": "1001241"
+        },
+        {
+            "variant": "XT MT",
+            "model_code": "1001245"
+        },
+        {
+            "variant": "XT PETROL",
+            "model_code": "52952"
+        },
+        {
+            "variant": "XMA 1.2 RTN BS4",
+            "model_code": "92662"
+        },
+        {
+            "variant": "XZ PLUS (O)",
+            "model_code": "1009123"
+        },
+        {
+            "variant": "XZA PLUS (O) 1.2L BS VI",
+            "model_code": "1010323"
+        },
+        {
+            "variant": "XE 1.2L BS VI",
+            "model_code": "1010324"
+        },
+        {
+            "variant": "XZ NEW BS VI",
+            "model_code": "1010325"
+        },
+        {
+            "variant": "XZA PLUS (O) P ST",
+            "model_code": "1010326"
+        },
+        {
+            "variant": "XM 1.2L RTN BSVI",
+            "model_code": "1010221"
+        },
+        {
+            "variant": "XZ PLUS BSVI",
+            "model_code": "1022624"
+        },
+        {
+            "variant": "XM S PETROL",
+            "model_code": "1023828"
+        },
+        {
+            "variant": "XZA PLUS PETROL DUAL TONE",
+            "model_code": "1013931"
+        },
+        {
+            "variant": "XMA S",
+            "model_code": "1023427"
+        },
+        {
+            "variant": "XMA 1.2L RTN BSVI",
+            "model_code": "1022847"
+        },
+        {
+            "variant": "KRAZ 1.2 RTN BSIV",
+            "model_code": "1028933"
+        },
+        {
+            "variant": "XZ PLUS S",
+            "model_code": "1033146"
+        },
+        {
+            "variant": "XZ PLUS DARK ED BSVI",
+            "model_code": "1048626"
+        },
+        {
+            "variant": "XZ PLUS (O) DARK ED BSVI",
+            "model_code": "1048627"
+        },
+        {
+            "variant": "XZA PLUS DARK ED BSVI",
+            "model_code": "1048628"
+        },
+        {
+            "variant": "XZA PLUS (O) DARK ED BSVI",
+            "model_code": "1048629"
+        },
+        {
+            "variant": "XZA PLUS S PETROL",
+            "model_code": "1052336"
+        },
+        {
+            "variant": "XM S 1.2L RTN PETROL BSVI",
+            "model_code": "1060131"
+        },
+        {
+            "variant": "XZ PLUS DT S BSVI",
+            "model_code": "1062946"
+        },
+        {
+            "variant": "XZA PLUS DT S BSVI",
+            "model_code": "1062947"
+        },
+        {
+            "variant": "KAZIRANGA XZ PLUS P BSVI",
+            "model_code": "1062948"
+        },
+        {
+            "variant": "KAZIRANGA XZA PLUS P BSVI",
+            "model_code": "1062949"
+        },
+        {
+            "variant": "XZA PLUS P BSVI",
+            "model_code": "1062950"
+        },
+        {
+            "variant": "XZ PLUS HS BSVI",
+            "model_code": "1062951"
+        },
+        {
+            "variant": "XZA PLUS HS BSVI",
+            "model_code": "1062952"
+        },
+        {
+            "variant": "XZ PLUS DT HS BSVI",
+            "model_code": "1062953"
+        },
+        {
+            "variant": "XZ PLUS DT PREMIUM BSVI",
+            "model_code": "1062954"
+        },
+        {
+            "variant": "XZA PLUS DT HS BSVI",
+            "model_code": "1062955"
+        },
+        {
+            "variant": "XZA PLUS DT PREMIUM BSVI",
+            "model_code": "1062956"
+        },
+        {
+            "variant": "XZ PLUS HS DARK ED BSVI",
+            "model_code": "1062957"
+        },
+        {
+            "variant": "XZ PLUS PREMIUM DARK ED BSVI",
+            "model_code": "1062958"
+        },
+        {
+            "variant": "XZA PLUS HS DARK ED BSVI",
+            "model_code": "1062959"
+        },
+        {
+            "variant": "XZA PLUS PREMIUM DARK ED BSVI",
+            "model_code": "1062960"
+        },
+        {
+            "variant": "XZ PLUS DUAL TONE",
+            "model_code": "30133"
+        },
+        {
+            "variant": "XZ PLUS (P) MT BSVI",
+            "model_code": "1062661"
+        },
+        {
+            "variant": "XZA PLUS PETROL BSVI",
+            "model_code": "1062942"
+        },
+        {
+            "variant": "XZ PLUS DT BSVI",
+            "model_code": "1062943"
+        },
+        {
+            "variant": "XZA PLUS (O) DT BSVI",
+            "model_code": "1062944"
+        },
+        {
+            "variant": "XZ PLUS (O) DT BSVI",
+            "model_code": "1062945"
+        },
+        {
+            "variant": "XM PLUS S 1.2L RTN BSVI",
+            "model_code": "1070228"
+        },
+        {
+            "variant": "1.2 XZ PLUS PREMIUM JET BSVI",
+            "model_code": "1076226"
+        },
+        {
+            "variant": "1.5 XZA PLUS PREMIUM JET",
+            "model_code": "1076228"
+        },
+        {
+            "variant": "1.2 XZ PLUS L DT BSVI",
+            "model_code": "1084527"
+        },
+        {
+            "variant": "1.2 XZ PLUS L DARK EDN BSVI",
+            "model_code": "1084529"
+        },
+        {
+            "variant": "1.2 XZA PLUS L BSVI",
+            "model_code": "1084530"
+        },
+        {
+            "variant": "1.2 XZA PLUS L DT BSVI",
+            "model_code": "1084531"
+        },
+        {
+            "variant": "1.2 XZA PLUS L DARK EDN BSVI",
+            "model_code": "1084533"
+        },
+        {
+            "variant": "1.2 XMA PLUS S BSVI",
+            "model_code": "1073955"
+        },
+        {
+            "variant": "1.2 XZ PLUS DT HS BSVI",
+            "model_code": "1073946"
+        },
+        {
+            "variant": "1.2 XZ PLUS HS BSVI",
+            "model_code": "1073948"
+        },
+        {
+            "variant": "1.2 XZA PLUS HS BSVI",
+            "model_code": "1073950"
+        },
+        {
+            "variant": "1.2 XZA PLUS DT HS BSVI",
+            "model_code": "1073952"
+        },
+        {
+            "variant": "1.2 XZ PLUS L BSVI",
+            "model_code": "1084524"
+        },
+        {
+            "variant": "1.2 XMA PLUS S AT BSVI",
+            "model_code": "1071331"
+        },
+        {
+            "variant": "1.2 XZA PLUS LUXS RED DK EDT BSVI",
+            "model_code": "1105227"
+        },
+        {
+            "variant": "XM MT PETROL BSVI",
+            "model_code": "1106430"
+        },
+        {
+            "variant": "1.2 XZA PLUS S DARK EDT BSVI",
+            "model_code": "1093825"
+        },
+        {
+            "variant": "1.2 XZ PLUS LUXS BSVI",
+            "model_code": "1096928"
+        },
+        {
+            "variant": "1.2 XZ PLUS LUXS DT BSVI",
+            "model_code": "1096929"
+        },
+        {
+            "variant": "1.2 XZ PLUS LUXS KAZIRANGA BSVI",
+            "model_code": "1096931"
+        },
+        {
+            "variant": "1.2 XZ PLUS LUXS DARK ED BSVI",
+            "model_code": "1096930"
+        },
+        {
+            "variant": "1.2 XZA PLUS LUXS BSVI",
+            "model_code": "1096932"
+        },
+        {
+            "variant": "1.2 XZA PLUS LUXS DARK ED BSVI",
+            "model_code": "1096934"
+        },
+        {
+            "variant": "1.2 XZA PLUS LUXS DT BSVI",
+            "model_code": "1096933"
+        },
+        {
+            "variant": "1.2 XZA PLUS LUXS KAZIRANGA BSVI",
+            "model_code": "1096935"
+        },
+        {
+            "variant": "1.2 XZ PLUS S DARK ED BSVI",
+            "model_code": "1090131"
+        },
+        {
+            "variant": "1.2 XZ PLUS RTN BSIV",
+            "model_code": "1102924"
+        },
+        {
+            "variant": "1.2 XZ PLUS LUXS RED DARK EDT BSVI",
+            "model_code": "1107637"
+        },
+        {
+            "variant": "1.2 XZA PLUS LUXS RED DARK ED BSVI",
+            "model_code": "1107638"
+        },
+        {
+            "variant": "1.2 XZ PLUS S DARK EDT BSVI",
+            "model_code": "1107633"
+        },
+        {
+            "variant": "1.2 XZ PLUS LUXS RED DK EDT BSVI",
+            "model_code": "1105226"
+        }
+    ]
+}
