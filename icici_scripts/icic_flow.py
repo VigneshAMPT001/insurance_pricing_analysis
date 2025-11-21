@@ -1,5 +1,7 @@
 import asyncio
+import os
 import json
+from pathlib import Path
 from typing import Dict, List, Any
 from playwright.async_api import async_playwright, Page
 from icic_bs4_scraper import (
@@ -300,6 +302,12 @@ def handle_response(response):
 
 
 async def run():
+    output_path = Path("extracted/icici")
+
+    if not os.path.exists(output_path):
+        print("output file doesnt exist")
+    else:
+        print("output file exists")
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=False)
         context = await browser.new_context()
@@ -389,7 +397,7 @@ async def run():
         # ------------------------------------------------------
         # SAVE ALL SCRAPED DATA
         # ------------------------------------------------------
-        output_file = f"icic_scraped_output_{CAR_NUMBER}_fixed.json"
+        output_file = f"{output_path}/{CAR_NUMBER}-not-claimed.json"
         with open(output_file, "w", encoding="utf-8") as f:
             json.dump(car_details, f, indent=4, ensure_ascii=False)
         print(f">>> All scraped data saved to: {output_file} ✔")
@@ -397,11 +405,11 @@ async def run():
         # ------------------------------------------------------
         # SAVE HTML FOR BS4 SCRAPING (FINAL STATE)
         # ------------------------------------------------------
-        print(">>> Saving final HTML page for bs4 scraping...")
-        html_content = await page.content()
-        with open(f"{output_file.strip(".json")}.html", "w", encoding="utf-8") as f:
-            f.write(html_content)
-        print(">>> HTML saved → icic_quote_page.html ✔")
+        # print(">>> Saving final HTML page for bs4 scraping...")
+        # html_content = await page.content()
+        # with open(f"{output_file.strip(".json")}.html", "w", encoding="utf-8") as f:
+        #     f.write(html_content)
+        # print(">>> HTML saved → icic_quote_page.html ✔")
 
         # ------------------------------------------------------
         # SAVE MASTER JSON

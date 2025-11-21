@@ -12,6 +12,8 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import os
+import glob
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional
 
@@ -173,18 +175,53 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    with args.input_json.open("r", encoding="utf-8") as handle:
-        data = json.load(handle)
+    input_path = args.input_json
 
-    extracted = extract_acko_snapshot(data)
+    # If input_json is a directory, glob all *.json files in it
+    if input_path.is_dir():
+        json_files = sorted(input_path.glob("*.json"))
+    else:
+        json_files = [input_path]
+
+    outputs = []
+
+    for json_file in json_files:
+        with json_file.open("r", encoding="utf-8") as handle:
+            data = json.load(handle)
+        extracted = extract_acko_snapshot(data)
+        outputs.append({"input_file": str(json_file), "data": extracted})
 
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)
         with args.output.open("w", encoding="utf-8") as handle:
-            json.dump(extracted, handle, ensure_ascii=False, indent=2)
+            # Write a list of extracted results for batch processing
+            json.dump(outputs, handle, ensure_ascii=False, indent=2)
     else:
-        print(json.dumps(extracted, ensure_ascii=False, indent=2))
+        print(json.dumps(outputs, ensure_ascii=False, indent=2))
+
+
+def extract_acko():
+    input_path = Path("insurer/acko")
+    if input_path.is_dir():
+        json_files = sorted(input_path.glob("*.json"))
+    else:
+        json_files = [input_path]
+
+    output_path = Path("extracted/acko")
+    os.makedirs(output_path, exist_ok=True)
+    for json_file in json_files:
+        with json_file.open("r", encoding="utf-8") as handle:
+            data = json.load(handle)
+            extracted = extract_acko_snapshot(data)
+
+        output_file = os.path.join(
+            output_path,
+            json_file.name if hasattr(json_file, "name") else str(json_file),
+        )
+        with open(output_file, "w", encoding="utf-8") as handle:
+            json.dump(extracted, handle, ensure_ascii=False, indent=2)
 
 
 if __name__ == "__main__":
-    main()
+    # main()
+    extract_acko()

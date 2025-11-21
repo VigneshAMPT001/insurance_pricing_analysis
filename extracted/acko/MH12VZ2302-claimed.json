@@ -1,0 +1,252 @@
+{
+  "car_info": {
+    "registration_number": "MH12VZ2302",
+    "vehicle_make": "Tata",
+    "vehicle_model": "Nexon",
+    "vehicle_variant": "Fearless plus S Dark Edition",
+    "variant_id": 26648,
+    "fuel_type": "petrol",
+    "engine_cc": "1199",
+    "registration_year": 2023,
+    "registration_month": 10,
+    "rto_zone": "MH-12",
+    "is_commercial": false,
+    "previous_policy_type": "od_only",
+    "previous_insurer": "royal-sundaram",
+    "previous_policy_expiry_date": "2025-10-25T05:30:00+05:30",
+    "previous_policy_claims_count": 2,
+    "last_year_claim_flag": "claimed",
+    "current_idv": 869399,
+    "recommended_idv": 869399,
+    "min_idv": 482999,
+    "max_idv": 1380000,
+    "idv_selected": 869399,
+    "plan_selected": "Smart Saver Zero Depreciation Plan"
+  },
+  "plans": [
+    {
+      "plan_id": "car_od",
+      "plan_name": "Own Damage Plan",
+      "category": "od",
+      "premium_display": "17,619",
+      "premium_value": 17619.0,
+      "description": "This plan covers theft and damage to your car from accidents, fire, and natural disasters. It <b>does not</b> cover damage caused by your car to others and their property.",
+      "is_selected": false,
+      "badge": "",
+      "variants_count": 1,
+      "addons": [
+        {
+          "id": "engine_protect_car",
+          "display_name": "Engine Protection",
+          "description": "Cover engine and gearbox damage due to floods or heavy rains, as well as engine damage from oil/coolant leakage during an accident.",
+          "title": "Save yourself from costly engine repairs",
+          "net_premium": 1739.0,
+          "gross_premium": 2052.0,
+          "display_net_premium": "1,739",
+          "is_selected": true,
+          "badge": "Recommended for you"
+        },
+        {
+          "id": "pa_owner_car",
+          "display_name": "Personal Accident Cover",
+          "description": "Pays <b>up to ₹50 lakh</b> if the car owner is permanently disabled or dies in an accident.",
+          "title": "For you",
+          "net_premium": 399.0,
+          "gross_premium": 471.0,
+          "display_net_premium": "399",
+          "is_selected": true,
+          "badge": "Mandatory by law"
+        },
+        {
+          "id": "invoice_car",
+          "display_name": "Return to Invoice Cover",
+          "description": "Get the complete invoice value of your car or the current on-road price, whichever is lower, if your car is stolen or damaged beyond repair.",
+          "title": "Ensure full coverage for total loss",
+          "net_premium": 2832.0,
+          "gross_premium": 3342.0,
+          "display_net_premium": "2,832",
+          "is_selected": true,
+          "badge": null
+        },
+        {
+          "id": "consumables_car",
+          "display_name": "Consumables Cover",
+          "description": "Cover the cost of consumables like nuts, bolts, brake oil, engine oil, etc. that get replaced during repairs.",
+          "title": "Save on repair extras",
+          "net_premium": 567.0,
+          "gross_premium": 669.0,
+          "display_net_premium": "567",
+          "is_selected": true,
+          "badge": null
+        },
+        {
+          "id": "pa_unnamed_passenger_car",
+          "display_name": "Passenger Protection",
+          "description": "Pays <b>up to ₹2 lakh per passenger</b> if they are permanently disabled or die in an accident.",
+          "title": "For your loved ones",
+          "net_premium": 500.0,
+          "gross_premium": 590.0,
+          "display_net_premium": "500",
+          "is_selected": true,
+          "badge": null
+        },
+        {
+          "id": "rsa_outstation_keyprotect_combo_car",
+          "display_name": "Extra Car Protection",
+          "description": "<ul><li>24x7 car breakdown assistance</li><li>Key repair/replacement up to ₹7,000</li><li>Accommodation expenses up to ₹6,500 during outstation repairs</li></ul>",
+          "title": "Be prepared for roadside emergencies",
+          "net_premium": 299.0,
+          "gross_premium": 353.0,
+          "display_net_premium": "299",
+          "is_selected": true,
+          "badge": null
+        },
+        {
+          "id": "legal_liability_car",
+          "display_name": "Paid Driver Protection",
+          "description": "Pays up to your legal obligation amount if your paid driver is permanently disabled or dies in an accident.",
+          "title": "For your driver",
+          "net_premium": 50.0,
+          "gross_premium": 59.0,
+          "display_net_premium": "50",
+          "is_selected": true,
+          "badge": null
+        },
+        {
+          "id": "electrical_accessories_own_damage_basic_car",
+          "display_name": "Electrical Accessories Cover ",
+          "description": "Cover theft or damage of items like music system, speakers, and other electrical car accessories",
+          "title": "Protect your car accessories",
+          "net_premium": 0.0,
+          "gross_premium": 0.0,
+          "display_net_premium": "0",
+          "is_selected": true,
+          "badge": null
+        },
+        {
+          "id": "non_electrical_accessories_own_damage_basic_car",
+          "display_name": "Non-electrical Accessories Cover",
+          "description": "Cover theft or damage of items like alloy wheels, seat covers, and other non-electrical accessories.",
+          "title": "Secure non-electrical items",
+          "net_premium": 0.0,
+          "gross_premium": 0.0,
+          "display_net_premium": "0",
+          "is_selected": true,
+          "badge": null
+        }
+      ]
+    },
+    {
+      "plan_id": "zero_dep_deductible_od",
+      "plan_name": "Zero Depreciation Own Damage Plan",
+      "category": "zd_od",
+      "premium_display": "19,852",
+      "premium_value": 19852.0,
+      "description": "This plan covers theft, damage from fire, accidents, and natural disasters, as well as the <b>full cost of replaced parts</b> during repairs. It <b>does not</b> cover damage caused by your car to others and their property.",
+      "is_selected": true,
+      "badge": "Recommended for your car",
+      "variants_count": 2,
+      "addons": [
+        {
+          "id": "engine_protect_car",
+          "display_name": "Engine Protection",
+          "description": "Cover engine and gearbox damage due to floods or heavy rains, as well as engine damage from oil/coolant leakage during an accident.",
+          "title": "Save yourself from costly engine repairs",
+          "net_premium": 1739.0,
+          "gross_premium": 2052.0,
+          "display_net_premium": "1,739",
+          "is_selected": true,
+          "badge": "Recommended for you"
+        },
+        {
+          "id": "pa_owner_car",
+          "display_name": "Personal Accident Cover",
+          "description": "Pays <b>up to ₹50 lakh</b> if the car owner is permanently disabled or dies in an accident.",
+          "title": "For you",
+          "net_premium": 399.0,
+          "gross_premium": 471.0,
+          "display_net_premium": "399",
+          "is_selected": true,
+          "badge": "Mandatory by law"
+        },
+        {
+          "id": "invoice_car",
+          "display_name": "Return to Invoice Cover",
+          "description": "Get the complete invoice value of your car or the current on-road price, whichever is lower, if your car is stolen or damaged beyond repair.",
+          "title": "Ensure full coverage for total loss",
+          "net_premium": 2832.0,
+          "gross_premium": 3342.0,
+          "display_net_premium": "2,832",
+          "is_selected": true,
+          "badge": null
+        },
+        {
+          "id": "consumables_car",
+          "display_name": "Consumables Cover",
+          "description": "Cover the cost of consumables like nuts, bolts, brake oil, engine oil, etc. that get replaced during repairs.",
+          "title": "Save on repair extras",
+          "net_premium": 567.0,
+          "gross_premium": 669.0,
+          "display_net_premium": "567",
+          "is_selected": true,
+          "badge": null
+        },
+        {
+          "id": "pa_unnamed_passenger_car",
+          "display_name": "Passenger Protection",
+          "description": "Pays <b>up to ₹2 lakh per passenger</b> if they are permanently disabled or die in an accident.",
+          "title": "For your loved ones",
+          "net_premium": 500.0,
+          "gross_premium": 590.0,
+          "display_net_premium": "500",
+          "is_selected": true,
+          "badge": null
+        },
+        {
+          "id": "rsa_outstation_keyprotect_combo_car",
+          "display_name": "Extra Car Protection",
+          "description": "<ul><li>24x7 car breakdown assistance</li><li>Key repair/replacement up to ₹7,000</li><li>Accommodation expenses up to ₹6,500 during outstation repairs</li></ul>",
+          "title": "Be prepared for roadside emergencies",
+          "net_premium": 299.0,
+          "gross_premium": 353.0,
+          "display_net_premium": "299",
+          "is_selected": true,
+          "badge": null
+        },
+        {
+          "id": "legal_liability_car",
+          "display_name": "Paid Driver Protection",
+          "description": "Pays up to your legal obligation amount if your paid driver is permanently disabled or dies in an accident.",
+          "title": "For your driver",
+          "net_premium": 50.0,
+          "gross_premium": 59.0,
+          "display_net_premium": "50",
+          "is_selected": true,
+          "badge": null
+        },
+        {
+          "id": "electrical_accessories_own_damage_basic_car",
+          "display_name": "Electrical Accessories Cover ",
+          "description": "Cover theft or damage of items like music system, speakers, and other electrical car accessories",
+          "title": "Protect your car accessories",
+          "net_premium": 0.0,
+          "gross_premium": 0.0,
+          "display_net_premium": "0",
+          "is_selected": true,
+          "badge": null
+        },
+        {
+          "id": "non_electrical_accessories_own_damage_basic_car",
+          "display_name": "Non-electrical Accessories Cover",
+          "description": "Cover theft or damage of items like alloy wheels, seat covers, and other non-electrical accessories.",
+          "title": "Secure non-electrical items",
+          "net_premium": 0.0,
+          "gross_premium": 0.0,
+          "display_net_premium": "0",
+          "is_selected": true,
+          "badge": null
+        }
+      ]
+    }
+  ]
+}
