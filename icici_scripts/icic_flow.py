@@ -12,12 +12,12 @@ from icic_bs4_scraper import (
 )
 
 HOME_URL = "https://www.icicilombard.com/"
-CAR_NUMBER = "MH12VZ2302"
-MOBILE = "8534675225"
-EMAIL = "surbhi55@gmail.com"
+CAR_NUMBER = "MH04KW1827"
+MOBILE = "8514646225"
+EMAIL = "vignesh27@gmail.com"
 
 # Keywords to detect ANY premium/plan API
-KEYWORDS = ["premium", "plan", "quote", "addon", "coverage"]
+# KEYWORDS = ["premium", "plan", "quote", "addon", "coverage"]
 
 
 async def locate_plan_buttons(page: Page):
@@ -100,41 +100,6 @@ async def click_through_plan_types_and_buttons(page: Page) -> List[Dict[str, Any
     total_radio_groups = await page.locator("div.il-radio-group").count()
     print(f">>> Total plan types found = {total_radio_groups}")
 
-    # # ----------------------------------------------------------------------
-    # # If NO RADIO BUTTONS -> directly scrape plan buttons (fallback mode)
-    # # ----------------------------------------------------------------------
-    # if total_radio_groups == 0:
-    #     print(">>> No radio plan types found. Processing plan buttons directly...")
-    #     return await process_plan_buttons_without_radio(page)
-
-    # # ---------------------------------------------------------------
-    # # TEST CLICK RADIO BUTTONS (to ensure they are clickable)
-    # # ---------------------------------------------------------------
-    # print("\n>>> Performing test-click pass for all radio buttons...")
-
-    # for test_idx in range(total_radio_groups):
-
-    #     # Re-locate fresh (DOM-safe)
-    #     test_radio_group = page.locator("div.il-radio-group").nth(test_idx)
-    #     test_radio_input = test_radio_group.locator("input[type='radio']")
-    #     test_label = test_radio_group.locator("label")
-
-    #     try:
-    #         label = (await test_label.inner_text()).strip()
-    #     except:
-    #         label = f"Radio {test_idx+1}"
-
-    #     print(f">>> Test-clicking radio {test_idx+1}/{total_radio_groups}: {label}")
-
-    #     try:
-    #         await test_radio_input.click(force=True)
-    #         await page.wait_for_load_state("networkidle")
-    #         await asyncio.sleep(10)
-    #     except Exception as e:
-    #         print(f"!!! FAILED to test-click radio {label}: {e}")
-
-    # print(">>> Test-click pass complete.\n")
-
     # ----------------------------------------------------------------------
     # OUTER LOOP: PLAN TYPES
     # ----------------------------------------------------------------------
@@ -145,7 +110,7 @@ async def click_through_plan_types_and_buttons(page: Page) -> List[Dict[str, Any
         for arrow in down_arrows:
             try:
                 await arrow.click(force=True)
-                await asyncio.sleep(5)
+                await asyncio.sleep(1)
             except Exception as e:
                 print(f"Could not click one down-arrow: {e}")
     except Exception as e:
@@ -197,7 +162,7 @@ async def click_through_plan_types_and_buttons(page: Page) -> List[Dict[str, Any
                 print(f">>> Clicking plan type: {label_text}")
                 await radio_input.click(force=True)
                 await page.wait_for_load_state("networkidle", timeout=15000)
-                await asyncio.sleep(5)
+                await asyncio.sleep(1)
         except Exception as e:
             print(f">>> Failed to select plan type '{label_text}': {e}")
             continue
@@ -245,7 +210,7 @@ async def click_through_plan_types_and_buttons(page: Page) -> List[Dict[str, Any
             try:
                 await button.click()
                 await page.wait_for_load_state("networkidle", timeout=15000)
-                await asyncio.sleep(5)
+                await asyncio.sleep(1)
             except Exception as e:
                 print(f">>> Error clicking plan button: {e}")
                 continue
@@ -397,7 +362,7 @@ async def run():
         # ------------------------------------------------------
         # SAVE ALL SCRAPED DATA
         # ------------------------------------------------------
-        output_file = f"{output_path}/{CAR_NUMBER}-not-claimed.json"
+        output_file = f"{output_path}/{CAR_NUMBER}-not_claimed.json"
         with open(output_file, "w", encoding="utf-8") as f:
             json.dump(car_details, f, indent=4, ensure_ascii=False)
         print(f">>> All scraped data saved to: {output_file} ✔")

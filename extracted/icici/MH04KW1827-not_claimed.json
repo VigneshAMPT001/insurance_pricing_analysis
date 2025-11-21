@@ -8,10 +8,10 @@
     "previous_ncb": "35 %",
     "registered_under": "Individual",
     "previous_policy_type": "Comprehensive Package",
-    "idv": null,
-    "idv_min": null,
-    "idv_max": null,
     "no_change_of_ownership": true,
+    "idv": 351395,
+    "idv_min": 351395,
+    "idv_max": 584485,
     "plans_offered": {
         "plans": [
             {
