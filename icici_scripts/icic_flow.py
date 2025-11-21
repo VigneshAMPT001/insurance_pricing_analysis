@@ -12,12 +12,12 @@ from icic_bs4_scraper import (
 )
 
 HOME_URL = "https://www.icicilombard.com/"
-CAR_NUMBER = "MH04KW1827"
+CAR_NUMBER = "KA03NV1947"
 MOBILE = "8514646225"
 EMAIL = "vignesh27@gmail.com"
 
 # Keywords to detect ANY premium/plan API
-# KEYWORDS = ["premium", "plan", "quote", "addon", "coverage"]
+KEYWORDS = ["premium", "plan", "quote", "addon", "coverage"]
 
 
 async def locate_plan_buttons(page: Page):
