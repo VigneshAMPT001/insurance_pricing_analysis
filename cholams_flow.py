@@ -1,10 +1,36 @@
 import asyncio
 from playwright.async_api import async_playwright
 
-# --- CONFIGURATION ---
 CAR_NUMBER = "MH04KW1827"
 PHONE = "8325369138"
 HOME_URL = "https://www.cholainsurance.com/"
+
+async def click_and_wait_price(page, label_selector):
+    # wait for label
+    await page.wait_for_selector(label_selector, timeout=60000)
+
+    # try clicking (Angular sometimes blocks first click)
+    for _ in range(3):
+        try:
+            await page.locator(label_selector).click(force=True)
+            break
+        except:
+            await page.wait_for_timeout(400)
+
+    # WAIT for price page to load
+    # "p-back" is your given unique price page icon
+    await page.wait_for_selector("div.p-back", state="visible", timeout=90000)
+
+    # extra wait for plans to fully load
+    await page.wait_for_load_state("networkidle")
+
+    # click back button
+    await page.locator("div.p-back").click()
+
+    # wait until you return back to plans list
+    await page.wait_for_selector("label.for-checkbox-tools", timeout=60000)
+    await page.wait_for_load_state("networkidle")
+
 
 async def run():
 
@@ -14,9 +40,9 @@ async def run():
         await context.grant_permissions(["geolocation"])
         page = await context.new_page()
 
-        # ---- OPEN HOME PAGE ----
+        # ---- HOME ----
         await page.goto(HOME_URL, wait_until="domcontentloaded", timeout=60000)
-        await page.wait_for_selector("div.product-container", timeout=30000)
+        await page.wait_for_selector("div.product-container")
 
         # ---- ENTER MOBILE ----
         await page.fill(
@@ -30,63 +56,58 @@ async def run():
             CAR_NUMBER
         )
 
-        # ---- CLICK GET QUOTE ----
+        # ---- GET QUOTE ----
         async with page.expect_navigation(wait_until="domcontentloaded"):
             await page.click(
                 "a#_com_chola_insurance_products_web_InsuranceProductsPortlet_INSTANCE_ozvf_quote-btn"
             )
 
-        # ---- CLICK VIEW PLAN ----
-        await page.wait_for_selector(
-            "div.d-grid.gap-2.col-lg-12.col-md-12.col-sm-12.mx-auto",
-            timeout=60000
-        )
-
+        # ---- VIEW PLAN ----
+        await page.wait_for_selector("div.d-grid.gap-2.col-lg-12.col-md-12.col-sm-12.mx-auto")
         await page.click(
             "div.d-grid.gap-2.col-lg-12.col-md-12.col-sm-12.mx-auto button.btn.btn-danger.btn-lg"
         )
 
-        # ---- WAIT FOR MAIN DIV ----
-        await page.wait_for_selector("div.clearfix", timeout=60000)
+        # ---- MAIN DIV ----
+        await page.wait_for_selector("div.clearfix")
 
-        # ---- CLICK CALENDAR ----
-        await page.wait_for_selector("div.custom-callender input#demo-14", timeout=60000)
+        # ---- CALENDAR ----
         await page.click("div.custom-callender input#demo-14")
 
-        # ---- TARGET ONLY THE MODAL THAT CONTAINS CARD1 RADIO ----
+        # ---- MODAL YES ----
         MODAL_SELECTOR = "div.mod-body:has(input#card1)"
         YES_LABEL = f"{MODAL_SELECTOR} label[for='card1']"
 
-        # Wait for modal to appear
-        await page.wait_for_selector(MODAL_SELECTOR, timeout=80000, state="visible")
-
-        # Small delay for animation
-        await page.wait_for_timeout(300)
-
-        print("DEBUG: Correct modal is visible")
-
-        # Wait for label (radio button UI) to be clickable
-        await page.wait_for_selector(YES_LABEL, timeout=80000, state="visible")
-
-        # Debug label text
-        label_el = await page.query_selector(YES_LABEL)
-        if label_el:
-            txt = await label_el.inner_text()
-            print("DEBUG: Label text:", repr(txt))
-        else:
-            print("DEBUG: Label not found:", YES_LABEL)
-
-        # ---- CLICK THE RADIO BUTTON BY CLICKING LABEL ----
-        print("DEBUG: Clicking label for card1")
+        await page.wait_for_selector(MODAL_SELECTOR, state="visible", timeout=60000)
+        await page.wait_for_selector(YES_LABEL, state="visible", timeout=60000)
         await page.locator(YES_LABEL).click(force=True)
-        print("DEBUG: Selected YES radio option")
 
+        await page.wait_for_timeout(1200)
+        await page.wait_for_load_state("networkidle")
 
-        # Allow modal to close fully
-        await page.wait_for_timeout(2000)
+        # ---------------------------------------------------
+        # 🔥 CLICK PLAN 1 – Comprehensive Cover
+        # ---------------------------------------------------
+        await click_and_wait_price(
+            page,
+            "label.for-checkbox-tools:has(div.prod-con.comp)"
+        )
 
-        # Ensure next page loads
-        await page.wait_for_load_state("domcontentloaded")
+        # ---------------------------------------------------
+        # 🔥 CLICK PLAN 2 – Zero Dep Cover
+        # ---------------------------------------------------
+        await click_and_wait_price(
+            page,
+            "label.for-checkbox-tools:has(div.prod-con.comp-zer)"
+        )
+
+        # ---------------------------------------------------
+        # 🔥 CLICK PLAN 3 – Third Party Cover
+        # ---------------------------------------------------
+        await click_and_wait_price(
+            page,
+            "label.for-checkbox-tools:has(div.prod-con.tp)"
+        )
 
 
 asyncio.run(run())
