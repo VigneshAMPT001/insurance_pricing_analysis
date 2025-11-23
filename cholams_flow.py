@@ -1,6 +1,7 @@
 import asyncio
 import json
 from pathlib import Path
+from pprint import pprint
 from playwright.async_api import async_playwright
 
 from chola_bs4_scraper import (
@@ -11,7 +12,7 @@ from chola_bs4_scraper import (
 )
 
 CAR_NUMBER = "MH04KW1827"
-PHONE = "8325369135"
+PHONE = "8325349135"
 HOME_URL = "https://www.cholainsurance.com/"
 
 
@@ -97,11 +98,12 @@ async def click_plans_with_back(page):
         # --- PLAN LIST PAGE ---
 
         plan = plans.nth(i)
-        plan_obj = {}
 
         plan_title_locator = plan.locator("div.tit")
         plan_title = await plan_title_locator.inner_text()
         print("\n=== PLAN:", plan_title, "===")
+        plan_obj = {}
+        plan_obj[plan_title] = {}
 
         clickable = plan.locator("div.prod-con")
         await clickable.scroll_into_view_if_needed()
@@ -113,24 +115,38 @@ async def click_plans_with_back(page):
 
         # Ensure details page is fully loaded
         await clear_backdrop(page)
+
+        await page.locator("div.prem-break span", has_text="Premium Breakup").click()
+        await page.wait_for_load_state("domcontentloaded")
+        await page.wait_for_timeout(3000)
+
+        # Wait for the modal to appear after clicking "Premium Breakup" before getting HTML
+        await page.wait_for_selector("div.modal-content", timeout=5000)
+        premium_html = await page.content()
+        plan_details = {}
+        plan_details["plan_premium"] = parse_premium_breakup(premium_html)
+        plan_details["idv_range"] = parse_idv_section(premium_html)
+
+        await page.locator("div.mod-close button.btn-close").click()
+
+        await page.wait_for_timeout(2000)
+
+        await page.locator("div.cover-more", has_text="Know More").click()
+
+        covers_html = await page.content()
+        plan_details["benefits_covered"] = parse_cover_sections(covers_html)
+
+        pprint(plan_details)
+        what_covers_close_btn = page.locator("div#knowmorenew button.btn-close")
+        await what_covers_close_btn.scroll_into_view_if_needed()
+        await what_covers_close_btn.click(force=True)
+
+        plan_obj[plan_title] = plan_details
+
+        # --- GO BACK ---
         await page.wait_for_selector("div.p-back img", timeout=10000)
         await page.wait_for_load_state("domcontentloaded")
         await page.wait_for_timeout(5000)
-
-        await page.locator("div.prem-break span", has_text="Premium Breakup").click()
-
-        # Save HTML snapshot
-        premium_html = await page.content()
-        plan_obj[plan_title]["plan_premium"] = parse_premium_breakup(premium_html)
-        plan_obj[plan_title]["idv_range"] = parse_idv_section(premium_html)
-
-        locator = page.locator("div.cover-more", has_text="Know More")
-        await locator.click()
-
-        covers_html = await page.content()
-        plan_obj[plan_title]["benefits_covered"] = parse_cover_sections(covers_html)
-
-        # --- GO BACK ---
 
         plans_data.append(plan_obj)
 
@@ -223,10 +239,12 @@ async def run():
         # await page.wait_for_load_state("networkidle")
 
         plans_data = await click_plans_with_back(page)
-        car_details["plans"] = plans_data
+        plans_obj = {}
+        plans_obj["plans"] = plans_data
+        car_details.append(plans_data)
         file_name = output_path / f"{CAR_NUMBER}-claimed.json"
         with open(file_name, "w", encoding="utf-8") as f:
-            json.dump(plans_data, f, indent=2)
+            json.dump(car_details, f, indent=2)
         print(f"Output written to: {file_name}")
 
 
