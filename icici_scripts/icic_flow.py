@@ -268,11 +268,6 @@ def handle_response(response):
 
 async def run():
     output_path = Path("extracted/icici")
-
-    if not os.path.exists(output_path):
-        print("output file doesnt exist")
-    else:
-        print("output file exists")
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=False)
         context = await browser.new_context()

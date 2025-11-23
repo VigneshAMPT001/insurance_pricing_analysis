@@ -3,15 +3,19 @@ import re, json
 from datetime import datetime
 
 # Regex patterns
-REG_NO_PATTERN = re.compile(r'\b([A-Z]{2}\d{1,2}[A-Z]{1,3}\d{1,4})\b', re.I)
-DATE_PATTERN = re.compile(r'(\d{1,2}[\/\-\.\s]\d{1,2}[\/\-\.\s]\d{2,4})')
-FUEL_PATTERN = re.compile(r'fuel\s*type\s*(?:is|:)\s*(\w+)', re.I)
-VARIANT_PATTERN = re.compile(r'variant\s*(?:is|:)\s*(.+)', re.I)
-RTO_PATTERN = re.compile(r'RTO\s*[-:]?\s*(.+)', re.I)
-MAKE_MODEL_PATTERN = re.compile(r'([A-Z][A-Z0-9\- ]+)\s*<span[^>]*>\s*([^<]+)\s*</span>', re.I)
+REG_NO_PATTERN = re.compile(r"\b([A-Z]{2}\d{1,2}[A-Z]{1,3}\d{1,4})\b", re.I)
+DATE_PATTERN = re.compile(r"(\d{1,2}[\/\-\.\s]\d{1,2}[\/\-\.\s]\d{2,4})")
+FUEL_PATTERN = re.compile(r"fuel\s*type\s*(?:is|:)\s*(\w+)", re.I)
+VARIANT_PATTERN = re.compile(r"variant\s*(?:is|:)\s*(.+)", re.I)
+RTO_PATTERN = re.compile(r"RTO\s*[-:]?\s*(.+)", re.I)
+MAKE_MODEL_PATTERN = re.compile(
+    r"([A-Z][A-Z0-9\- ]+)\s*<span[^>]*>\s*([^<]+)\s*</span>", re.I
+)
+
 
 def clean_text(t):
-    return ' '.join(t.split()).strip()
+    return " ".join(t.split()).strip()
+
 
 def try_parse_date(text):
     m = DATE_PATTERN.search(text)
@@ -25,9 +29,11 @@ def try_parse_date(text):
             continue
     return s
 
+
 def clean_amount(v):
     v = v.replace("₹", "").replace(",", "").strip()
     return re.sub(r"[^\d]", "", v)
+
 
 def parse_idv_section(html):
     soup = BeautifulSoup(html, "html.parser")
@@ -52,16 +58,14 @@ def parse_idv_section(html):
     return {
         "idv_min": clean(min_tag),
         "idv_max": clean(max_tag),
-        "idv_selected": clean(selected_tag)
+        "idv_selected": clean(selected_tag),
     }
+
 
 def parse_cover_sections(html):
     soup = BeautifulSoup(html, "html.parser")
 
-    result = {
-        "whats_covered": [],
-        "whats_not_covered": []
-    }
+    result = {"whats_covered": [], "whats_not_covered": []}
 
     # ---- Helper: extract accordion items ----
     def extract_items(container_id):
@@ -71,22 +75,23 @@ def parse_cover_sections(html):
         if not container:
             return items
 
-        accordion_items = container.find_all("div", class_=lambda c: c and "accordion-item" in c)
+        accordion_items = container.find_all(
+            "div", class_=lambda c: c and "accordion-item" in c
+        )
 
         for item in accordion_items:
-            header_btn = item.find("button", class_=lambda c: c and "accordion-button" in c)
+            header_btn = item.find(
+                "button", class_=lambda c: c and "accordion-button" in c
+            )
             body_div = item.find("div", class_=lambda c: c and "accordion-body" in c)
 
             if not header_btn or not body_div:
                 continue
 
             title = header_btn.get_text(strip=True)
-            desc  = body_div.get_text(strip=True)
+            desc = body_div.get_text(strip=True)
 
-            items.append({
-                "title": title,
-                "description": desc
-            })
+            items.append({"title": title, "description": desc})
 
         return items
 
@@ -95,7 +100,6 @@ def parse_cover_sections(html):
     result["whats_not_covered"] = extract_items("accordionFlushExampleNotCovered")
 
     return result
-
 
 
 def parse_premium_breakup(html):
@@ -129,7 +133,7 @@ def parse_premium_breakup(html):
         elif tag.name == "li" and current_section:
 
             label_div = tag.find("div", class_=lambda c: c and "prem-lable" in c)
-            amt_div   = tag.find("div", class_=lambda c: c and "prem-amt" in c)
+            amt_div = tag.find("div", class_=lambda c: c and "prem-amt" in c)
 
             if not (label_div and amt_div):
                 continue  # avoid crashes
@@ -137,83 +141,87 @@ def parse_premium_breakup(html):
             label = label_div.get_text(strip=True)
             amt = clean_amount(amt_div.get_text())
 
-            result[current_section].append({
-                "label": label,
-                "amount": amt
-            })
+            result[current_section].append({"label": label, "amount": amt})
 
     return result
 
+
 def parse_car_details(html):
-    soup = BeautifulSoup(html, 'html.parser')
+    soup = BeautifulSoup(html, "html.parser")
     result = []
-    blocks = soup.find_all('app-car-details')
+    blocks = soup.find_all("app-car-details")
     if not blocks:
         blocks = [soup]
     for blk in blocks:
         data = {
-            'registration_number': None,
-            'make': None,
-            'model': None,
-            'fuel_type': None,
-            'variant': None,
-            'registration_date': None,
-            'rto': None,
-            'raw_lines': []
+            "registration_number": None,
+            "make": None,
+            "model": None,
+            "fuel_type": None,
+            "variant": None,
+            "registration_date": None,
+            "rto": None,
+            "raw_lines": [],
         }
-        lis = blk.find_all('li')
+        lis = blk.find_all("li")
         if lis:
             for li in lis:
-                txt = clean_text(li.get_text(separator=' '))
-                data['raw_lines'].append(txt)
-                if not data['registration_number']:
+                txt = clean_text(li.get_text(separator=" "))
+                data["raw_lines"].append(txt)
+                if not data["registration_number"]:
                     m = REG_NO_PATTERN.search(txt)
                     if m:
-                        data['registration_number'] = m.group(1).upper()
-                if not data['fuel_type']:
+                        data["registration_number"] = m.group(1).upper()
+                if not data["fuel_type"]:
                     m = FUEL_PATTERN.search(txt)
                     if m:
-                        data['fuel_type'] = m.group(1).upper()
-                if not data['variant']:
+                        data["fuel_type"] = m.group(1).upper()
+                if not data["variant"]:
                     m = VARIANT_PATTERN.search(txt)
                     if m:
-                        data['variant'] = m.group(1).strip()
-                if not data['registration_date']:
+                        data["variant"] = m.group(1).strip()
+                if not data["registration_date"]:
                     dt = try_parse_date(txt)
                     if dt:
-                        data['registration_date'] = dt
-                if not data['rto']:
+                        data["registration_date"] = dt
+                if not data["rto"]:
                     m = RTO_PATTERN.search(txt)
                     if m:
-                        data['rto'] = m.group(1).strip()
-                span = li.find('span')
-                if span and not data['model']:
-                    full = clean_text(li.get_text(separator=' '))
+                        data["rto"] = m.group(1).strip()
+                span = li.find("span")
+                if span and not data["model"]:
+                    full = clean_text(li.get_text(separator=" "))
                     span_txt = clean_text(span.get_text())
-                    make_guess = full.replace(span_txt, '').strip()
+                    make_guess = full.replace(span_txt, "").strip()
                     if make_guess:
-                        data['make'] = make_guess.upper()
-                        data['model'] = span_txt
+                        data["make"] = make_guess.upper()
+                        data["model"] = span_txt
         else:
-            txt = clean_text(blk.get_text(separator=' | '))
-            data['raw_lines'].append(txt)
+            txt = clean_text(blk.get_text(separator=" | "))
+            data["raw_lines"].append(txt)
             m = REG_NO_PATTERN.search(txt)
-            if m: data['registration_number'] = m.group(1).upper()
+            if m:
+                data["registration_number"] = m.group(1).upper()
             m = FUEL_PATTERN.search(txt)
-            if m: data['fuel_type'] = m.group(1).upper()
+            if m:
+                data["fuel_type"] = m.group(1).upper()
             m = VARIANT_PATTERN.search(txt)
-            if m: data['variant'] = m.group(1).strip()
+            if m:
+                data["variant"] = m.group(1).strip()
             dt = try_parse_date(txt)
-            if dt: data['registration_date'] = dt
+            if dt:
+                data["registration_date"] = dt
             m = RTO_PATTERN.search(txt)
-            if m: data['rto'] = m.group(1).strip()
+            if m:
+                data["rto"] = m.group(1).strip()
             mm = MAKE_MODEL_PATTERN.search(str(blk))
             if mm:
-                data['make'] = mm.group(1).strip().upper()
-                data['model'] = mm.group(2).strip()
+                data["make"] = mm.group(1).strip().upper()
+                data["model"] = mm.group(2).strip()
 
         result.append(data)
     return result
+
 
 # Example usage:
 if __name__ == "__main__":
@@ -221,9 +229,8 @@ if __name__ == "__main__":
     with open(html_file_path, "r", encoding="utf-8") as f:
         html_content = f.read()
     print(json.dumps(parse_car_details(html_content), indent=2))
-    
+
     parsed = parse_premium_breakup(html_content)
     print(json.dumps(parsed, indent=2))
     print(json.dumps(parse_idv_section(html_content), indent=2))
     print(json.dumps(parse_cover_sections(html_content), indent=2))
-    

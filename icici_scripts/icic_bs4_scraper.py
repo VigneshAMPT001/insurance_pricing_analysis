@@ -8,10 +8,6 @@ from typing import Dict, List, Optional, Any
 from bs4 import BeautifulSoup
 
 
-from bs4 import BeautifulSoup
-import re
-
-
 def extract_idv_values(html: str):
     """
     Extract recommended IDV, minimum IDV, and maximum IDV from the IDV popup HTML.

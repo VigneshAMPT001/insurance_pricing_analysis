@@ -1,38 +1,167 @@
 import asyncio
+import json
+from pathlib import Path
 from playwright.async_api import async_playwright
 
+from chola_bs4_scraper import (
+    parse_car_details,
+    parse_premium_breakup,
+    parse_cover_sections,
+    parse_idv_section,
+)
+
 CAR_NUMBER = "MH04KW1827"
-PHONE = "8325369138"
+PHONE = "8325369135"
 HOME_URL = "https://www.cholainsurance.com/"
 
-async def click_and_wait_price(page, label_selector):
-    # wait for label
-    await page.wait_for_selector(label_selector, timeout=60000)
 
-    # try clicking (Angular sometimes blocks first click)
-    for _ in range(3):
+async def clear_backdrop(page):
+    # Remove backdrop if present
+    backdrops = page.locator("div.modal-backdrop.show")
+    if await backdrops.count() > 0:
+        print("Backdrop found → removing it")
+        await page.evaluate(
+            """
+            document.querySelectorAll('.modal-backdrop.show')
+                .forEach(el => el.remove());
+            document.body.classList.remove('modal-open');
+            document.body.style.overflow = 'auto';
+        """
+        )
+        await page.wait_for_timeout(300)
+
+
+async def click_plans_with_back(page):
+
+    async def clear_backdrop(page):
         try:
-            await page.locator(label_selector).click(force=True)
-            break
+            await page.evaluate(
+                """() => {
+                    const el = document.querySelector('.modal-backdrop');
+                    if (el) el.remove();
+                }"""
+            )
+            await page.wait_for_timeout(500)
         except:
-            await page.wait_for_timeout(400)
+            pass
 
-    # WAIT for price page to load
-    # "p-back" is your given unique price page icon
-    await page.wait_for_selector("div.p-back", state="visible", timeout=90000)
+    # re-locate the back button fresh every time
+    async def do_back_click():
+        back_btn = page.locator("div.p-back img")
 
-    # extra wait for plans to fully load
-    await page.wait_for_load_state("networkidle")
+        # Make sure it is visible
+        await page.wait_for_selector("div.p-back img", timeout=8000)
+        await back_btn.scroll_into_view_if_needed()
+        await click_force_js(back_btn)
 
-    # click back button
-    await page.locator("div.p-back").click()
+    async def click_force_js(locator):
+        try:
+            await locator.click(timeout=2000)
+        except:
+            try:
+                box = await locator.bounding_box()
+                if box:
+                    await page.mouse.click(
+                        box["x"] + box["width"] / 2, box["y"] + box["height"] / 2
+                    )
+                    return
+            except:
+                pass
 
-    # wait until you return back to plans list
-    await page.wait_for_selector("label.for-checkbox-tools", timeout=60000)
-    await page.wait_for_load_state("networkidle")
+            # Final fallback
+            try:
+                handle = await locator.element_handle()
+                if handle:
+                    await page.evaluate("(el) => el.click()", handle)
+            except:
+                pass
+
+    # Clean leftover modal blockers
+    await clear_backdrop(page)
+
+    plans_data = []
+
+    plans = page.locator("div.covet-type")
+    tit_divs = page.locator("div.tit")
+
+    tit_count = await tit_divs.count()
+    for i in range(tit_count):
+        print(await tit_divs.nth(i).inner_text())
+
+    count = await plans.count()
+    print("plans count", count)
+
+    i = 0
+    while i < count:
+
+        # --- PLAN LIST PAGE ---
+
+        plan = plans.nth(i)
+        plan_obj = {}
+
+        plan_title_locator = plan.locator("div.tit")
+        plan_title = await plan_title_locator.inner_text()
+        print("\n=== PLAN:", plan_title, "===")
+
+        clickable = plan.locator("div.prod-con")
+        await clickable.scroll_into_view_if_needed()
+
+        print(f"Clicking plan {i+1}/{count}")
+        await click_force_js(clickable)
+
+        # --- DETAILS PAGE ---
+
+        # Ensure details page is fully loaded
+        await clear_backdrop(page)
+        await page.wait_for_selector("div.p-back img", timeout=10000)
+        await page.wait_for_load_state("domcontentloaded")
+        await page.wait_for_timeout(5000)
+
+        await page.locator("div.prem-break span", has_text="Premium Breakup").click()
+
+        # Save HTML snapshot
+        premium_html = await page.content()
+        plan_obj[plan_title]["plan_premium"] = parse_premium_breakup(premium_html)
+        plan_obj[plan_title]["idv_range"] = parse_idv_section(premium_html)
+
+        locator = page.locator("div.cover-more", has_text="Know More")
+        await locator.click()
+
+        covers_html = await page.content()
+        plan_obj[plan_title]["benefits_covered"] = parse_cover_sections(covers_html)
+
+        # --- GO BACK ---
+
+        plans_data.append(plan_obj)
+
+        print("Going BACK...")
+
+        # main attempt
+        await do_back_click()
+        if i == 1:
+            await do_back_click()
+
+        # Wait for list page
+        try:
+            await page.wait_for_selector("div.box.pro-sel", timeout=10000)
+        except:
+            print("⚠ Back didn't work, retrying…")
+            await clear_backdrop(page)
+            await page.wait_for_timeout(500)
+            await do_back_click()
+            await page.wait_for_selector("div.box.pro-sel", timeout=10000)
+
+        i += 1
+
+    print("Done visiting all plans.")
+
+    return plans_data
 
 
 async def run():
+
+    output_path = Path("extracted/cholams")
+    output_path.mkdir(parents=True, exist_ok=True)
 
     async with async_playwright() as pw:
         browser = await pw.chromium.launch(headless=False)
@@ -47,13 +176,13 @@ async def run():
         # ---- ENTER MOBILE ----
         await page.fill(
             "input#_com_chola_insurance_products_web_InsuranceProductsPortlet_INSTANCE_ozvf_insurance-mob-no",
-            PHONE
+            PHONE,
         )
 
         # ---- ENTER REG NUMBER ----
         await page.fill(
             "input#_com_chola_insurance_products_web_InsuranceProductsPortlet_INSTANCE_ozvf_insurance-reg-no",
-            CAR_NUMBER
+            CAR_NUMBER,
         )
 
         # ---- GET QUOTE ----
@@ -63,7 +192,9 @@ async def run():
             )
 
         # ---- VIEW PLAN ----
-        await page.wait_for_selector("div.d-grid.gap-2.col-lg-12.col-md-12.col-sm-12.mx-auto")
+        await page.wait_for_selector(
+            "div.d-grid.gap-2.col-lg-12.col-md-12.col-sm-12.mx-auto"
+        )
         await page.click(
             "div.d-grid.gap-2.col-lg-12.col-md-12.col-sm-12.mx-auto button.btn.btn-danger.btn-lg"
         )
@@ -78,36 +209,25 @@ async def run():
         MODAL_SELECTOR = "div.mod-body:has(input#card1)"
         YES_LABEL = f"{MODAL_SELECTOR} label[for='card1']"
 
+        print("opening modal")
+
         await page.wait_for_selector(MODAL_SELECTOR, state="visible", timeout=60000)
         await page.wait_for_selector(YES_LABEL, state="visible", timeout=60000)
         await page.locator(YES_LABEL).click(force=True)
 
-        await page.wait_for_timeout(1200)
-        await page.wait_for_load_state("networkidle")
+        base_html = await page.content()
+        car_details = parse_car_details(base_html)
 
-        # ---------------------------------------------------
-        # 🔥 CLICK PLAN 1 – Comprehensive Cover
-        # ---------------------------------------------------
-        await click_and_wait_price(
-            page,
-            "label.for-checkbox-tools:has(div.prod-con.comp)"
-        )
+        print("calling plan clicker")
 
-        # ---------------------------------------------------
-        # 🔥 CLICK PLAN 2 – Zero Dep Cover
-        # ---------------------------------------------------
-        await click_and_wait_price(
-            page,
-            "label.for-checkbox-tools:has(div.prod-con.comp-zer)"
-        )
+        # await page.wait_for_load_state("networkidle")
 
-        # ---------------------------------------------------
-        # 🔥 CLICK PLAN 3 – Third Party Cover
-        # ---------------------------------------------------
-        await click_and_wait_price(
-            page,
-            "label.for-checkbox-tools:has(div.prod-con.tp)"
-        )
+        plans_data = await click_plans_with_back(page)
+        car_details["plans"] = plans_data
+        file_name = output_path / f"{CAR_NUMBER}-claimed.json"
+        with open(file_name, "w", encoding="utf-8") as f:
+            json.dump(plans_data, f, indent=2)
+        print(f"Output written to: {file_name}")
 
 
 asyncio.run(run())
