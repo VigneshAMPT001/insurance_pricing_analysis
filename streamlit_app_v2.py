@@ -168,12 +168,12 @@ def display_plan_card(
         addons = plan.get("addons", [])
 
         if benefits:
-            with st.expander("✨ Benefits", expanded=False):
+            with st.expander("Benefits", expanded=False):
                 for benefit in benefits:
                     st.markdown(f"• {benefit}")
 
         if addons:
-            with st.expander("🔧 Add-ons & Covers", expanded=False):
+            with st.expander("Add-ons & Covers", expanded=False):
                 for addon in addons:
                     if isinstance(addon, dict):
                         name = addon.get("name", addon.get("display_name", "Unknown"))
@@ -189,7 +189,7 @@ def display_plan_card(
 
 def homepage():
     """Homepage with car selection dropdowns"""
-    st.title("🏠 Insurance Plans Overview")
+    st.title("Insurance Plans Overview")
     st.markdown(
         "Select your car to view all available insurance plans from different insurers"
     )
@@ -307,7 +307,7 @@ def homepage():
         # Display plans in accordions grouped by insurer
         for insurer_name, plans in all_plans_by_insurer.items():
             with st.expander(
-                f"🏢 {insurer_name} Insurance ({len(plans)} plans)", expanded=True
+                f"{insurer_name} Insurance ({len(plans)} plans)", expanded=True
             ):
                 if plans:
                     for plan in plans:
@@ -322,14 +322,14 @@ def homepage():
         st.session_state.all_plans_by_insurer = all_plans_by_insurer
 
         # Button to go to comparison page
-        if st.button("🔍 Compare Plans", type="primary", use_container_width=True):
+        if st.button("Compare Plans", type="primary", use_container_width=True):
             st.session_state.page = "comparison"
             st.rerun()
 
 
 def comparison_page():
     """Plan comparison page"""
-    st.title("🔍 Plan Comparison")
+    st.title("Plan Comparison")
     st.markdown(
         "<p style='color:#475569'>Fine-tune filters in the sidebar to narrow down plans and compare premiums at a glance.</p>",
         unsafe_allow_html=True,
@@ -340,7 +340,7 @@ def comparison_page():
         or "all_plans_by_insurer" not in st.session_state
     ):
         st.warning("Please select a car from the homepage first.")
-        if st.button("← Go to Homepage"):
+        if st.button("Back to Homepage"):
             st.session_state.page = "homepage"
             st.rerun()
         return
@@ -361,7 +361,7 @@ def comparison_page():
 
     if not all_plans:
         st.warning("No plans available for comparison.")
-        if st.button("← Go to Homepage"):
+        if st.button("Back to Homepage"):
             st.session_state.page = "homepage"
             st.rerun()
         return
@@ -511,7 +511,7 @@ def comparison_page():
         st.markdown("---")
 
     # Back button
-    if st.button("← Back to Homepage"):
+    if st.button("Back to Homepage"):
         st.session_state.page = "homepage"
         st.rerun()
 
