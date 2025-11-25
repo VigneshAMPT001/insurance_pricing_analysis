@@ -1,327 +1,84 @@
-import json
-import os
 import re
-from pathlib import Path
-from typing import Dict, Any, List, Optional, Tuple
+from typing import Any, Dict, List, Optional
 
 import streamlit as st
 import pandas as pd
 
-
-PLAN_CATEGORY_LABELS = {
-    "comp": "Comprehensive",
-    "od": "Own Damage",
-    "tp": "Third Party",
-    "zd": "Zero Depreciation",
-}
-
-
-def normalize_plan_category(category: str) -> str:
-    """Normalize various plan category strings into common keys."""
-    if not category:
-        return ""
-    value = category.strip().lower()
-
-    if value in {"zd", "zd_od", "zero dep", "zero_dep", "zero depreciation"}:
-        return "comp"
-
-    if "third" in value or value in {"tp", "third-party", "third party"}:
-        return "tp"
-
-    if "own" in value and "damage" in value:
-        return "od"
-    if value in {"od", "od_plan"}:
-        return "od"
-
-    if "comp" in value or "comprehensive" in value:
-        return "comp"
-
-    return value
+from app_v2_utils import (
+    format_premium,
+    get_acko_plans,
+    get_cholams_plans,
+    get_icici_plans,
+    get_plan_category_label,
+    get_unique_makes_models_variants,
+    load_acko_data,
+    load_cholams_data,
+    load_icici_data,
+    scan_all_car_data,
+)
 
 
-def get_plan_category_label(category_key: str, fallback: str = "") -> str:
-    """Return a user-friendly label for a normalized category key."""
-    if not category_key:
-        return fallback
-    return PLAN_CATEGORY_LABELS.get(
-        category_key, category_key.replace("_", " ").title()
-    )
+def format_signed_currency(value: Optional[float]) -> str:
+    """Format currency values while preserving the sign for discounts."""
+    if value is None:
+        return "—"
+    sign = "-" if value < 0 else ""
+    return f"{sign}{format_premium(abs(value))}"
 
 
-def extract_premium_value(premium_str: str) -> float:
-    """Extract numeric value from premium string like '₹5,142' or '₹4,992'"""
-    if not premium_str:
-        return 0.0
-    # Remove currency symbols and commas, extract number
-    numbers = re.findall(r"[\d,]+", premium_str.replace("₹", "").replace(",", ""))
-    if numbers:
-        try:
-            return float(numbers[0].replace(",", ""))
-        except:
-            return 0.0
-    return 0.0
+def build_pricing_rows(pricing_breakdown: Dict[str, Any]) -> List[Dict[str, str]]:
+    """Convert pricing breakdown dictionary into table rows."""
+    if not isinstance(pricing_breakdown, dict):
+        return []
+
+    rows = []
+
+    row_map = [
+        ("Base Premium", "base_premium"),
+        ("Own Damage Premium", "own_damage_premium"),
+        ("Third Party Premium", "third_party_premium"),
+        ("Add-ons", "addons_total"),
+        ("Discounts", "discounts_total"),
+        ("GST Amount", "gst_amount"),
+        ("Net Premium", "net_premium"),
+        ("Total Premium", "total_premium"),
+    ]
+
+    for label, key in row_map:
+        value = pricing_breakdown.get(key)
+        if value is None:
+            continue
+        rows.append({"Component": label, "Amount": format_signed_currency(value)})
+
+    gst_rate = pricing_breakdown.get("gst_rate")
+    gst_amount = pricing_breakdown.get("gst_amount")
+    if gst_rate and gst_amount is None:
+        rows.append({"Component": f"GST ({gst_rate})", "Amount": gst_rate})
+
+    return rows
 
 
-def load_acko_data(file_path: str) -> Dict[str, Any]:
-    """Load and parse Acko insurance data"""
-    with open(file_path, "r", encoding="utf-8") as f:
-        return json.load(f)
+def render_idv_info(plan: Dict[str, Any]):
+    """Render IDV information when present."""
+    idv = plan.get("idv") or {}
+    if not idv:
+        return
 
+    selected = idv.get("selected") or idv.get("current")
+    idv_min = idv.get("min")
+    idv_max = idv.get("max")
+    recommended = idv.get("recommended")
 
-def load_icici_data(file_path: str) -> Dict[str, Any]:
-    """Load and parse ICICI insurance data"""
-    with open(file_path, "r", encoding="utf-8") as f:
-        return json.load(f)
+    pieces = []
+    if selected:
+        pieces.append(f"Selected: {format_premium(selected)}")
+    if idv_min and idv_max:
+        pieces.append(f"Range: {format_premium(idv_min)} – {format_premium(idv_max)}")
+    if recommended:
+        pieces.append(f"Recommended: {format_premium(recommended)}")
 
-
-def get_acko_plans(data: Dict[str, Any]) -> List[Dict[str, Any]]:
-    """Extract plans from Acko data structure"""
-    plans = []
-    for plan in data.get("plans", []):
-        category_raw = plan.get("category", "")
-        normalized_category = normalize_plan_category(category_raw)
-
-        plan_info = {
-            "plan_id": plan.get("plan_id", ""),
-            "plan_name": plan.get("plan_name", ""),
-            "category": normalized_category or category_raw,
-            "category_display": get_plan_category_label(
-                normalized_category, category_raw.upper()
-            ),
-            "premium_display": plan.get("premium_display", ""),
-            "premium_value": plan.get("premium_value", 0.0),
-            "description": plan.get("description", ""),
-            "is_selected": plan.get("is_selected", False),
-            "badge": plan.get("badge", ""),
-            "addons": plan.get("addons", []),
-            "insurer": "Acko",
-        }
-        plans.append(plan_info)
-    return plans
-
-
-def get_icici_plans(data: Dict[str, Any]) -> List[Dict[str, Any]]:
-    """Extract plans from ICICI data structure"""
-    plans = []
-    plans_offered = data.get("plans_offered", {})
-    premiums_list = plans_offered.get("premiums", [])
-
-    for premium_info in premiums_list:
-        plan_type = premium_info.get("plan_type", "")
-        button_text = premium_info.get("button_text", "")
-        title = button_text.split("\n")[0].replace("Recommended\n", "").strip()
-        normalized_category = normalize_plan_category(plan_type)
-
-        premium_summary = premium_info.get("premium", {}).get("premium_summary", {})
-        total_premium_str = premium_summary.get("total_premium", "₹0")
-        base_premium_str = premium_summary.get("base_premium", "₹0")
-
-        # Extract description from additional_covers_breakdown
-        additional_covers = premium_summary.get("additional_covers_breakdown", [])
-        description_parts = []
-        for cover in additional_covers:
-            if isinstance(cover, dict):
-                name = cover.get("name", "")
-                if name:
-                    description_parts.append(name)
-            elif isinstance(cover, str):
-                description_parts.append(cover)
-
-        plan_info = {
-            "plan_id": f"{plan_type}_{premium_info.get('button_index', 0)}",
-            "plan_name": title,
-            "category": normalized_category or plan_type.lower(),
-            "category_display": get_plan_category_label(
-                normalized_category, plan_type.title()
-            ),
-            "premium_display": total_premium_str,
-            "premium_value": extract_premium_value(total_premium_str),
-            "base_premium": extract_premium_value(base_premium_str),
-            "description": ", ".join(description_parts),
-            "is_selected": "Recommended" in button_text,
-            "badge": "Recommended" if "Recommended" in button_text else "",
-            "addons": premium_summary.get("additional_covers_breakdown", []),
-            "benefits": [],
-            "insurer": "ICICI",
-        }
-
-        # Get benefits from plans structure
-        plans_list = plans_offered.get("plans", [])
-        if plans_list and len(plans_list) > 0:
-            for plan_group in plans_list:
-                if plan_type in plan_group:
-                    plan_variants = plan_group[plan_type]
-                    button_idx = premium_info.get("button_index", 0)
-                    if button_idx < len(plan_variants):
-                        plan_info["benefits"] = plan_variants[button_idx].get(
-                            "benefits", []
-                        )
-                        break
-
-        plans.append(plan_info)
-    return plans
-
-
-def normalize_make_model(make: str, model: str) -> Tuple[str, str]:
-    """Normalize make and model names for matching"""
-    make_norm = make.strip().lower()
-    model_norm = model.strip().lower()
-
-    # Handle common variations
-    make_mappings = {
-        "tata motors": "tata",
-        "tata": "tata",
-    }
-
-    for key, value in make_mappings.items():
-        if key in make_norm:
-            make_norm = value
-            break
-
-    return make_norm, model_norm
-
-
-def scan_all_car_data() -> Dict[str, Any]:
-    """Scan all data files and extract unique makes, models, and variants"""
-    extracted_dir = Path("extracted")
-    car_data_map = {}  # Maps (make, model, variant) -> list of file paths
-    icici_data_list = []  # Store ICICI data separately for matching
-
-    # Scan Acko files
-    acko_dir = extracted_dir / "acko"
-    if acko_dir.exists():
-        for file in acko_dir.glob("*.json"):
-            try:
-                data = load_acko_data(str(file))
-                car_info = data.get("car_info", {})
-                make = car_info.get("vehicle_make", "").strip()
-                model = car_info.get("vehicle_model", "").strip()
-                variant = car_info.get("vehicle_variant", "").strip()
-
-                if make and model and variant:
-                    key = (make, model, variant)
-                    if key not in car_data_map:
-                        car_data_map[key] = {"acko": [], "icici": []}
-                    car_data_map[key]["acko"].append(
-                        {
-                            "file": str(file),
-                            "claim_status": (
-                                file.stem.split("-")[-1]
-                                if "-" in file.stem
-                                else "not_claimed"
-                            ),
-                            "registration": car_info.get("registration_number", ""),
-                        }
-                    )
-            except Exception as e:
-                continue
-
-    # Scan ICICI files
-    icici_dir = extracted_dir / "icici"
-    if icici_dir.exists():
-        for file in icici_dir.glob("*.json"):
-            try:
-                data = load_icici_data(str(file))
-                make = data.get("manufacturer", "").strip()
-                model = data.get("model", "").strip()
-
-                if make and model:
-                    icici_data_list.append(
-                        {
-                            "make": make,
-                            "model": model,
-                            "file": str(file),
-                            "registration": (
-                                file.stem.split("-")[0] if "-" in file.stem else ""
-                            ),
-                        }
-                    )
-            except Exception as e:
-                continue
-
-    # Match ICICI data with Acko entries based on make and model
-    for icici_entry in icici_data_list:
-        icici_make = icici_entry["make"]
-        icici_model = icici_entry["model"]
-        icici_make_norm, icici_model_norm = normalize_make_model(
-            icici_make, icici_model
-        )
-
-        matched = False
-        for (acko_make, acko_model, acko_variant), files in car_data_map.items():
-            acko_make_norm, acko_model_norm = normalize_make_model(
-                acko_make, acko_model
-            )
-
-            # Match if make matches and model is similar
-            if acko_make_norm == icici_make_norm and (
-                acko_model_norm in icici_model_norm
-                or icici_model_norm in acko_model_norm
-            ):
-                files["icici"].append(
-                    {
-                        "file": icici_entry["file"],
-                        "registration": icici_entry["registration"],
-                    }
-                )
-                matched = True
-                break
-
-        # If no match found, create a new entry with model as variant
-        if not matched:
-            key = (icici_make, icici_model, icici_model)
-            if key not in car_data_map:
-                car_data_map[key] = {"acko": [], "icici": []}
-            car_data_map[key]["icici"].append(
-                {
-                    "file": icici_entry["file"],
-                    "registration": icici_entry["registration"],
-                }
-            )
-
-    return car_data_map
-
-
-def get_unique_makes_models_variants(
-    car_data_map: Dict[str, Any],
-) -> Tuple[List[str], Dict[str, List[str]], Dict[str, Dict[str, List[str]]]]:
-    """Extract unique makes, models, and variants from car data map"""
-    makes = set()
-    models_by_make = {}
-    variants_by_make_model = {}
-
-    for (make, model, variant), _ in car_data_map.items():
-        makes.add(make)
-        if make not in models_by_make:
-            models_by_make[make] = set()
-        models_by_make[make].add(model)
-
-        if make not in variants_by_make_model:
-            variants_by_make_model[make] = {}
-        if model not in variants_by_make_model[make]:
-            variants_by_make_model[make][model] = set()
-        variants_by_make_model[make][model].add(variant)
-
-    # Convert sets to sorted lists
-    makes_list = sorted(list(makes))
-    models_by_make_sorted = {
-        make: sorted(list(models)) for make, models in models_by_make.items()
-    }
-    variants_by_make_model_sorted = {
-        make: {model: sorted(list(variants)) for model, variants in models.items()}
-        for make, models in variants_by_make_model.items()
-    }
-
-    return makes_list, models_by_make_sorted, variants_by_make_model_sorted
-
-
-def format_premium(premium: Any) -> str:
-    """Format premium for display"""
-    if isinstance(premium, (int, float)):
-        return f"₹{premium:,.0f}"
-    if isinstance(premium, str):
-        return premium
-    return "N/A"
+    if pieces:
+        st.markdown(f"**IDV Details:** {' | '.join(pieces)}")
 
 
 def display_plan_card_compact(plan: Dict[str, Any]):
@@ -354,27 +111,44 @@ def display_plan_card(
 ):
     """Display a single plan card"""
     with st.container():
-        # Header with plan name and badge
         header_col1, header_col2 = st.columns([3, 1])
+        plan_type = plan.get("category_display") or plan.get("category", "").upper()
+        plan_name = plan.get("plan_name", "Unknown Plan")
+        badge = plan.get("badge", "")
+        insurer_label = insurer or plan.get("insurer", "")
+
         with header_col1:
-            st.markdown(f"#### {plan.get('plan_name', 'Unknown Plan')}")
+            if insurer_label:
+                st.markdown(
+                    f"<div style='display:inline-block;padding:0.15rem 0.55rem;border-radius:999px;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:600;text-transform:uppercase;margin-bottom:0.35rem;'>{insurer_label}</div>",
+                    unsafe_allow_html=True,
+                )
+            if plan_type:
+                st.markdown(
+                    f"<div style='font-size:1.15rem;font-weight:700;text-transform:uppercase;color:#0f172a;'>{plan_type}</div>",
+                    unsafe_allow_html=True,
+                )
+            st.markdown(
+                f"<div style='font-size:1rem;color:#475569;margin-bottom:0.25rem;'>{plan_name}</div>",
+                unsafe_allow_html=True,
+            )
+            st.caption(f"{insurer} • {plan.get('plan_id', '').upper()}")
+
         with header_col2:
-            badge = plan.get("badge", "")
+            premium_value = plan.get("premium_value", 0.0)
+            premium_display = plan.get("premium_display", format_premium(premium_value))
+            st.markdown(
+                f"<div style='text-align:right;font-size:1.2rem;font-weight:700;color:#0f172a;'> {premium_display} </div>",
+                unsafe_allow_html=True,
+            )
+            st.caption("Total Premium")
             if badge:
                 st.markdown(
-                    f"<span style='background-color: #ff6b6b; color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.75em;'>{badge}</span>",
+                    f"<div style='text-align:right;'><span style='background-color: #ff6b6b; color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.75em;'>{badge}</span></div>",
                     unsafe_allow_html=True,
                 )
 
-        # Premium - highlight
-        premium_value = plan.get("premium_value", 0.0)
-        premium_display = plan.get("premium_display", format_premium(premium_value))
-        st.markdown(f"**💰 Premium:** `{premium_display}`")
-
-        # Category
-        category = plan.get("category_display") or plan.get("category", "").upper()
-        if category:
-            st.markdown(f"**📋 Type:** {category}")
+        render_idv_info(plan)
 
         # Description
         description = plan.get("description", "")
@@ -383,6 +157,11 @@ def display_plan_card(
             if len(clean_desc) > 120:
                 clean_desc = clean_desc[:120] + "..."
             st.markdown(f"*{clean_desc}*")
+
+        pricing_rows = build_pricing_rows(plan.get("pricing_breakdown", {}))
+        if pricing_rows:
+            st.markdown("**Pricing Breakdown**")
+            st.table(pd.DataFrame(pricing_rows))
 
         # Benefits/Addons
         benefits = plan.get("benefits", [])
@@ -440,14 +219,16 @@ def homepage():
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        selected_make = st.selectbox("Car Make", options=[""] + makes, index=0)
+        selected_make = st.selectbox(
+            "Car Make", makes, index=None, placeholder="Select Make"
+        )
 
     selected_model = ""
     if selected_make:
         with col2:
             available_models = models_by_make.get(selected_make, [])
             selected_model = st.selectbox(
-                "Car Model", options=[""] + available_models, index=0
+                "Car Model", available_models, index=None, placeholder="Select Model"
             )
 
     selected_variant = ""
@@ -457,7 +238,10 @@ def homepage():
                 selected_model, []
             )
             selected_variant = st.selectbox(
-                "Car Variant", options=[""] + available_variants, index=0
+                "Car Variant",
+                available_variants,
+                index=None,
+                placeholder="Select Variant",
             )
 
     # Display plans when all three are selected
@@ -465,7 +249,11 @@ def homepage():
         key = (selected_make, selected_model, selected_variant)
         car_files = car_data_map.get(key, {})
 
-        if not car_files.get("acko") and not car_files.get("icici"):
+        if (
+            not car_files.get("acko")
+            and not car_files.get("icici")
+            and not car_files.get("cholams")
+        ):
             st.warning(
                 f"No insurance data found for {selected_make} {selected_model} {selected_variant}"
             )
@@ -505,6 +293,17 @@ def homepage():
             except Exception as e:
                 st.error(f"Error loading ICICI data: {e}")
 
+        # Load Cholams plans
+        cholams_plans = []
+        if car_files.get("cholams"):
+            cholams_file_info = car_files["cholams"][0]
+            try:
+                cholams_data = load_cholams_data(cholams_file_info["file"])
+                cholams_plans = get_cholams_plans(cholams_data)
+                all_plans_by_insurer["Cholams"] = cholams_plans
+            except Exception as e:
+                st.error(f"Error loading Cholams data: {e}")
+
         # Display plans in accordions grouped by insurer
         for insurer_name, plans in all_plans_by_insurer.items():
             with st.expander(
@@ -512,8 +311,8 @@ def homepage():
             ):
                 if plans:
                     for plan in plans:
-                        display_plan_card_compact(plan)
-                        st.markdown("---")
+                        display_plan_card(plan, insurer_name)
+                        st.divider()
                 else:
                     st.info(f"No plans available from {insurer_name}")
 
@@ -531,6 +330,10 @@ def homepage():
 def comparison_page():
     """Plan comparison page"""
     st.title("🔍 Plan Comparison")
+    st.markdown(
+        "<p style='color:#475569'>Fine-tune filters in the sidebar to narrow down plans and compare premiums at a glance.</p>",
+        unsafe_allow_html=True,
+    )
 
     if (
         "selected_car_key" not in st.session_state
@@ -604,6 +407,7 @@ def comparison_page():
         ]
 
     # Price range filter
+    price_range = None
     if filtered_plans:
         premiums = [p.get("premium_value", 0) for p in filtered_plans]
         min_premium = min(premiums)
@@ -628,6 +432,36 @@ def comparison_page():
     if not filtered_plans:
         st.info("No plans match the selected filters.")
         return
+
+    # Summary metrics
+    st.subheader("At a Glance")
+    summary_cols = st.columns(3)
+    summary_cols[0].metric("Plans Available", len(filtered_plans))
+    if price_range:
+        summary_cols[1].metric("Price Floor", format_premium(price_range[0]))
+        summary_cols[2].metric("Price Ceiling", format_premium(price_range[1]))
+    else:
+        premiums = [p.get("premium_value", 0) for p in filtered_plans]
+        summary_cols[1].metric("Lowest Premium", format_premium(min(premiums)))
+        summary_cols[2].metric("Highest Premium", format_premium(max(premiums)))
+
+    insurer_counts = {}
+    for plan in filtered_plans:
+        insurer_counts.setdefault(plan.get("insurer", "Unknown"), []).append(plan)
+
+    st.markdown(
+        "<div style='display:flex;gap:1rem;flex-wrap:wrap;'>"
+        + "".join(
+            f"<div style='flex:1 1 220px;border:1px solid #e2e8f0;border-radius:0.75rem;padding:0.75rem;background:#f8fafc;'>"
+            f"<div style='font-size:0.85rem;color:#475569;text-transform:uppercase;letter-spacing:0.08em;'>{insurer}</div>"
+            f"<div style='font-size:1.4rem;font-weight:700;color:#0f172a;margin:0.2rem 0;'>{len(plans)} plans</div>"
+            f"<div style='font-size:0.8rem;color:#64748b;'>₹{int(min(p.get('premium_value', 0) for p in plans)):,} – ₹{int(max(p.get('premium_value', 0) for p in plans)):,}</div>"
+            "</div>"
+            for insurer, plans in insurer_counts.items()
+        )
+        + "</div>",
+        unsafe_allow_html=True,
+    )
 
     # Group by plan type for better comparison
     plans_by_category = {}
@@ -675,42 +509,6 @@ def comparison_page():
                     display_plan_card(plan, plan.get("insurer", ""))
 
         st.markdown("---")
-
-    # Add-ons comparison
-    st.markdown("---")
-    st.subheader("Add-ons Comparison")
-
-    # Collect all unique add-ons
-    all_addons_map = {}
-    for plan in filtered_plans:
-        insurer = plan.get("insurer", "")
-        plan_name = plan.get("plan_name", "")
-        addons = plan.get("addons", [])
-
-        for addon in addons:
-            if isinstance(addon, dict):
-                addon_name = addon.get("name", addon.get("display_name", "Unknown"))
-                addon_price = addon.get("price", addon.get("net_premium", 0))
-
-                if addon_name not in all_addons_map:
-                    all_addons_map[addon_name] = []
-
-                all_addons_map[addon_name].append(
-                    {
-                        "insurer": insurer,
-                        "plan": plan_name,
-                        "price": addon_price,
-                    }
-                )
-
-    if all_addons_map:
-        for addon_name, addon_info in sorted(all_addons_map.items()):
-            with st.expander(f"🔧 {addon_name}"):
-                for info in addon_info:
-                    price_str = (
-                        format_premium(info["price"]) if info["price"] else "Included"
-                    )
-                    st.markdown(f"**{info['insurer']} - {info['plan']}**: {price_str}")
 
     # Back button
     if st.button("← Back to Homepage"):

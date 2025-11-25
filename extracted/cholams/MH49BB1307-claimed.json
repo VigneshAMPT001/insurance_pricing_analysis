@@ -4,7 +4,7 @@
     "make": "HYUNDAI",
     "model": "I20 ACTIVE",
     "fuel_type": "PETROL",
-    "variant": "I20 ACTIVE - S VTVT",
+    "variant": "I20 ACTIVE - S",
     "registration_date": "2018-10-17",
     "rto": "MH49-NAGPUR(NAGPUR EAST)",
     "raw_lines": [
@@ -144,15 +144,15 @@
           "(C) Total Premium": [
             {
               "label": "Net Premium (A+B)",
-              "amount": "9755"
+              "amount": "4116"
             },
             {
               "label": "GST (18%)",
-              "amount": "1756"
+              "amount": "741"
             },
             {
               "label": "Total Premium",
-              "amount": "11511"
+              "amount": "4857"
             }
           ]
         },

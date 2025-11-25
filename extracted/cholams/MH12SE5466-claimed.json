@@ -145,8 +145,12 @@
               "amount": "650"
             },
             {
+              "label": "Zero Depreciation",
+              "amount": "1813"
+            },
+            {
               "label": "(D) Own Damage Premium after Discount (A - B + C)",
-              "amount": "4009"
+              "amount": "5822"
             }
           ],
           "(E) Liability Premium": [
@@ -162,15 +166,15 @@
           "(F) Total Premium": [
             {
               "label": "Net Premium",
-              "amount": "7475"
+              "amount": "9288"
             },
             {
               "label": "GST (18%)",
-              "amount": "1346"
+              "amount": "1672"
             },
             {
               "label": "Total Premium",
-              "amount": "8821"
+              "amount": "10960"
             }
           ]
         },
