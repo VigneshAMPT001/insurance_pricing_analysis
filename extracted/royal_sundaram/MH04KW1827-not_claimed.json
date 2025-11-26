@@ -1,168 +1,158 @@
 {
     "car_details": {
-        "registration_number": "MH04KW1827",
-        "manufacturer": "TATA MOTORS LTD.",
-        "model_variant": "NEXON KRAZ-5 Seater",
-        "model_year": "2018",
-        "fuel_type": "Petrol",
-        "rto_name": "Nagpur West",
-        "ncb_percentage": "50%",
-        "idv": {
-            "default_idv": 315285,
-            "min_idv": 283756.5,
-            "max_idv": 346813.5
-        }
+      "registration_number": "MH04KW1827",
+      "manufacturer": "TATA MOTORS LTD.",
+      "model_variant":"NEXON XE-5 Seater" ,
+      "model_year": "2018",
+      "fuel_type": "Petrol",
+      "rto_name": "Nagpur West",
+      "ncb_percentage": "50%",
+      "idv": {
+        "default_idv": 320360,
+        "min_idv": 288324,
+        "max_idv": 352396
+      }
     },
     "plans": {
-        "comprehensive_plan": {
-            "plan_name": "Comprehensive Plan",
-            "idv": {
-                "default_idv": 315285,
-                "min_idv": 283756.5,
-                "max_idv": 346813.5
-            },
-            "premium_summary": {
-                "premium_excluding_gst": 4412.4,
-                "gst_applicable": true
-            },
-            "addons": {
-                "roadside_assistance": 199.0,
-                "smart_save": -63.4,
-                "windshield_glass": 226.8,
-                "pay_as_you_drive": "Available",
-                "zero_depreciation": 3373.0,
-                "engine_protection": 378.4,
-                "personal_accident_cover": "Mandatory",
-                "key_replacement": 100.0,
-                "loss_of_baggage": 100.0,
-                "spare_car": 164.0,
-                "towing_cover": 25.0,
-                "tyre_cover": 606.0,
-                "consumable_cover": 433.14
-            },
-            "premium_breakup": {
-                "quote_id": "QVPN122600805",
-                "own_damage": {
-                    "base_premium": 1268.0,
-                    "addons": {
-                        "windshield_glass": 226.8,
-                        "roadside_assistance": 199.0,
-                        "smart_save": -63.4,
-                        "ncb": -634.0
-                    }
-                },
-                "liability": {
-                    "base_premium": 3416.0
-                },
-                "net_premium": 4412.4,
-                "gst_18_percent": 794.16,
-                "total_premium": 5206.16
-            }
+      "comprehensive_plan": {
+        "plan_name": "Comprehensive Plan",
+        "premium_summary": {
+          "premium_excluding_gst": 4425.0,
+          "gst_applicable": true
         },
-        "bumper_to_bumper_plan": {
-            "plan_name": "Bumper to Bumper (Zero Dep Plan)",
-            "idv": {
-                "default_idv": 315285,
-                "min_idv": 283756.5,
-                "max_idv": 346813.5
-            },
-            "premium_summary": {
-                "premium_excluding_gst": 7291.0,
-                "gst_applicable": true
-            },
-            "addons": {
-                "zero_depreciation": 3241.0,
-                "engine_protection": 378.4,
-                "windshield_glass": 201.6,
-                "key_replacement": 100.0,
-                "loss_of_baggage": 100.0,
-                "roadside_assistance": 199.0,
-                "spare_car": 164.0,
-                "towing_cover": 25.0,
-                "tyre_cover": 606.0,
-                "smart_save": -73.91,
-                "consumable_cover": 433.14,
-                "personal_accident_cover": "Mandatory"
-            },
-            "premium_breakup": {
-                "quote_id": "QVPN122600805",
-                "own_damage": {
-                    "base_premium": 1268.0,
-                    "addons": {
-                        "depreciation_waiver": 3241.0,
-                        "ncb": -634.0
-                    }
-                },
-                "liability": {
-                    "base_premium": 3416.0
-                },
-                "net_premium": 7291.0,
-                "gst_18_percent": 1312.38,
-                "total_premium": 8603.38
-            }
+        "addons": {
+          "roadside_assistance": 199.0,
+          "smart_save": -64.4,
+          "windshield_glass": 230.4,
+          "zero_depreciation": 3425.0,
+          "aggravation_cover": 384.8,
+          "engine_protection": 378.4,
+          "personal_accident_cover": "Mandatory (₹15L cover)",
+          "key_replacement": 100.0,
+          "loss_of_baggage": 100.0,
+          "spare_car": 164.0,
+          "towing_cover": 25.0,
+          "tyre_cover": 606.0,
+          "consumable_cover": 439.84
         },
-        "comprehensive_basic": {
-            "plan_name": "Comprehensive Plan Basic",
-            "idv": {
-                "default_idv": 315285,
-                "min_idv": 283756.5,
-                "max_idv": 346813.5
-            },
-            "premium_summary": {
-                "premium_excluding_gst": 4068.0,
-                "gst_applicable": true
-            },
+        "premium_breakup": {
+          "quote_id": "QVPN122610801",
+          "own_damage": {
+            "base_premium": 1288.0,
             "addons": {
-                "zero_depreciation": 3036.0,
-                "aggravation_cover": 378.4,
-                "windshield_glass": 201.6,
-                "key_replacement": 100.0,
-                "loss_of_baggage": 100.0,
-                "roadside_assistance": 199.0,
-                "spare_car": 164.0,
-                "towing_cover": 25.0,
-                "tyre_cover": 606.0,
-                "smart_save": -75.44,
-                "consumable_cover": 433.14
-            },
-            "premium_breakup": {
-                "quote_id": "QVPN122600805",
-                "own_damage": {
-                    "base_premium": 1268.0,
-                    "addons": {
-                        "ncb": -634.0
-                    }
-                },
-                "liability": {
-                    "base_premium": 3416.0
-                },
-                "net_premium": 4050.0,
-                "gst_18_percent": 729.0,
-                "total_premium": 4779.0
+              "windshield_glass": 230.4,
+              "roadside_assistance": 199.0,
+              "smart_save": -64.4,
+              "ncb": -644.0
             }
-        },
-        "third_party_plan": {
-            "plan_name": "Third Party Plan",
-            "premium_summary": {
-                "premium_excluding_gst": 3416.0,
-                "gst_applicable": true
-            },
-            "idv": {
-                "applicable": false,
-                "reason": "IDV is not used for third-party plans"
-            },
-            "addons": {
-                "personal_accident_cover": "Mandatory (₹15L cover)"
-            },
-            "premium_breakup": {
-                "quote_id": "QVPN122600805",
-                "liability": {
-                    "base_premium": 3416.0
-                },
-                "net_premium": 3416.0,
-                "gst_18_percent": 614.88,
-                "total_premium": 4030.88
-            }
+          },
+          "liability": {
+            "base_premium": 3416.0
+          },
+          "net_premium": 4425.0,
+          "gst_18_percent": 796.5,
+          "total_premium": 5221.5
         }
+      },
+      "bumper_to_bumper_plan": {
+        "plan_name": "Bumper to Bumper (Zero Dep Plan)",
+        "premium_summary": {
+          "premium_excluding_gst": 7353.0,
+          "gst_applicable": true
+        },
+        "addons": {
+          "zero_depreciation": 3293.0,
+          "windshield_glass": 204.8,
+          "aggravation_cover": 384.8,
+          "personal_accident_cover": "Mandatory (₹15L cover)",
+          "key_replacement": 100.0,
+          "loss_of_baggage": 100.0,
+          "roadside_assistance": 199.0,
+          "spare_car": 164.0,
+          "towing_cover": 25.0,
+          "tyre_cover": 615.0,
+          "smart_save": -74.76,
+          "consumable_cover": 439.84
+          
+        },
+        "premium_breakup": {
+          "quote_id": "QVPN122610801",
+          "own_damage": {
+            "base_premium": 1288.0,
+            "addons": {
+              "depreciation_waiver": 3293.0,
+              "ncb": -644.0
+            }
+          },
+          "liability": {
+            "base_premium": 3416.0
+          },
+          "net_premium": 7353.0,
+          "gst_18_percent": 1323.54,
+          "total_premium": 8676.54
+        }
+      },
+      "comprehensive_basic": {
+        "plan_name": "Comprehensive Plan Basic",
+        "premium_summary": {
+          "premium_excluding_gst": 4060.0,
+          "gst_applicable": true
+        },
+        "addons": {
+          "zero_depreciation": 3425.0,
+          "aggravation_cover": 384.8,
+          "windshield_glass": 204.8,
+          "personal_accident_cover": "Mandatory (₹15L cover)",
+          "key_replacement": 100.0,
+          "loss_of_baggage": 100.0,
+          "roadside_assistance": 199.0,
+          "spare_car": 164.0,
+          "towing_cover": 25.0,
+          "tyre_cover": 615.0,
+          "smart_save": -74.76,
+          "consumable_cover": 439.84
+        },
+        "premium_breakup": {
+          "quote_id": "QVPN122610801",
+          "own_damage": {
+            "base_premium": 1288.0,
+            "addons": {
+              "ncb": -644.0
+            }
+          },
+          "liability": {
+            "base_premium": 3416.0
+          },
+          "net_premium": 4060.0,
+          "gst_18_percent": 730.8,
+          "total_premium": 4790.8
+        }
+      },
+      "third_party_plan": {
+        "plan_name": "Third Party Plan",
+        "premium_summary": {
+          "premium_excluding_gst": 3416.0,
+          "gst_applicable": true
+        },
+        "idv": {
+          "applicable": false,
+          "reason": "IDV is not used for third-party plans"
+        },
+        "addons": {
+          "personal_accident_cover": "Mandatory (₹15L cover)"
+        },
+        "premium_breakup": {
+          "quote_id": "QVPN122600805",
+          "liability": {
+            "base_premium": 3416.0
+          },
+          "net_premium": 3416.0,
+          "gst_18_percent": 614.88,
+          "total_premium": 4030.88
+        }
+      }
     }
+  
 }
+
+ 
