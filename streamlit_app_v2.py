@@ -9,11 +9,13 @@ from app_v2_utils import (
     get_acko_plans,
     get_cholams_plans,
     get_icici_plans,
+    get_royal_sundaram_plans,
     get_plan_category_label,
     get_unique_makes_models_variants,
     load_acko_data,
     load_cholams_data,
     load_icici_data,
+    load_royal_sundaram_data,
     scan_all_car_data,
 )
 
@@ -253,6 +255,7 @@ def homepage():
             not car_files.get("acko")
             and not car_files.get("icici")
             and not car_files.get("cholams")
+            and not car_files.get("royal_sundaram")
         ):
             st.warning(
                 f"No insurance data found for {selected_make} {selected_model} {selected_variant}"
@@ -303,6 +306,23 @@ def homepage():
                 all_plans_by_insurer["Cholams"] = cholams_plans
             except Exception as e:
                 st.error(f"Error loading Cholams data: {e}")
+
+        royal_sundaram_plans = []
+        if car_files.get("royal_sundaram"):
+            royal_file_info = next(
+                (
+                    f
+                    for f in car_files["royal_sundaram"]
+                    if f.get("claim_status") == "not_claimed"
+                ),
+                car_files["royal_sundaram"][0],
+            )
+            try:
+                royal_data = load_royal_sundaram_data(royal_file_info["file"])
+                royal_sundaram_plans = get_royal_sundaram_plans(royal_data)
+                all_plans_by_insurer["Royal Sundaram"] = royal_sundaram_plans
+            except Exception as e:
+                st.error(f"Error loading Royal Sundaram data: {e}")
 
         # Display plans in accordions grouped by insurer
         for insurer_name, plans in all_plans_by_insurer.items():

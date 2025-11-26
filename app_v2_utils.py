@@ -14,6 +14,11 @@ PLAN_CATEGORY_LABELS = {
 BADGE_TEXTS_TO_REMOVE = {"recommended for your car"}
 
 
+def init_car_file_entry() -> Dict[str, List[Dict[str, Any]]]:
+    """Return default storage structure for car files across insurers."""
+    return {"acko": [], "icici": [], "cholams": [], "royal_sundaram": []}
+
+
 def sanitize_badge_text(badge: Any) -> str:
     """Return cleaned badge text while suppressing unwanted phrases."""
     if not isinstance(badge, str):
@@ -59,7 +64,7 @@ def extract_signed_amount(value: Any) -> float:
 def build_idv_info(*sources: Dict[str, Any]) -> Dict[str, float]:
     """Merge IDV information from multiple sources into a normalized dict."""
     field_map = {
-        "current": ["current_idv", "idv"],
+        "current": ["current_idv", "idv", "default_idv"],
         "recommended": ["recommended_idv"],
         "min": ["min_idv", "idv_min"],
         "max": ["max_idv", "idv_max"],
@@ -256,6 +261,9 @@ def normalize_plan_category(category: str) -> str:
     if value in {"od", "od_plan"}:
         return "od"
 
+    if "bumper" in value:
+        return "comp"
+
     if "comp" in value or "comprehensive" in value:
         return "comp"
 
@@ -298,6 +306,12 @@ def load_icici_data(file_path: str) -> Dict[str, Any]:
 
 def load_cholams_data(file_path: str) -> Dict[str, Any]:
     """Load and parse Cholams insurance data"""
+    with open(file_path, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+def load_royal_sundaram_data(file_path: str) -> Dict[str, Any]:
+    """Load and parse Royal Sundaram insurance data"""
     with open(file_path, "r", encoding="utf-8") as f:
         return json.load(f)
 
@@ -482,6 +496,133 @@ def get_cholams_plans(data: List[Any]) -> List[Dict[str, Any]]:
     return plans
 
 
+def build_royal_sundaram_pricing(plan: Dict[str, Any]) -> Dict[str, Any]:
+    """Build pricing breakdown for Royal Sundaram plans."""
+    pricing = init_pricing_template()
+    if not isinstance(plan, dict):
+        return finalize_pricing_breakdown(pricing)
+
+    premium_breakup = plan.get("premium_breakup", {}) or {}
+    own_damage = premium_breakup.get("own_damage", {}) or {}
+    liability = premium_breakup.get("liability", {}) or {}
+
+    base_od = extract_signed_amount(own_damage.get("base_premium"))
+    liability_base = extract_signed_amount(liability.get("base_premium"))
+    net_premium = extract_signed_amount(premium_breakup.get("net_premium"))
+    gst_amount = extract_signed_amount(
+        premium_breakup.get("gst_18_percent") or premium_breakup.get("gst_amount")
+    )
+    total_premium = extract_signed_amount(premium_breakup.get("total_premium"))
+
+    addons_total = 0.0
+    discount_total = 0.0
+    for name, value in (own_damage.get("add_ons") or {}).items():
+        amount = extract_signed_amount(value)
+        if amount == 0:
+            continue
+        label = name.replace("_", " ").title()
+        entry = {"name": label, "price": amount}
+        if amount > 0:
+            pricing["addons_breakdown"].append(entry)
+            addons_total += amount
+        else:
+            pricing["discount_breakdown"].append(entry)
+            discount_total += amount
+
+    pricing["base_premium"] = base_od if base_od else None
+    od_total = net_premium - liability_base if net_premium and liability_base else None
+    pricing["own_damage_premium"] = od_total if od_total else None
+    pricing["third_party_premium"] = liability_base if liability_base else None
+    pricing["addons_total"] = addons_total if pricing["addons_breakdown"] else None
+    pricing["discounts_total"] = (
+        discount_total if pricing["discount_breakdown"] else None
+    )
+    pricing["gst_amount"] = gst_amount if gst_amount else None
+    pricing["gst_rate"] = "18%" if gst_amount else ""
+    pricing["net_premium"] = net_premium if net_premium else None
+    pricing["total_premium"] = total_premium if total_premium else None
+    pricing["sections"] = []
+
+    return finalize_pricing_breakdown(pricing)
+
+
+def format_selected_addons(selected_addons: Dict[str, Any]) -> List[str]:
+    """Return a readable list of selected addon labels."""
+    benefits = []
+    for key, value in (selected_addons or {}).items():
+        label = key.replace("_", " ").title()
+        value_str = str(value).strip()
+        if not value_str:
+            continue
+        if value_str.lower() in {"yes", "true", "selected"}:
+            benefits.append(label)
+        else:
+            benefits.append(f"{label}: {value_str}")
+    return benefits
+
+
+def normalize_royal_sundaram_addons(addons: Dict[str, Any]) -> List[Any]:
+    """Convert Royal Sundaram addon dict into list for display."""
+    normalized: List[Any] = []
+    for key, value in (addons or {}).items():
+        label = key.replace("_", " ").title()
+        if isinstance(value, (int, float)):
+            normalized.append({"name": label, "price": float(value)})
+        else:
+            normalized.append(f"{label}: {value}")
+    return normalized
+
+
+def get_royal_sundaram_plans(data: Dict[str, Any]) -> List[Dict[str, Any]]:
+    """Extract plans from Royal Sundaram data structure."""
+    if not isinstance(data, dict):
+        return []
+
+    car_details = data.get("car_details", {}) or {}
+    plans_data = data.get("plans", {}) or {}
+    idv_info = build_idv_info(car_details.get("idv", {}), car_details)
+    plans: List[Dict[str, Any]] = []
+
+    for plan_key, plan in plans_data.items():
+        if not isinstance(plan, dict):
+            continue
+
+        plan_name = plan.get("plan_name") or plan_key.replace("_", " ").title()
+        normalized_category = normalize_plan_category(plan_name or plan_key)
+
+        premium_breakup = plan.get("premium_breakup", {}) or {}
+        premium_value = extract_signed_amount(premium_breakup.get("total_premium"))
+        premium_display = (
+            format_premium(premium_value)
+            if premium_value
+            else format_premium(
+                plan.get("premium_summary", {}).get("premium_excluding_gst")
+            )
+        )
+
+        plan_info = {
+            "plan_id": plan_key,
+            "plan_name": plan_name,
+            "category": normalized_category or plan_key,
+            "category_display": get_plan_category_label(
+                normalized_category, plan_name.title()
+            ),
+            "premium_display": premium_display,
+            "premium_value": premium_value,
+            "description": plan.get("description", ""),
+            "is_selected": False,
+            "badge": "",
+            "addons": normalize_royal_sundaram_addons(plan.get("addons")),
+            "benefits": format_selected_addons(plan.get("selected_addons", {})),
+            "insurer": "Royal Sundaram",
+            "idv": idv_info,
+            "pricing_breakdown": build_royal_sundaram_pricing(plan),
+        }
+        plans.append(plan_info)
+
+    return plans
+
+
 def normalize_make_display(make: str) -> str:
     """Normalize make for display (e.g., 'tata' -> 'Tata Motors')"""
     if not make:
@@ -541,12 +682,23 @@ def normalize_make_model(make: str, model: str) -> Tuple[str, str]:
     return make_norm, model_norm
 
 
+def split_model_variant(model_variant: str) -> Tuple[str, str]:
+    """Split model_variant string into approximate model and variant parts."""
+    if not model_variant:
+        return "", ""
+    cleaned = model_variant.strip()
+    parts = re.split(r"\s+-\s+|\s+–\s+|\s+—\s+", cleaned, maxsplit=1)
+    model_part = parts[0].strip()
+    return model_part, cleaned
+
+
 def scan_all_car_data() -> Dict[str, Any]:
     """Scan all data files and extract unique makes, models, and variants"""
     extracted_dir = Path("extracted")
     car_data_map = {}
     icici_data_list = []
     cholams_data_list = []
+    royal_sundaram_data_list = []
 
     acko_dir = extracted_dir / "acko"
     if acko_dir.exists():
@@ -566,7 +718,7 @@ def scan_all_car_data() -> Dict[str, Any]:
             if make and model and variant:
                 key = (make, model, variant)
                 if key not in car_data_map:
-                    car_data_map[key] = {"acko": [], "icici": [], "cholams": []}
+                    car_data_map[key] = init_car_file_entry()
                 car_data_map[key]["acko"].append(
                     {
                         "file": str(file),
@@ -634,6 +786,36 @@ def scan_all_car_data() -> Dict[str, Any]:
                         }
                     )
 
+    royal_sundaram_dir = extracted_dir / "royal_sundaram"
+    if royal_sundaram_dir.exists():
+        for file in royal_sundaram_dir.glob("*.json"):
+            try:
+                data = load_royal_sundaram_data(str(file))
+            except Exception:
+                continue
+            car_details = data.get("car_details", {}) or {}
+            make_raw = car_details.get("manufacturer", "").strip()
+            model_variant_raw = car_details.get("model_variant", "").strip()
+            model_part, variant_part = split_model_variant(model_variant_raw)
+
+            make = normalize_make_display(make_raw) if make_raw else ""
+            model = normalize_model_display(model_part or model_variant_raw)
+            variant = variant_part or model_variant_raw or model
+
+            if make and model:
+                royal_sundaram_data_list.append(
+                    {
+                        "make": make,
+                        "model": model,
+                        "variant": variant,
+                        "file": str(file),
+                        "registration": car_details.get("registration_number", ""),
+                        "claim_status": (
+                            file.stem.split("-")[-1] if "-" in file.stem else ""
+                        ),
+                    }
+                )
+
     for icici_entry in icici_data_list:
         icici_make = icici_entry["make"]
         icici_model = icici_entry["model"]
@@ -668,7 +850,7 @@ def scan_all_car_data() -> Dict[str, Any]:
         if not matched:
             key = (icici_make, icici_model, icici_variant)
             if key not in car_data_map:
-                car_data_map[key] = {"acko": [], "icici": [], "cholams": []}
+                car_data_map[key] = init_car_file_entry()
             car_data_map[key]["icici"].append(
                 {
                     "file": icici_entry["file"],
@@ -710,11 +892,55 @@ def scan_all_car_data() -> Dict[str, Any]:
         if not matched:
             key = (cholams_make, cholams_model, cholams_variant)
             if key not in car_data_map:
-                car_data_map[key] = {"acko": [], "icici": [], "cholams": []}
+                car_data_map[key] = init_car_file_entry()
             car_data_map[key]["cholams"].append(
                 {
                     "file": cholams_entry["file"],
                     "registration": cholams_entry["registration"],
+                }
+            )
+
+    for royal_entry in royal_sundaram_data_list:
+        royal_make = royal_entry["make"]
+        royal_model = royal_entry["model"]
+        royal_variant = royal_entry["variant"]
+        royal_make_norm, royal_model_norm = normalize_make_model(
+            royal_make, royal_model
+        )
+
+        matched = False
+        for (
+            existing_make,
+            existing_model,
+            existing_variant,
+        ), files in car_data_map.items():
+            existing_make_norm, existing_model_norm = normalize_make_model(
+                existing_make, existing_model
+            )
+
+            if existing_make_norm == royal_make_norm and (
+                existing_model_norm in royal_model_norm
+                or royal_model_norm in existing_model_norm
+            ):
+                files["royal_sundaram"].append(
+                    {
+                        "file": royal_entry["file"],
+                        "registration": royal_entry["registration"],
+                        "claim_status": royal_entry["claim_status"],
+                    }
+                )
+                matched = True
+                break
+
+        if not matched:
+            key = (royal_make, royal_model, royal_variant)
+            if key not in car_data_map:
+                car_data_map[key] = init_car_file_entry()
+            car_data_map[key]["royal_sundaram"].append(
+                {
+                    "file": royal_entry["file"],
+                    "registration": royal_entry["registration"],
+                    "claim_status": royal_entry["claim_status"],
                 }
             )
 

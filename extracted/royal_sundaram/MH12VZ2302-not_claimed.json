@@ -1,0 +1,175 @@
+{
+    "car_details": {
+        "registration_number": "MH12VZ2302",
+        "manufacturer": "TATA MOTORS LTD.",
+        "model_variant": "NEXON SMART 1.2 BSVI-5 Seater",
+        "model_year": "2023",
+        "fuel_type": "Petrol",
+        "rto_name": "MH12-PUNE",
+        "ncb_percentage": "25%",
+        "idv": {
+            "default_idv": 603077,
+            "min_idv": 542769.3,
+            "max_idv": 663384.7
+        }
+    },
+    "plans": {
+        "comprehensive_plan": {
+            "plan_name": "Comprehensive Plan",
+            "premium_summary": {
+                "premium_excluding_gst": 5593.2,
+                "gst_applicable": true
+            },
+            "addons": {
+                "roadside_assistance": 199.0,
+                "smart_save": -63.4,
+                "windshield_glass": 433.8,
+                "pay_as_you_drive": "Available",
+                "zero_depreciation": 2661.0,
+                "engine_protection": 482.4,
+                "personal_accident_cover": "Mandatory",
+                "key_replacement": 116.0,
+                "loss_of_baggage": 100.0,
+                "spare_car": 184.0,
+                "towing_cover": 25.0,
+                "tyre_cover": 434.0,
+                "consumable_cover": 542.02
+            },
+            "premium_breakup": {
+                "quote_id": "QVPN122601237",
+                "own_damage": {
+                    "base_premium": 2376.0,
+                    "addons": {
+                        "windshield_glass": 433.8,
+                        "roadside_assistance": 199.0,
+                        "smart_save": -63.4,
+                        "ncb": -831.6
+                    }
+                },
+                "liability": {
+                    "base_premium": 3416.0
+                },
+                "net_premium": 5593.2,
+                "gst_18_percent": 1006.74,
+                "total_premium": 6599.74
+            }
+        },
+        "bumper_to_bumper_plan": {
+            "plan_name": "Bumper to Bumper Cover",
+            "premium_summary": {
+                "premium_excluding_gst": 7565.4,
+                "gst_applicable": true
+            },
+            "addons": {
+                "depreciation_waiver": 2605.0,
+                "engine_protection": 482.4,
+                "windshield_glass": 385.6,
+                "key_replacement": 116.0,
+                "loss_of_baggage": 100.0,
+                "roadside_assistance": 199.0,
+                "spare_car": 184.0,
+                "towing_cover": 25.0,
+                "tyre_cover": 434.0,
+                "smart_save": -73.0,
+                "consumable_cover": 542.02,
+                "personal_accident_cover": "Mandatory"
+            },
+            "premium_breakup": {
+                "quote_id": "QVPN122601237",
+                "own_damage": {
+                    "base_premium": 2376.0,
+                    "addons": {
+                        "depreciation_waiver": 2605.0,
+                        "ncb": -831.6
+                    }
+                },
+                "liability": {
+                    "base_premium": 3416.0
+                },
+                "net_premium": 7565.4,
+                "gst_18_percent": 1361.7,
+                "total_premium": 8926.7
+            }
+        },
+        "comprehensive_basic": {
+            "plan_name": "Comprehensive Plan Basic",
+            "premium_summary": {
+                "premium_excluding_gst": 4960.4,
+                "gst_applicable": true
+            },
+            "addons": {
+                "roadside_assistance": 199.0,
+                "windshield_glass": 385.6,
+                "smart_save": -73.0,
+                "personal_accident_cover": "Mandatory",
+                "key_replacement": 116.0,
+                "loss_of_baggage": 100.0,
+                "spare_car": 184.0,
+                "towing_cover": 25.0,
+                "tyre_cover": 434.0,
+                "consumable_cover": 542.02
+            },
+            "premium_breakup": {
+                "quote_id": "QVPN122601237",
+                "own_damage": {
+                    "base_premium": 2376.0,
+                    "addons": {
+                        "ncb": -831.6
+                    }
+                },
+                "liability": {
+                    "base_premium": 3416.0
+                },
+                "net_premium": 4960.4,
+                "gst_18_percent": 892.8,
+                "total_premium": 5852.8
+            }
+        },
+        "third_party_plan": {
+            "plan_name": "Third Party Plan",
+            "premium_summary": {
+                "premium_excluding_gst": 3416.0,
+                "gst_applicable": true
+            },
+            "idv": {
+                "applicable": false,
+                "reason": "IDV is not used for third-party plans"
+            },
+            "addons": {
+                "personal_accident_cover": "Mandatory (₹15L cover)"
+            },
+            "premium_breakup": {
+                "quote_id": "QVPN122601237",
+                "liability": {
+                    "base_premium": 3416.0
+                },
+                "net_premium": 3416.0,
+                "gst_18_percent": 614.88,
+                "total_premium": 4030.88
+            }
+        },
+        "own_damage_plan": {
+            "plan_name": "Own Damage Plan",
+            "premium_summary": {
+                "premium_excluding_gst": 1673.1,
+                "gst_applicable": true
+            },
+            "addons": {
+                "personal_accident_cover": "Mandatory",
+                "ncb": -900.9
+            },
+            "premium_breakup": {
+                "quote_id": "QVPN122601237",
+                "own_damage": {
+                    "base_premium": 2574.0,
+                    "addons": {
+                        "ncb": -900.9
+                    }
+                },
+                "net_premium": 1673.1,
+                "gst_18_percent": 301.14,
+                "total_premium": 1974.14
+            }
+        }
+    }
+}
