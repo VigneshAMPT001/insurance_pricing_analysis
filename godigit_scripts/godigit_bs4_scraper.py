@@ -1,8 +1,20 @@
 import json
 from pathlib import Path
 from bs4 import BeautifulSoup
+import re
+
+
 # -----------------------------------------------------------
-# 1. SCRAPE PLAN INFO (<p id="ComprehensiveWithPiCoverPlanInfo">)
+# CLEANER → RETURNS ONLY PURE NUMERIC VALUE (e.g., 8,538 → "8538")
+# -----------------------------------------------------------
+def clean_price(value):
+    if not value:
+        return None
+    return re.sub(r"[^\d-]", "", value)   # keep only digits & minus sign
+
+
+# -----------------------------------------------------------
+# 1. SCRAPE PLAN INFO
 # -----------------------------------------------------------
 def scrape_plan_info(html):
     soup = BeautifulSoup(html, "html.parser")
@@ -16,13 +28,14 @@ def scrape_plan_info(html):
 
 
 # -----------------------------------------------------------
-# 2. HANDLE FOOTER PREMIUM BLOCK + CLICK CONTINUE BUTTON
+# 2. HANDLE FOOTER PREMIUM BLOCK + CONTINUE
 # -----------------------------------------------------------
 async def handle_footer_premium_and_continue(page):
     await page.wait_for_selector("#continue-btn", timeout=15000)
 
-    actual_premium = await page.locator("#actualPremiumAmount").inner_text()
-    discounted_premium = await page.locator("#premiumAmount").inner_text()
+    # CLEANED HERE
+    actual_premium = clean_price(await page.locator("#actualPremiumAmount").inner_text())
+    discounted_premium = clean_price(await page.locator("#premiumAmount").inner_text())
     gst_msg = await page.locator("#gstTextMessage").inner_text()
 
     print("🔵 Premium Details Extracted:")
@@ -61,7 +74,6 @@ def scrape_plan_card(html):
                 details.append(text)
 
     plan_data["details"] = details
-
     return plan_data
 
 
@@ -100,16 +112,17 @@ def scrape_idv_block(html):
     result = {}
 
     idv_value_tag = soup.select_one(".idv-content-container span.notranslate")
-    result["idv_value"] = idv_value_tag.get_text(strip=True) if idv_value_tag else None
+    result["idv_value"] = clean_price(idv_value_tag.get_text(strip=True)) if idv_value_tag else None
 
     user_range_tag = soup.find("p", class_="motor-idv-titl-text")
     result["popular_range"] = user_range_tag.get_text(strip=True) if user_range_tag else None
 
+    # CLEANED VALUES
     min_tag = soup.find("div", id="minValue")
     max_tag = soup.find("div", id="maxValue")
 
-    result["min_idv"] = min_tag.get_text(strip=True).replace("₹", "").replace(",", "") if min_tag else None
-    result["max_idv"] = max_tag.get_text(strip=True).replace("₹", "").replace(",", "") if max_tag else None
+    result["min_idv"] = clean_price(min_tag.get_text(strip=True)) if min_tag else None
+    result["max_idv"] = clean_price(max_tag.get_text(strip=True)) if max_tag else None
 
     slider_handle = soup.select_one(".p-slider-handle")
     if slider_handle:
@@ -142,9 +155,7 @@ async def select_addon_package(page, package_name: str):
     package_selector = package_ids[package_name]
 
     await page.wait_for_selector(package_selector, timeout=15000)
-
     await page.locator(package_selector).scroll_into_view_if_needed()
-
     await page.locator(f"{package_selector} .select-btn").click()
 
     print(f"🟢 Selected Add-on Package: {package_name}")
@@ -180,10 +191,30 @@ async def handle_claim_ncb_and_ownership(page):
 
 
 # -----------------------------------------------------------
-# Example usage for local HTML testing
+# 8. PARSE FOOTER PREMIUM BLOCK (BS4) CLEANED
+# -----------------------------------------------------------
+def parse_comprehensive_plan_footer(html):
+    soup = BeautifulSoup(html, "html.parser")
+
+    data = {}
+
+    actual = soup.find("p", id="actualPremiumAmount")
+    data["actual_premium"] = clean_price(actual.get_text(strip=True)) if actual else None
+
+    discounted = soup.find("p", id="premiumAmount")
+    data["discounted_premium"] = clean_price(discounted.get_text(strip=True)) if discounted else None
+
+    gst = soup.find("p", id="gstTextMessage")
+    data["gst_text"] = gst.get_text(strip=True) if gst else None
+
+    return data
+
+
+# -----------------------------------------------------------
+# 9. LOCAL HTML TESTING (ONLY BS4)
 # -----------------------------------------------------------
 if __name__ == "__main__":
-    html_file_path = Path("godigit_scripts/godigit.html")
+    html_file_path = Path("/home/ampara/Documents/insurance_pricing_analysis/godigit_scripts/go.html")
     with open(html_file_path, "r", encoding="utf-8") as f:
         html_content = f.read()
 
@@ -198,3 +229,6 @@ if __name__ == "__main__":
 
     print("=== IDV BLOCK ===")
     print(json.dumps(scrape_idv_block(html_content), indent=2))
+
+    print("=== PREMIUM FOOTER ===")
+    print(json.dumps(parse_comprehensive_plan_footer(html_content), indent=2))
