@@ -20,12 +20,12 @@ async def main():
         page = await context.new_page()
 
         print("🌍 Opening website...")
-        await page.goto(BASE_URL, wait_until="domcontentloaded")
+        await page.goto(BASE_URL)
 
-        print("🚗 Navigating to Car Insurance...")
-        await page.click('a[href*="car-insurance"]', timeout=15000)
+        # print("🚗 Navigating to Car Insurance...")
+        # await page.click('a[href*="car-insurance"]', timeout=15000)
         await page.wait_for_load_state("domcontentloaded")
-        await asyncio.sleep(2)
+        # await asyncio.sleep(2)
 
         print("\n🟡 Filling Registration Number...")
         reg = page.locator("input[placeholder*='E.g'], input[placeholder*='Registration']")
@@ -49,8 +49,8 @@ async def main():
         print("🟢 Detected CAPTCHA iframe. Please tick the CAPTCHA manually...")
 
         # Wait for validation checkmark in DOM
-        await page.wait_for_selector("text=verified", timeout=None)
-        print("✔ CAPTCHA solved by user")
+        # await page.wait_for_selector("text=verified", timeout=None)
+        # print("✔ CAPTCHA solved by user")
 
         print("\n🔵 Clicking View Prices button...")
         await page.click("button:has-text('View Prices')")
