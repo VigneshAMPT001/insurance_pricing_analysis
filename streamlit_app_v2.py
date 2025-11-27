@@ -196,10 +196,18 @@ def homepage():
         "Select your car to view all available insurance plans from different insurers"
     )
 
-    # Initialize session state
+    # JSON view for car data map (for debugging or exploration)
     if "car_data_map" not in st.session_state:
         with st.spinner("Loading car data..."):
             st.session_state.car_data_map = scan_all_car_data()
+
+    # # JSON/dict preview: show as list of strings of the key triple, to avoid serialization error
+    # car_data_map_preview = [
+    #     f"{make} | {model} | {variant}:\n{files}"
+    #     for (make, model, variant), files in st.session_state.car_data_map.items()
+    # ]
+    # st.write("Car data map keys and files:")
+    # st.write(car_data_map_preview)
 
     car_data_map = st.session_state.car_data_map
 
@@ -502,7 +510,7 @@ def comparison_page():
                 "Type": plan.get("category_display")
                 or plan.get("category", "").upper(),
                 "Premium": format_premium(plan.get("premium_value", 0)),
-                "Badge": plan.get("badge", ""),
+                # "Badge": plan.get("badge", ""),
             }
         )
 

@@ -292,28 +292,17 @@ def extract_premium_value(premium_str: str) -> float:
     return 0.0
 
 
-def load_acko_data(file_path: str) -> Dict[str, Any]:
-    """Load and parse Acko insurance data"""
+def load_json_data(file_path: str) -> Dict[str, Any]:
+    """Load and parse JSON insurance data from a file"""
     with open(file_path, "r", encoding="utf-8") as f:
         return json.load(f)
 
 
-def load_icici_data(file_path: str) -> Dict[str, Any]:
-    """Load and parse ICICI insurance data"""
-    with open(file_path, "r", encoding="utf-8") as f:
-        return json.load(f)
-
-
-def load_cholams_data(file_path: str) -> Dict[str, Any]:
-    """Load and parse Cholams insurance data"""
-    with open(file_path, "r", encoding="utf-8") as f:
-        return json.load(f)
-
-
-def load_royal_sundaram_data(file_path: str) -> Dict[str, Any]:
-    """Load and parse Royal Sundaram insurance data"""
-    with open(file_path, "r", encoding="utf-8") as f:
-        return json.load(f)
+# Aliases for backwards compatibility or readability
+load_acko_data = load_json_data
+load_icici_data = load_json_data
+load_cholams_data = load_json_data
+load_royal_sundaram_data = load_json_data
 
 
 def get_acko_plans(data: Dict[str, Any]) -> List[Dict[str, Any]]:
@@ -655,10 +644,8 @@ def normalize_model_display(model: str) -> str:
     if "nexon" in model_lower:
         return "Nexon"
 
-    if "active" in model_lower:
-        return "Active I20"
-    if "elite" in model_lower:
-        return "Elite I20"
+    if "i20" or "i 20" in model_lower:
+        return "I20"
     if not model:
         return ""
     return model.strip().title()
@@ -666,30 +653,91 @@ def normalize_model_display(model: str) -> str:
 
 def normalize_make_model(make: str, model: str) -> Tuple[str, str]:
     """Normalize make and model names for matching (returns normalized keys)"""
-    make_norm = make.strip().lower()
-    model_norm = model.strip().lower()
-
-    make_mappings = {
-        "tata motors": "tata",
-        "tata": "tata",
-    }
-
-    for key, value in make_mappings.items():
-        if key in make_norm:
-            make_norm = value
-            break
+    make_norm = normalize_make_display(make)
+    model_norm = normalize_model_display(model)
 
     return make_norm, model_norm
 
 
 def split_model_variant(model_variant: str) -> Tuple[str, str]:
-    """Split model_variant string into approximate model and variant parts."""
     if not model_variant:
         return "", ""
+
     cleaned = model_variant.strip()
-    parts = re.split(r"\s+-\s+|\s+–\s+|\s+—\s+", cleaned, maxsplit=1)
-    model_part = parts[0].strip()
-    return model_part, cleaned
+
+    # Normalized model (e.g. "I 20" -> "I20")
+    model = normalize_model_display(cleaned).strip()
+
+    # Build a flexible regex: allow spaces between every character
+    # Example: "I20" -> "I\s*2\s*0"
+    spaced_pattern = r"\s*".join(map(re.escape, model))
+
+    # Remove the model from the beginning OR anywhere in string
+    pattern = re.compile(rf"^{spaced_pattern}[\s\-:–—]*", re.IGNORECASE)
+
+    variant = pattern.sub("", cleaned).strip()
+
+    return model, variant
+
+
+def merge_insurer_data_into_car_map(
+    car_data_map,
+    insurer_data_list,
+    insurer_key,
+    entry_fields,
+    extra_fields_func=None,
+):
+    """
+    Merges data from a given insurer's data list into the car_data_map.
+
+    Args:
+        car_data_map (dict): The destination data map to update.
+        insurer_data_list (list): List of insurer entry dicts.
+        insurer_key (str): The key in car_data_map to use (e.g. "icici").
+        entry_fields (list): List of fields to store, e.g. ["file", "registration"].
+        extra_fields_func (callable, optional): If set, takes the entry and returns a dict of extra fields to add.
+    """
+    for entry in insurer_data_list:
+        make = entry["make"]
+        model = entry["model"]
+        variant = entry["variant"]
+        make_norm, model_norm = normalize_make_model(make, model)
+
+        matched = False
+        for (
+            existing_make,
+            existing_model,
+            existing_variant,
+        ), files in car_data_map.items():
+            existing_make_norm, existing_model_norm = normalize_make_model(
+                existing_make, existing_model
+            )
+            if (
+                existing_make_norm == make_norm
+                and (
+                    existing_model_norm in model_norm
+                    or model_norm in existing_model_norm
+                )
+                and (
+                    existing_variant == variant
+                    or variant in existing_variant
+                    or existing_variant in variant
+                )
+            ):
+                data_dict = {field: entry[field] for field in entry_fields}
+                if extra_fields_func:
+                    data_dict.update(extra_fields_func(entry))
+                files[insurer_key].append(data_dict)
+                matched = True
+                break
+        if not matched:
+            key = (make, model, variant)
+            if key not in car_data_map:
+                car_data_map[key] = init_car_file_entry()
+            data_dict = {field: entry[field] for field in entry_fields}
+            if extra_fields_func:
+                data_dict.update(extra_fields_func(entry))
+            car_data_map[key][insurer_key].append(data_dict)
 
 
 def scan_all_car_data() -> Dict[str, Any]:
@@ -710,10 +758,11 @@ def scan_all_car_data() -> Dict[str, Any]:
             car_info = data.get("car_info", {})
             make_raw = car_info.get("vehicle_make", "").strip()
             model_raw = car_info.get("vehicle_model", "").strip()
-            variant = car_info.get("vehicle_variant", "").strip()
+            variant_raw = car_info.get("vehicle_variant", "").strip()
 
-            make = normalize_make_display(make_raw) if make_raw else ""
-            model = normalize_model_display(model_raw) if model_raw else ""
+            make = normalize_make_display(make_raw)
+            model = normalize_model_display(model_raw)
+            _, variant = split_model_variant(variant_raw)
 
             if make and model and variant:
                 key = (make, model, variant)
@@ -741,9 +790,9 @@ def scan_all_car_data() -> Dict[str, Any]:
             make_raw = data.get("manufacturer", "").strip()
             model_raw = data.get("model", "").strip()
 
-            make = normalize_make_display(make_raw) if make_raw else ""
-            model = normalize_model_display(model_raw) if model_raw else ""
-            variant = model
+            make = normalize_make_display(make_raw)
+            model = normalize_model_display(model_raw)
+            _, variant = split_model_variant(model_raw)
 
             if make and model:
                 icici_data_list.append(
@@ -771,9 +820,9 @@ def scan_all_car_data() -> Dict[str, Any]:
                 model_raw = car_info.get("model", "").strip()
                 variant_raw = car_info.get("variant", "").strip()
 
-                make = normalize_make_display(make_raw) if make_raw else ""
-                model = normalize_model_display(model_raw) if model_raw else ""
-                variant = variant_raw if variant_raw else model
+                make = normalize_make_display(make_raw)
+                model = normalize_model_display(model_raw)
+                _, variant = split_model_variant(variant_raw)
 
                 if make and model:
                     cholams_data_list.append(
@@ -798,9 +847,9 @@ def scan_all_car_data() -> Dict[str, Any]:
             model_variant_raw = car_details.get("model_variant", "").strip()
             model_part, variant_part = split_model_variant(model_variant_raw)
 
-            make = normalize_make_display(make_raw) if make_raw else ""
-            model = normalize_model_display(model_part or model_variant_raw)
-            variant = variant_part or model_variant_raw or model
+            make = normalize_make_display(make_raw)
+            model = normalize_model_display(model_part)
+            variant = variant_part
 
             if make and model:
                 royal_sundaram_data_list.append(
@@ -816,133 +865,25 @@ def scan_all_car_data() -> Dict[str, Any]:
                     }
                 )
 
-    for icici_entry in icici_data_list:
-        icici_make = icici_entry["make"]
-        icici_model = icici_entry["model"]
-        icici_variant = icici_entry["variant"]
-        icici_make_norm, icici_model_norm = normalize_make_model(
-            icici_make, icici_model
-        )
-
-        matched = False
-        for (
-            existing_make,
-            existing_model,
-            existing_variant,
-        ), files in car_data_map.items():
-            existing_make_norm, existing_model_norm = normalize_make_model(
-                existing_make, existing_model
-            )
-
-            if existing_make_norm == icici_make_norm and (
-                existing_model_norm in icici_model_norm
-                or icici_model_norm in existing_model_norm
-            ):
-                files["icici"].append(
-                    {
-                        "file": icici_entry["file"],
-                        "registration": icici_entry["registration"],
-                    }
-                )
-                matched = True
-                break
-
-        if not matched:
-            key = (icici_make, icici_model, icici_variant)
-            if key not in car_data_map:
-                car_data_map[key] = init_car_file_entry()
-            car_data_map[key]["icici"].append(
-                {
-                    "file": icici_entry["file"],
-                    "registration": icici_entry["registration"],
-                }
-            )
-
-    for cholams_entry in cholams_data_list:
-        cholams_make = cholams_entry["make"]
-        cholams_model = cholams_entry["model"]
-        cholams_variant = cholams_entry["variant"]
-        cholams_make_norm, cholams_model_norm = normalize_make_model(
-            cholams_make, cholams_model
-        )
-
-        matched = False
-        for (
-            existing_make,
-            existing_model,
-            existing_variant,
-        ), files in car_data_map.items():
-            existing_make_norm, existing_model_norm = normalize_make_model(
-                existing_make, existing_model
-            )
-
-            if existing_make_norm == cholams_make_norm and (
-                existing_model_norm in cholams_model_norm
-                or cholams_model_norm in existing_model_norm
-            ):
-                files["cholams"].append(
-                    {
-                        "file": cholams_entry["file"],
-                        "registration": cholams_entry["registration"],
-                    }
-                )
-                matched = True
-                break
-
-        if not matched:
-            key = (cholams_make, cholams_model, cholams_variant)
-            if key not in car_data_map:
-                car_data_map[key] = init_car_file_entry()
-            car_data_map[key]["cholams"].append(
-                {
-                    "file": cholams_entry["file"],
-                    "registration": cholams_entry["registration"],
-                }
-            )
-
-    for royal_entry in royal_sundaram_data_list:
-        royal_make = royal_entry["make"]
-        royal_model = royal_entry["model"]
-        royal_variant = royal_entry["variant"]
-        royal_make_norm, royal_model_norm = normalize_make_model(
-            royal_make, royal_model
-        )
-
-        matched = False
-        for (
-            existing_make,
-            existing_model,
-            existing_variant,
-        ), files in car_data_map.items():
-            existing_make_norm, existing_model_norm = normalize_make_model(
-                existing_make, existing_model
-            )
-
-            if existing_make_norm == royal_make_norm and (
-                existing_model_norm in royal_model_norm
-                or royal_model_norm in existing_model_norm
-            ):
-                files["royal_sundaram"].append(
-                    {
-                        "file": royal_entry["file"],
-                        "registration": royal_entry["registration"],
-                        "claim_status": royal_entry["claim_status"],
-                    }
-                )
-                matched = True
-                break
-
-        if not matched:
-            key = (royal_make, royal_model, royal_variant)
-            if key not in car_data_map:
-                car_data_map[key] = init_car_file_entry()
-            car_data_map[key]["royal_sundaram"].append(
-                {
-                    "file": royal_entry["file"],
-                    "registration": royal_entry["registration"],
-                    "claim_status": royal_entry["claim_status"],
-                }
-            )
+    merge_insurer_data_into_car_map(
+        car_data_map,
+        icici_data_list,
+        "icici",
+        ["file", "registration"],
+    )
+    merge_insurer_data_into_car_map(
+        car_data_map,
+        cholams_data_list,
+        "cholams",
+        ["file", "registration"],
+    )
+    merge_insurer_data_into_car_map(
+        car_data_map,
+        royal_sundaram_data_list,
+        "royal_sundaram",
+        ["file", "registration"],
+        extra_fields_func=lambda entry: {"claim_status": entry["claim_status"]},
+    )
 
     return car_data_map
 
