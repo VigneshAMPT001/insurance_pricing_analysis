@@ -1,6 +1,10 @@
 import asyncio
 import sys
 from playwright.async_api import async_playwright
+import json
+
+from godigit_scripts.bs4_flow import scrape_plan_info
+from godigit_scripts.godigit_bs4_scraper import parse_comprehensive_plan_footer, scrape_idv_block, scrape_plan_card, scrape_policy_durations
 
 BASE_URL = "https://www.godigit.com/"
 REG_NO = "MH04KW1827"
@@ -240,6 +244,21 @@ async def main():
             first_plan_btn = plan_section.locator("button:has-text('Select Plan')").first
             await click_force_js(page, first_plan_btn)
             print("✔ First plan selected!")
+            html_content = await page.content()
+            print("=== PLAN INFO ===")
+            print(json.dumps(scrape_plan_info(html_content), indent=2))
+
+            print("=== PLAN CARD ===")
+            print(json.dumps(scrape_plan_card(html_content), indent=2))
+
+            print("=== POLICY DURATIONS ===")
+            print(json.dumps(scrape_policy_durations(html_content), indent=2))
+
+            print("=== IDV BLOCK ===")
+            print(json.dumps(scrape_idv_block(html_content), indent=2))
+
+            print("=== PREMIUM FOOTER ===")
+            print(json.dumps(parse_comprehensive_plan_footer(html_content), indent=2))
         except:
             print("⚠ Could not select a plan")
 
