@@ -12,7 +12,7 @@ from icic_bs4_scraper import (
 )
 
 HOME_URL = "https://www.icicilombard.com/"
-CAR_NUMBER = "KA03NV1947"
+CAR_NUMBER = "MH04KW1827"
 MOBILE = "8514646225"
 EMAIL = "vignesh27@gmail.com"
 
@@ -84,26 +84,15 @@ async def refresh_button(page: Page, index: int):
     return None
 
 
-async def click_through_plan_types_and_buttons(page: Page) -> List[Dict[str, Any]]:
-    """
-    Stable scraper:
-    - Iterates plan type radio buttons
-    - For each plan type, iterates plan buttons
-    - Extracts HTML for every combination
-    """
-    plans = []
-    premiums = []
-    scraped_plans = {}
-
+async def get_all_plans(page: Page):
     print("\n>>> Locating plan type radio buttons...")
     # Count them (NEVER store node handles!)
     total_radio_groups = await page.locator("div.il-radio-group").count()
     print(f">>> Total plan types found = {total_radio_groups}")
+    return total_radio_groups
 
-    # ----------------------------------------------------------------------
-    # OUTER LOOP: PLAN TYPES
-    # ----------------------------------------------------------------------
 
+async def reveal_addons_cover(page: Page):
     # Click all <a> tags inside <span.down-arrow> to reveal add cover details, if present
     try:
         down_arrows = await page.query_selector_all("span.down-arrow a.js_showaddCover")
@@ -116,6 +105,8 @@ async def click_through_plan_types_and_buttons(page: Page) -> List[Dict[str, Any
     except Exception as e:
         print(f"Error finding down-arrow to show add cover: {e}")
 
+
+async def dismiss_vehicle_inspection_model(page: Page):
     try:
         popup_selector = "div.car-panel-content.bg-white.active"
         ok_button_selector = "a.ui-close-slide.triggerClick.ng-star-inserted"
@@ -129,9 +120,30 @@ async def click_through_plan_types_and_buttons(page: Page) -> List[Dict[str, Any
             # Wait for popup to disappear
             await page.wait_for_selector(popup_selector, state="hidden", timeout=10000)
             print(">>> Vehicle Inspection popup dismissed.")
-
     except Exception as e:
         print(f">>> No Vehicle Inspection popup detected or error occurred: {e}")
+
+
+async def click_through_plan_types_and_buttons(page: Page) -> List[Dict[str, Any]]:
+    """
+    Stable scraper:
+    - Iterates plan type radio buttons
+    - For each plan type, iterates plan buttons
+    - Extracts HTML for every combination
+    """
+    plans = []
+    premiums = []
+    scraped_plans = {}
+
+    total_radio_groups = await get_all_plans(page)
+
+    await dismiss_vehicle_inspection_model(page)
+
+    await reveal_addons_cover(page)
+
+    # ----------------------------------------------------------------------
+    # OUTER LOOP: PLAN TYPES
+    # ----------------------------------------------------------------------
 
     for radio_idx in range(total_radio_groups):
 
@@ -167,7 +179,7 @@ async def click_through_plan_types_and_buttons(page: Page) -> List[Dict[str, Any
             print(f">>> Failed to select plan type '{label_text}': {e}")
             continue
 
-        html_plan_details = await page.content()
+        html_plan_details = await get_html(page)  # page.content()
 
         scraped_plans[label_text] = scrape_icic_plans(html_plan_details)
         plans.append(scraped_plans)
@@ -218,7 +230,7 @@ async def click_through_plan_types_and_buttons(page: Page) -> List[Dict[str, Any
             # -----------------------------
             # SCRAPE HTML
             # -----------------------------
-            html_premium_expanded = await page.content()
+            html_premium_expanded = await get_html(page)  # page.content()
 
             premium_data = scrape_icic_plan_premium(html_premium_expanded)
 
@@ -266,6 +278,53 @@ def handle_response(response):
         asyncio.create_task(save_json())
 
 
+async def dismiss_initial_vehicle_inspection(page: Page):
+    # If "Vehicle Inspection" popup is present, click the Ok button before proceeding
+    try:
+        # Wait for either the popup or main content to appear, do not block too long
+        popup_selector = "div#break-case-odpolicy.js-popup-wrap.active"
+        ok_button_selector = f"{popup_selector} .primary-btn"
+
+        # Check if the popup is visible
+        if await page.locator(popup_selector).is_visible(timeout=3000):
+            print(">>> 'Vehicle Inspection' popup detected. Clicking Ok to proceed...")
+            await page.locator(ok_button_selector).click()
+            # Wait for popup to disappear before proceeding
+            await page.wait_for_selector(popup_selector, state="hidden", timeout=10000)
+            print(">>> Vehicle Inspection popup dismissed.")
+    except Exception as e:
+        print(f">>> No Vehicle Inspection popup detected or error occurred: {e}")
+
+
+async def open_close_idv_popup(page: Page, car_details: Dict):
+    updated_details = car_details.copy()
+    try:
+        # --- Min/Max IDV ---
+        edit_button = page.locator(
+            "div.idv-range-slider", has_text="Insured declared value"
+        ).locator("a.link-btn")
+        await edit_button.click(force=True)
+
+        html_idv_popup = await get_html(page)
+
+        await page.locator("#idvPopup a.close.js-popup-close.triggerClick").click()
+
+        # Copy car_details to avoid mutating the input dictionary
+        recommended, min_idv, max_idv = extract_idv_values(html_idv_popup)
+        updated_details["idv"] = recommended
+        updated_details["idv_min"] = min_idv
+        updated_details["idv_max"] = max_idv
+    except Exception as e:
+        print(f">>> Error opening/closing IDV popup: {e}")
+        return updated_details
+
+    return updated_details
+
+
+async def get_html(page: Page) -> str:
+    return await page.content()
+
+
 async def run():
     output_path = Path("extracted/icici")
     async with async_playwright() as p:
@@ -304,47 +363,16 @@ async def run():
         # ------------------------------------------------------
         print(">>> Waiting for page to load...")
         await page.wait_for_load_state("networkidle", timeout=30000)
-        await asyncio.sleep(3)  # Extra wait to ensure dynamic content loads
 
-        # If "Vehicle Inspection" popup is present, click the Ok button before proceeding
-        try:
-            # Wait for either the popup or main content to appear, do not block too long
-            popup_selector = "div#break-case-odpolicy.js-popup-wrap.active"
-            ok_button_selector = f"{popup_selector} .primary-btn"
+        await dismiss_initial_vehicle_inspection(page)
 
-            # Check if the popup is visible
-            if await page.locator(popup_selector).is_visible(timeout=3000):
-                print(
-                    ">>> 'Vehicle Inspection' popup detected. Clicking Ok to proceed..."
-                )
-                await page.locator(ok_button_selector).click()
-                # Wait for popup to disappear before proceeding
-                await page.wait_for_selector(
-                    popup_selector, state="hidden", timeout=10000
-                )
-                print(">>> Vehicle Inspection popup dismissed.")
-        except Exception as e:
-            print(f">>> No Vehicle Inspection popup detected or error occurred: {e}")
+        await page.wait_for_timeout(10000)
 
-        html_car_details = await page.content()
+        html_car_details = await get_html(page)  # page.content()
 
         car_details = extract_icici_car_details(html_car_details)
 
-        # --- Min/Max IDV ---
-        edit_button = page.locator(
-            "div.idv-range-slider", has_text="Insured declared value"
-        ).locator("a.link-btn")
-        await edit_button.click(force=True)
-        html_idv_popup = await page.content()
-        recommended, min_idv, max_idv = extract_idv_values(html_idv_popup)
-        car_details["idv"] = recommended
-        car_details["idv_min"] = min_idv
-        car_details["idv_max"] = max_idv
-        await page.locator("#idvPopup a.close.js-popup-close.triggerClick").click()
-
-        print("Recommended IDV:", recommended)
-        print("Min IDV:", min_idv)
-        print("Max IDV:", max_idv)
+        car_details = await open_close_idv_popup(page, car_details)
 
         # ------------------------------------------------------
         # CLICK THROUGH PLAN TYPES AND BUTTONS
@@ -357,7 +385,7 @@ async def run():
         # ------------------------------------------------------
         # SAVE ALL SCRAPED DATA
         # ------------------------------------------------------
-        output_file = f"{output_path}/{CAR_NUMBER}-not_claimed.json"
+        output_file = f"{output_path}/{CAR_NUMBER}-claimed.json"
         with open(output_file, "w", encoding="utf-8") as f:
             json.dump(car_details, f, indent=4, ensure_ascii=False)
         print(f">>> All scraped data saved to: {output_file} ✔")

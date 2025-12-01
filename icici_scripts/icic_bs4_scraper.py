@@ -8,6 +8,10 @@ from typing import Dict, List, Optional, Any
 from bs4 import BeautifulSoup
 
 
+def get_soup(html: str):
+    return BeautifulSoup(html, "html.parser")
+
+
 def extract_idv_values(html: str):
     """
     Extract recommended IDV, minimum IDV, and maximum IDV from the IDV popup HTML.
@@ -21,7 +25,7 @@ def extract_idv_values(html: str):
         s = re.sub(r"[^\d]", "", s)
         return int(s) if s else None
 
-    soup = BeautifulSoup(html, "html.parser")
+    soup = get_soup(html)
 
     # ---- Step 1: Identify popup ----
     popup = soup.find("div", {"id": "idvPopup"})
@@ -91,7 +95,7 @@ def extract_idv_values(html: str):
 
 
 def extract_icici_car_details(html):
-    soup = BeautifulSoup(html, "html.parser")
+    soup = get_soup(html)
 
     vehicle_section = soup.find("app-vehicle-details")
     if vehicle_section is None:
@@ -333,7 +337,7 @@ def scrape_icic_plans(html_content: str) -> Dict[str, Any]:
     Returns:
         Dictionary containing extracted plan data
     """
-    soup = BeautifulSoup(html_content, "html.parser")
+    soup = get_soup(html_content)
 
     # -------------------------------------------------------------
     # EXTRACT PLANS FROM CARDS
@@ -353,7 +357,7 @@ def scrape_icic_plan_premium(html_content: str) -> Dict[str, Any]:
     Returns:
         Dictionary containing extracted premium data
     """
-    soup = BeautifulSoup(html_content, "html.parser")
+    soup = get_soup(html_content)
 
     scraped_data = {
         "premium_summary": {},
