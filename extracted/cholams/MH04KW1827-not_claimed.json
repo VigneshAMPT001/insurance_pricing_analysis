@@ -1,0 +1,300 @@
+[
+  {
+    "registration_number": "MH04KW1827",
+    "make": "TATA MOTORS",
+    "model": "NEXON",
+    "fuel_type": "PETROL",
+    "variant": "NEXON - XMA 1.2 RTN BS4",
+    "registration_date": "2021-09-29",
+    "rto": "MH04-THANE(THANE)",
+    "raw_lines": [
+      "MH04KW1827",
+      "TATA MOTORS NEXON",
+      "Fuel Type is PETROL",
+      "Variant is NEXON - XMA 1.2 RTN BS4",
+      "Registration on 29/09/2021",
+      "RTO - MH04-THANE(THANE)"
+    ]
+  },
+  [
+    {
+      "Comprehensive Cover": {
+        "plan_premium": {
+          "(A) Basic Premium": [
+            {
+              "label": "Own Damage",
+              "amount": "12735"
+            }
+          ],
+          "(B) Discounts": [
+            {
+              "label": "No Claim Bonus 50%",
+              "amount": "6368"
+            },
+            {
+              "label": "DTD Discounts",
+              "amount": "4457"
+            }
+          ],
+          "(C) Add-On Cover": [
+            {
+              "label": "Personal Accident Cover",
+              "amount": "650"
+            },
+            {
+              "label": "(D) Own Damage Premium after Discount (A - B + C)",
+              "amount": "2560"
+            }
+          ],
+          "(E) Liability Premium": [
+            {
+              "label": "Basic Third Party Premium",
+              "amount": "3416"
+            },
+            {
+              "label": "Legal Liability to paid driver",
+              "amount": "50"
+            }
+          ],
+          "(F) Total Premium": [
+            {
+              "label": "Net Premium",
+              "amount": "6026"
+            },
+            {
+              "label": "GST (18%)",
+              "amount": "1085"
+            },
+            {
+              "label": "Total Premium",
+              "amount": "7111"
+            }
+          ]
+        },
+        "idv_range": {
+          "idv_min": "304020",
+          "idv_max": "405360",
+          "idv_selected": "380025"
+        },
+        "benefits_covered": {
+          "whats_covered": [
+            {
+              "title": "Accidents",
+              "description": "Covers repair/replacement costs if your car is damaged in an accident."
+            },
+            {
+              "title": "Fire",
+              "description": "Covers the damages caused due to self-ignition, explosion or lightning."
+            },
+            {
+              "title": "Theft",
+              "description": "If your car is stolen, we will pay you the value of your car as per your policy."
+            },
+            {
+              "title": "Calamities",
+              "description": "We will cover damage caused by natural or man-made calamities such as earthquakes, riots, etc."
+            },
+            {
+              "title": "Rat bite damages",
+              "description": "Cover the damages caused by rat bites."
+            },
+            {
+              "title": "Third-party injury/death",
+              "description": "We provide coverage for death/ injuries caused to individuals outside of your vehicle in accidents involving your car."
+            },
+            {
+              "title": "Third-party property",
+              "description": "We also cover any damage/loss to third-party property."
+            }
+          ],
+          "whats_not_covered": [
+            {
+              "title": "Non-Accident Damages",
+              "description": "Excludes coverage for natural wear and tear of parts like tyres, tubes, and engine."
+            },
+            {
+              "title": "Commercial Usage of the Car",
+              "description": "Excludes coverage for damages incurred while using car for commercial purposes (e.g. deliveries, transportation for a fee)."
+            },
+            {
+              "title": "Pre-existing Damages",
+              "description": "Excludes coverage for any damage that was already present before the purchase of the policy."
+            },
+            {
+              "title": "Illegal Driving",
+              "description": "This refers to any violation of traffic laws, such as driving without a valid license or driving under the influence of drugs, alcohol, etc."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "Comprehensive + Zero Dep Cover": {
+        "plan_premium": {
+          "(A) Basic Premium": [
+            {
+              "label": "Own Damage",
+              "amount": "12735"
+            }
+          ],
+          "(B) Discounts": [
+            {
+              "label": "No Claim Bonus 50%",
+              "amount": "6368"
+            },
+            {
+              "label": "DTD Discounts",
+              "amount": "4457"
+            }
+          ],
+          "(C) Add-On Cover": [
+            {
+              "label": "Personal Accident Cover",
+              "amount": "650"
+            },
+            {
+              "label": "(D) Own Damage Premium after Discount (A - B + C)",
+              "amount": "2560"
+            }
+          ],
+          "(E) Liability Premium": [
+            {
+              "label": "Basic Third Party Premium",
+              "amount": "3416"
+            },
+            {
+              "label": "Legal Liability to paid driver",
+              "amount": "50"
+            }
+          ],
+          "(F) Total Premium": [
+            {
+              "label": "Net Premium",
+              "amount": "6026"
+            },
+            {
+              "label": "GST (18%)",
+              "amount": "1085"
+            },
+            {
+              "label": "Total Premium",
+              "amount": "7111"
+            }
+          ]
+        },
+        "idv_range": {
+          "idv_min": "304020",
+          "idv_max": "405360",
+          "idv_selected": "380025"
+        },
+        "benefits_covered": {
+          "whats_covered": [
+            {
+              "title": "Accidents",
+              "description": "Covers repair/replacement costs if your car is damaged in an accident."
+            },
+            {
+              "title": "Fire",
+              "description": "Covers the damages caused due to self-ignition, explosion or lightning."
+            },
+            {
+              "title": "Theft",
+              "description": "If your car is stolen, we will pay you the value of your car as per your policy."
+            },
+            {
+              "title": "Calamities",
+              "description": "We will cover damage caused by natural or man-made calamities such as earthquakes, riots, etc."
+            },
+            {
+              "title": "Rat bite damages",
+              "description": "Cover the damages caused by rat bites."
+            },
+            {
+              "title": "Third-party injury/death",
+              "description": "We provide coverage for death/ injuries caused to individuals outside of your vehicle in accidents involving your car."
+            },
+            {
+              "title": "Third-party property",
+              "description": "We also cover any damage/loss to third-party property."
+            },
+            {
+              "title": "Zero Depreciation",
+              "description": "Covers total cost of parts replaced, due to loss or damage to the insured vehicle, without any deduction towards depreciation"
+            }
+          ],
+          "whats_not_covered": [
+            {
+              "title": "Non-Accident Damages",
+              "description": "Excludes coverage for natural wear and tear of parts like tyres, tubes, and engine."
+            },
+            {
+              "title": "Commercial Usage of the Car",
+              "description": "Excludes coverage for damages incurred while using car for commercial purposes (e.g. deliveries, transportation for a fee)."
+            },
+            {
+              "title": "Pre-existing Damages",
+              "description": "Excludes coverage for any damage that was already present before the purchase of the policy."
+            },
+            {
+              "title": "Illegal Driving",
+              "description": "This refers to any violation of traffic laws, such as driving without a valid license or driving under the influence of drugs, alcohol, etc."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "Third Party Cover": {
+        "plan_premium": {
+          "(A) Liability Premium": [
+            {
+              "label": "Basic TP",
+              "amount": "3416"
+            },
+            {
+              "label": "Personal Accident Cover",
+              "amount": "650"
+            },
+            {
+              "label": "Legal Liability to paid driver",
+              "amount": "50"
+            }
+          ],
+          "(C) Total Premium": [
+            {
+              "label": "Net Premium (A+B)",
+              "amount": "4116"
+            },
+            {
+              "label": "GST (18%)",
+              "amount": "741"
+            },
+            {
+              "label": "Total Premium",
+              "amount": "4857"
+            }
+          ]
+        },
+        "idv_range": {},
+        "benefits_covered": {
+          "whats_covered": [
+            {
+              "title": "Third-party injury/death",
+              "description": "We provide coverage for death/ injuries caused to individuals outside of your vehicle in accidents involving your car."
+            },
+            {
+              "title": "Third-party property",
+              "description": "We also cover any damage/loss to third-party property."
+            }
+          ],
+          "whats_not_covered": [
+            {
+              "title": "Own car damages",
+              "description": "Damages to your own car are not covered."
+            }
+          ]
+        }
+      }
+    }
+  ]
+]
