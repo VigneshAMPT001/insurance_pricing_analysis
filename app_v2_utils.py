@@ -11,6 +11,12 @@ PLAN_CATEGORY_LABELS = {
     "zd": "Zero Depreciation",
 }
 
+CLAIM_STATUS_LABELS = {
+    "claimed": "Claimed",
+    "not_claimed": "Not Claimed",
+    "pending": "Pending",
+}
+
 BADGE_TEXTS_TO_REMOVE = {"recommended for your car"}
 
 
@@ -25,6 +31,40 @@ def sanitize_badge_text(badge: Any) -> str:
         return ""
     badge_clean = badge.strip()
     return "" if badge_clean.lower() in BADGE_TEXTS_TO_REMOVE else badge_clean
+
+
+def normalize_claim_status(status: Any) -> str:
+    """Return normalized claim status key (claimed / not_claimed / pending)."""
+    if status is None:
+        return ""
+    value = str(status).strip().lower().replace(" ", "_")
+    if value in {"claimed", "not_claimed", "notclaimed", "not-claimed"}:
+        return "not_claimed" if value != "claimed" and "not" in value else "claimed"
+    if value in {"unclaimed"}:
+        return "not_claimed"
+    if value in {"pending", "in_process", "in-process"}:
+        return "pending"
+    return value
+
+
+def format_claim_status(status: Any, fallback: str = "") -> str:
+    """Return a user-friendly claim status label."""
+    normalized = normalize_claim_status(status)
+    if not normalized:
+        return fallback
+    return CLAIM_STATUS_LABELS.get(normalized, normalized.replace("_", " ").title())
+
+
+def infer_claim_status_from_filename(file_path: str) -> str:
+    """Infer claim status from trailing token in filename stem (e.g., '-claimed')."""
+    try:
+        stem = Path(file_path).stem
+    except Exception:
+        return ""
+    if "-" not in stem:
+        return ""
+    suffix = stem.split("-")[-1]
+    return normalize_claim_status(suffix)
 
 
 def extract_signed_amount(value: Any) -> float:
@@ -305,11 +345,14 @@ load_cholams_data = load_json_data
 load_royal_sundaram_data = load_json_data
 
 
-def get_acko_plans(data: Dict[str, Any]) -> List[Dict[str, Any]]:
-    """Extract plans from Acko data structure"""
+def get_acko_plans(
+    data: Dict[str, Any], claim_status: str = ""
+) -> List[Dict[str, Any]]:
+    """Extract plans from Acko data structure."""
     plans = []
     car_info = data.get("car_info", {})
     idv_info = build_idv_info(car_info)
+    normalized_claim_status = normalize_claim_status(claim_status)
     for plan in data.get("plans", []):
         category_raw = plan.get("category", "")
         normalized_category = normalize_plan_category(category_raw)
@@ -330,17 +373,21 @@ def get_acko_plans(data: Dict[str, Any]) -> List[Dict[str, Any]]:
             "insurer": "Acko",
             "idv": idv_info,
             "pricing_breakdown": build_acko_pricing(plan),
+            "claim_status": normalized_claim_status,
         }
         plans.append(plan_info)
     return plans
 
 
-def get_icici_plans(data: Dict[str, Any]) -> List[Dict[str, Any]]:
-    """Extract plans from ICICI data structure"""
+def get_icici_plans(
+    data: Dict[str, Any], claim_status: str = ""
+) -> List[Dict[str, Any]]:
+    """Extract plans from ICICI data structure."""
     plans = []
     plans_offered = data.get("plans_offered", {})
     premiums_list = plans_offered.get("premiums", [])
     idv_info = build_idv_info(data)
+    normalized_claim_status = normalize_claim_status(claim_status)
 
     for premium_info in premiums_list:
         plan_type = premium_info.get("plan_type", "")
@@ -382,6 +429,7 @@ def get_icici_plans(data: Dict[str, Any]) -> List[Dict[str, Any]]:
             "insurer": "ICICI",
             "idv": idv_info,
             "pricing_breakdown": build_icici_pricing(premium_summary),
+            "claim_status": normalized_claim_status,
         }
 
         plans_list = plans_offered.get("plans", [])
@@ -400,9 +448,10 @@ def get_icici_plans(data: Dict[str, Any]) -> List[Dict[str, Any]]:
     return plans
 
 
-def get_cholams_plans(data: List[Any]) -> List[Dict[str, Any]]:
-    """Extract plans from Cholams data structure"""
+def get_cholams_plans(data: List[Any], claim_status: str = "") -> List[Dict[str, Any]]:
+    """Extract plans from Cholams data structure."""
     plans = []
+    normalized_claim_status = normalize_claim_status(claim_status)
 
     if not isinstance(data, list) or len(data) < 2:
         return plans
@@ -478,6 +527,7 @@ def get_cholams_plans(data: List[Any]) -> List[Dict[str, Any]]:
                 "insurer": "Cholams",
                 "idv": build_idv_info(plan_details.get("idv_range", {})),
                 "pricing_breakdown": build_cholams_pricing(plan_premium),
+                "claim_status": normalized_claim_status,
             }
 
             plans.append(plan_info)
@@ -562,10 +612,13 @@ def normalize_royal_sundaram_addons(addons: Dict[str, Any]) -> List[Any]:
     return normalized
 
 
-def get_royal_sundaram_plans(data: Dict[str, Any]) -> List[Dict[str, Any]]:
+def get_royal_sundaram_plans(
+    data: Dict[str, Any], claim_status: str = ""
+) -> List[Dict[str, Any]]:
     """Extract plans from Royal Sundaram data structure."""
     if not isinstance(data, dict):
         return []
+    normalized_claim_status = normalize_claim_status(claim_status)
 
     car_details = data.get("car_details", {}) or {}
     plans_data = data.get("plans", {}) or {}
@@ -606,6 +659,7 @@ def get_royal_sundaram_plans(data: Dict[str, Any]) -> List[Dict[str, Any]]:
             "insurer": "Royal Sundaram",
             "idv": idv_info,
             "pricing_breakdown": build_royal_sundaram_pricing(plan),
+            "claim_status": normalized_claim_status,
         }
         plans.append(plan_info)
 
@@ -724,7 +778,7 @@ def merge_insurer_data_into_car_map(
                     or existing_variant in variant
                 )
             ):
-                data_dict = {field: entry[field] for field in entry_fields}
+                data_dict = {field: entry.get(field) for field in entry_fields}
                 if extra_fields_func:
                     data_dict.update(extra_fields_func(entry))
                 files[insurer_key].append(data_dict)
@@ -734,7 +788,7 @@ def merge_insurer_data_into_car_map(
             key = (make, model, variant)
             if key not in car_data_map:
                 car_data_map[key] = init_car_file_entry()
-            data_dict = {field: entry[field] for field in entry_fields}
+            data_dict = {field: entry.get(field) for field in entry_fields}
             if extra_fields_func:
                 data_dict.update(extra_fields_func(entry))
             car_data_map[key][insurer_key].append(data_dict)
@@ -768,14 +822,11 @@ def scan_all_car_data() -> Dict[str, Any]:
                 key = (make, model, variant)
                 if key not in car_data_map:
                     car_data_map[key] = init_car_file_entry()
+                claim_status = infer_claim_status_from_filename(str(file))
                 car_data_map[key]["acko"].append(
                     {
                         "file": str(file),
-                        "claim_status": (
-                            file.stem.split("-")[-1]
-                            if "-" in file.stem
-                            else "not_claimed"
-                        ),
+                        "claim_status": claim_status or "not_claimed",
                         "registration": car_info.get("registration_number", ""),
                     }
                 )
@@ -795,6 +846,7 @@ def scan_all_car_data() -> Dict[str, Any]:
             _, variant = split_model_variant(model_raw)
 
             if make and model:
+                claim_status = infer_claim_status_from_filename(str(file))
                 icici_data_list.append(
                     {
                         "make": make,
@@ -804,6 +856,7 @@ def scan_all_car_data() -> Dict[str, Any]:
                         "registration": (
                             file.stem.split("-")[0] if "-" in file.stem else ""
                         ),
+                        "claim_status": claim_status,
                     }
                 )
 
@@ -825,6 +878,7 @@ def scan_all_car_data() -> Dict[str, Any]:
                 _, variant = split_model_variant(variant_raw)
 
                 if make and model:
+                    claim_status = infer_claim_status_from_filename(str(file))
                     cholams_data_list.append(
                         {
                             "make": make,
@@ -832,6 +886,7 @@ def scan_all_car_data() -> Dict[str, Any]:
                             "variant": variant,
                             "file": str(file),
                             "registration": car_info.get("registration_number", ""),
+                            "claim_status": claim_status,
                         }
                     )
 
@@ -852,6 +907,7 @@ def scan_all_car_data() -> Dict[str, Any]:
             variant = variant_part
 
             if make and model:
+                claim_status = infer_claim_status_from_filename(str(file))
                 royal_sundaram_data_list.append(
                     {
                         "make": make,
@@ -859,9 +915,7 @@ def scan_all_car_data() -> Dict[str, Any]:
                         "variant": variant,
                         "file": str(file),
                         "registration": car_details.get("registration_number", ""),
-                        "claim_status": (
-                            file.stem.split("-")[-1] if "-" in file.stem else ""
-                        ),
+                        "claim_status": claim_status,
                     }
                 )
 
@@ -869,20 +923,22 @@ def scan_all_car_data() -> Dict[str, Any]:
         car_data_map,
         icici_data_list,
         "icici",
-        ["file", "registration"],
+        ["file", "registration", "claim_status"],
     )
     merge_insurer_data_into_car_map(
         car_data_map,
         cholams_data_list,
         "cholams",
-        ["file", "registration"],
+        ["file", "registration", "claim_status"],
     )
     merge_insurer_data_into_car_map(
         car_data_map,
         royal_sundaram_data_list,
         "royal_sundaram",
         ["file", "registration"],
-        extra_fields_func=lambda entry: {"claim_status": entry["claim_status"]},
+        extra_fields_func=lambda entry: {
+            "claim_status": normalize_claim_status(entry.get("claim_status", ""))
+        },
     )
 
     return car_data_map

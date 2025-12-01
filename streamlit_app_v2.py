@@ -5,6 +5,8 @@ import streamlit as st
 import pandas as pd
 
 from app_v2_utils import (
+    format_claim_status,
+    normalize_claim_status,
     format_premium,
     get_acko_plans,
     get_cholams_plans,
@@ -93,6 +95,9 @@ def display_plan_card_compact(plan: Dict[str, Any]):
             category = plan.get("category_display") or plan.get("category", "").upper()
             if category:
                 st.caption(f"Type: {category}")
+            status_label = format_claim_status(plan.get("claim_status", ""))
+            if status_label:
+                st.caption(f"Claim Status: {status_label}")
 
         with col2:
             premium_value = plan.get("premium_value", 0.0)
@@ -134,7 +139,17 @@ def display_plan_card(
                 f"<div style='font-size:1rem;color:#475569;margin-bottom:0.25rem;'>{plan_name}</div>",
                 unsafe_allow_html=True,
             )
-            st.caption(f"{insurer} • {plan.get('plan_id', '').upper()}")
+            meta_bits = []
+            if insurer:
+                meta_bits.append(insurer)
+            plan_id = plan.get("plan_id", "")
+            if plan_id:
+                meta_bits.append(plan_id.upper())
+            status_label = format_claim_status(plan.get("claim_status", ""))
+            if status_label:
+                meta_bits.append(f"Claim Status: {status_label}")
+            if meta_bits:
+                st.caption(" • ".join(meta_bits))
 
         with header_col2:
             premium_value = plan.get("premium_value", 0.0)
@@ -201,7 +216,7 @@ def homepage():
         with st.spinner("Loading car data..."):
             st.session_state.car_data_map = scan_all_car_data()
 
-    # # JSON/dict preview: show as list of strings of the key triple, to avoid serialization error
+    # JSON/dict preview: show as list of strings of the key triple, to avoid serialization error
     # car_data_map_preview = [
     #     f"{make} | {model} | {variant}:\n{files}"
     #     for (make, model, variant), files in st.session_state.car_data_map.items()
@@ -283,12 +298,18 @@ def homepage():
         if car_files.get("acko"):
             # Use not_claimed by default, or first available
             acko_file_info = next(
-                (f for f in car_files["acko"] if f["claim_status"] == "not_claimed"),
+                (
+                    f
+                    for f in car_files["acko"]
+                    if f.get("claim_status") == "not_claimed"
+                ),
                 car_files["acko"][0],
             )
             try:
                 acko_data = load_acko_data(acko_file_info["file"])
-                acko_plans = get_acko_plans(acko_data)
+                acko_plans = get_acko_plans(
+                    acko_data, acko_file_info.get("claim_status", "")
+                )
                 all_plans_by_insurer["Acko"] = acko_plans
             except Exception as e:
                 st.error(f"Error loading Acko data: {e}")
@@ -299,7 +320,9 @@ def homepage():
             icici_file_info = car_files["icici"][0]
             try:
                 icici_data = load_icici_data(icici_file_info["file"])
-                icici_plans = get_icici_plans(icici_data)
+                icici_plans = get_icici_plans(
+                    icici_data, icici_file_info.get("claim_status", "")
+                )
                 all_plans_by_insurer["ICICI"] = icici_plans
             except Exception as e:
                 st.error(f"Error loading ICICI data: {e}")
@@ -310,7 +333,9 @@ def homepage():
             cholams_file_info = car_files["cholams"][0]
             try:
                 cholams_data = load_cholams_data(cholams_file_info["file"])
-                cholams_plans = get_cholams_plans(cholams_data)
+                cholams_plans = get_cholams_plans(
+                    cholams_data, cholams_file_info.get("claim_status", "")
+                )
                 all_plans_by_insurer["Cholams"] = cholams_plans
             except Exception as e:
                 st.error(f"Error loading Cholams data: {e}")
@@ -327,7 +352,9 @@ def homepage():
             )
             try:
                 royal_data = load_royal_sundaram_data(royal_file_info["file"])
-                royal_sundaram_plans = get_royal_sundaram_plans(royal_data)
+                royal_sundaram_plans = get_royal_sundaram_plans(
+                    royal_data, royal_file_info.get("claim_status", "")
+                )
                 all_plans_by_insurer["Royal Sundaram"] = royal_sundaram_plans
             except Exception as e:
                 st.error(f"Error loading Royal Sundaram data: {e}")
@@ -434,6 +461,20 @@ def comparison_page():
             p for p in filtered_plans if p.get("insurer") in selected_insurers
         ]
 
+    # Claim status filter
+    claim_status_option = st.sidebar.radio(
+        "Claim Status", options=["Both", "Not Claimed", "Claimed"], index=0
+    )
+    if claim_status_option != "Both":
+        target_status = (
+            "not_claimed" if claim_status_option == "Not Claimed" else "claimed"
+        )
+        filtered_plans = [
+            p
+            for p in filtered_plans
+            if normalize_claim_status(p.get("claim_status")) == target_status
+        ]
+
     # Price range filter
     price_range = None
     if filtered_plans:
@@ -510,6 +551,7 @@ def comparison_page():
                 "Type": plan.get("category_display")
                 or plan.get("category", "").upper(),
                 "Premium": format_premium(plan.get("premium_value", 0)),
+                "Claim Status": format_claim_status(plan.get("claim_status", "")),
                 # "Badge": plan.get("badge", ""),
             }
         )
