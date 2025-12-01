@@ -1,0 +1,192 @@
+{
+    "car_details": {
+        "registration_number": "MH49BB1307",
+        "manufacturer": "HYUNDAI MOTORS LTD.",
+        "model_variant": "I20 - ACTIVE S VTVT",
+        "model_year": "2018",
+        "fuel_type": "Petrol",
+        "ncb_percentage": "50%",
+        "rto_name": "Nagpur East",
+        "idv": {
+            "default_idv": 348161,
+            "min_idv": 313344.9,
+            "max_idv": 382977.1
+        }
+    },
+    "plans": {
+        "comprehensive_plan": {
+            "plan_name": "Comprehensive Plan",
+            "premium_summary": {
+                "premium_excluding_gst": 4931.25,
+                "gst_applicable": true
+            },
+            "premium_breakup": {
+                "quote_id": "QVPN122717156",
+                "own_damage": {
+                    "base_premium": 4083.0,
+                    "add_ons": {
+                        "windshield_glass": 251.1,
+                        "roadside_assistance": 199.0,
+                        "smart_save": -408.3
+                    }
+                },
+                "liability": {
+                    "base_premium": 3416.0
+                },
+                "net_premium": 7540.8,
+                "gst_18_percent": 1357.38,
+                "total_premium": 8898.38
+            },
+            "addons": {
+                "personal_accident_cover": "Mandatory (₹15L cover)",
+                "accessory_protection": "Recommended",
+                "deductible": "Recommended",
+                "smart_use_pay_as_you_drive": 4000.0,
+                "zero_depreciation": 4000.0,
+                "aggravation_cover": 417.6,
+                "windshield_glass": 251.1,
+                "key_replacement": 133.6,
+                "loss_of_baggage": 100.0,
+                "roadside_assistance": 199.0,
+                "spare_car": 144.0,
+                "towing_cover": 25.0,
+                "tyre_cover": 530.0,
+                "smart_save": -408.3,
+                "consumable_cover": 476.54
+            },
+            "selected_addons": {
+                "personal_accident_cover": "Yes",
+                "accessory_protection": "Yes",
+                "deductible": "Yes",
+                "smart_use_pay_as_you_drive": "Yes",
+                "zero_depreciation": "Yes",
+                "aggravation_cover": "Yes",
+                "windshield_glass": "Yes",
+                "key_replacement": "Yes",
+                "loss_of_baggage": "Yes",
+                "roadside_assistance": "Yes",
+                "spare_car": "Yes",
+                "towing_cover": "Yes",
+                "tyre_cover": "Yes",
+                "smart_save": "Yes",
+                "consumable_cover": "Yes"
+            }
+        },
+        "comprehensive__basic": {
+            "plan_name": "Comprehensive Plan",
+            "premium_summary": {
+                "premium_excluding_gst": 7499.0,
+                "gst_applicable": true
+            },
+            "premium_breakup": {
+                "quote_id": "QVPN122609250",
+                "own_damage": {
+                    "base_premium": 4083.0
+                },
+                "liability": {
+                    "base_premium": 3416.0
+                },
+                "net_premium": 7499.0,
+                "gst_18_percent": 1349.82,
+                "total_premium": 8848.82
+            },
+            "addons": {
+                "personal_accident_cover": "Mandatory (₹15L cover)",
+                "zero_depreciation": 4000,
+                "aggravation_cover": 417.6,
+                "windshield_glass": 223.2,
+                "key_replacement": 133.6,
+                "loss_of_baggage": 100.0,
+                "roadside_assistance": 199.0,
+                "spare_car": 144.0,
+                "towing_cover": 25.0,
+                "tyre_cover": 530.0,
+                "smart_save": -411.8,
+                "consumable_cover": 476.54
+            },
+            "selected_addons": {}
+        },
+        "bumper_to_bumper_plan": {
+            "plan_name": "Bumper to Bumper Cover",
+            "premium_summary": {
+                "premium_excluding_gst": 11357.0,
+                "gst_applicable": true
+            },
+            "premium_breakup": {
+                "quote_id": "QVPN122609250",
+                "own_damage": {
+                    "base_premium": 4083.0,
+                    "add_ons": {
+                        "depreciation_waiver": 3858.0
+                    }
+                },
+                "liability": {
+                    "base_premium": 3416.0
+                },
+                "net_premium": 11357.0,
+                "gst_18_percent": 2044.26,
+                "total_premium": 13401.26
+            },
+            "addons": {
+                "personal_accident_cover": "Mandatory (₹15L cover)",
+                "accessory_protection": "Recommended",
+                "deductible": "Recommended",
+                "smart_use_pay_as_you_drive": 4440.0,
+                "zero_depreciation": 3858.0,
+                "aggravation_cover": 417.6,
+                "windshield_glass": 232.2,
+                "key_replacement": 133.6,
+                "loss_of_baggage": 100.0,
+                "roadside_assistance": 199.0,
+                "spare_car": 144.0,
+                "towing_cover": 25.0,
+                "tyre_cover": 530.0,
+                "smart_save": -411.8,
+                "consumable_cover": 476.54
+            },
+            "selected_addons": {
+                "personal_accident_cover": "Yes",
+                "accessory_protection": "Yes",
+                "deductible": "Yes",
+                "smart_use_pay_as_you_drive": "Yes",
+                "zero_depreciation": "Yes",
+                "aggravation_cover": "Yes",
+                "windshield_glass": "Yes",
+                "key_replacement": "Yes",
+                "loss_of_baggage": "Yes",
+                "roadside_assistance": "Yes",
+                "spare_car": "Yes",
+                "towing_cover": "Yes",
+                "tyre_cover": "Yes",
+                "smart_save": "Yes",
+                "consumable_cover": "Yes"
+            }
+        },
+        "third_party_plan": {
+            "plan_name": "Third Party Plan",
+            "premium_summary": {
+                "premium_excluding_gst": 3416.0,
+                "gst_applicable": true
+            },
+            "premium_breakup": {
+                "quote_id": "QVPN122609250",
+                "liability": {
+                    "base_premium": 3416.0
+                },
+                "net_premium": 3416.0,
+                "gst_18_percent": 614.88,
+                "total_premium": 4030.88
+            },
+            "idv": {
+                "applicable": false,
+                "reason": "IDV is not used for third-party plans"
+            },
+            "addons": {
+                "personal_accident_cover": "Mandatory (₹15L cover)"
+            },
+            "selected_addons": {
+                "personal_accident_cover": "Yes"
+            }
+        }
+    }
+}
