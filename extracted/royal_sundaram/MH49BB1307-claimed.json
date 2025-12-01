@@ -23,20 +23,19 @@
             "premium_breakup": {
                 "quote_id": "QVPN122717156",
                 "own_damage": {
-                    "base_premium": 1983.0,
+                    "base_premium": 4083.0,
                     "add_ons": {
                         "windshield_glass": 251.1,
                         "roadside_assistance": 199.0,
-                        "smart_save": -408.3,
-                        "ncb": -991.5
+                        "smart_save": -408.3
                     }
                 },
                 "liability": {
                     "base_premium": 3416.0
                 },
-                "net_premium": 4758.45,
-                "gst_18_percent": 856.44,
-                "total_premium": 5614.44
+                "net_premium": 7540.8,
+                "gst_18_percent": 1357.38,
+                "total_premium": 8898.38
             },
             "addons": {
                 "personal_accident_cover": "Mandatory (₹15L cover)",
@@ -80,16 +79,16 @@
                 "gst_applicable": true
             },
             "premium_breakup": {
-                "quote_id": "QVPN122717156",
+                "quote_id": "QVPN122609250",
                 "own_damage": {
-                    "base_premium": 1983.0
+                    "base_premium": 4083.0
                 },
                 "liability": {
                     "base_premium": 3416.0
                 },
-                "net_premium": 4407.5,
-                "gst_18_percent": 793.44,
-                "total_premium": 5201.44
+                "net_premium": 7499.0,
+                "gst_18_percent": 1349.82,
+                "total_premium": 8848.82
             },
             "addons": {
                 "personal_accident_cover": "Mandatory (₹15L cover)",
@@ -114,20 +113,19 @@
                 "gst_applicable": true
             },
             "premium_breakup": {
-                "quote_id": "QVPN122717156",
+                "quote_id": "QVPN122609250",
                 "own_damage": {
-                    "base_premium": 1983.0,
+                    "base_premium": 4083.0,
                     "add_ons": {
-                        "depreciation_waiver": 3858.0,
-                        "ncb": -991.5
+                        "depreciation_waiver": 3858.0
                     }
                 },
                 "liability": {
                     "base_premium": 3416.0
                 },
-                "net_premium": 8256.5,
-                "gst_18_percent": 1487.88,
-                "total_premium": 9753.88
+                "net_premium": 11357.0,
+                "gst_18_percent": 2044.26,
+                "total_premium": 13401.26
             },
             "addons": {
                 "personal_accident_cover": "Mandatory (₹15L cover)",
@@ -171,7 +169,7 @@
                 "gst_applicable": true
             },
             "premium_breakup": {
-                "quote_id": "QVPN122717156",
+                "quote_id": "QVPN122609250",
                 "liability": {
                     "base_premium": 3416.0
                 },
