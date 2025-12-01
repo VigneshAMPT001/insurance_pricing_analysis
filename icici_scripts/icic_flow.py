@@ -12,7 +12,7 @@ from icic_bs4_scraper import (
 )
 
 HOME_URL = "https://www.icicilombard.com/"
-CAR_NUMBER = "MH04KW1827"
+CAR_NUMBER = "MH12VZ2302"
 MOBILE = "8514646225"
 EMAIL = "vignesh27@gmail.com"
 
@@ -137,9 +137,9 @@ async def click_through_plan_types_and_buttons(page: Page) -> List[Dict[str, Any
 
     total_radio_groups = await get_all_plans(page)
 
-    await dismiss_vehicle_inspection_model(page)
-
     await reveal_addons_cover(page)
+
+    await dismiss_vehicle_inspection_model(page)
 
     # ----------------------------------------------------------------------
     # OUTER LOOP: PLAN TYPES
@@ -173,16 +173,17 @@ async def click_through_plan_types_and_buttons(page: Page) -> List[Dict[str, Any
             else:
                 print(f">>> Clicking plan type: {label_text}")
                 await radio_input.click(force=True)
-                await page.wait_for_load_state("networkidle", timeout=15000)
-                await asyncio.sleep(1)
         except Exception as e:
             print(f">>> Failed to select plan type '{label_text}': {e}")
             continue
 
+        await page.wait_for_timeout(5000)
         html_plan_details = await get_html(page)  # page.content()
 
         scraped_plans[label_text] = scrape_icic_plans(html_plan_details)
         plans.append(scraped_plans)
+
+        html_plan_details = None
 
         # ----------------------------------------------------------------------
         # INNER LOOP: CLICK EACH PLAN BUTTON FOR THIS PLAN TYPE
@@ -221,8 +222,6 @@ async def click_through_plan_types_and_buttons(page: Page) -> List[Dict[str, Any
             # -----------------------------
             try:
                 await button.click()
-                await page.wait_for_load_state("networkidle", timeout=15000)
-                await asyncio.sleep(1)
             except Exception as e:
                 print(f">>> Error clicking plan button: {e}")
                 continue
@@ -230,9 +229,12 @@ async def click_through_plan_types_and_buttons(page: Page) -> List[Dict[str, Any
             # -----------------------------
             # SCRAPE HTML
             # -----------------------------
+            await page.wait_for_timeout(5000)
             html_premium_expanded = await get_html(page)  # page.content()
 
             premium_data = scrape_icic_plan_premium(html_premium_expanded)
+
+            html_premium_expanded = None
 
             premiums.append(
                 {
@@ -305,6 +307,8 @@ async def open_close_idv_popup(page: Page, car_details: Dict):
         ).locator("a.link-btn")
         await edit_button.click(force=True)
 
+        await page.wait_for_timeout(1000)
+
         html_idv_popup = await get_html(page)
 
         # Copy car_details to avoid mutating the input dictionary
@@ -367,7 +371,7 @@ async def run():
 
         await dismiss_initial_vehicle_inspection(page)
 
-        await page.wait_for_timeout(10000)
+        # await page.wait_for_timeout(10000)
 
         html_car_details = await get_html(page)  # page.content()
 
