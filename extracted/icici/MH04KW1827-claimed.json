@@ -4,14 +4,11 @@
     "city_of_registration": "MAHARASHTRA-THANE",
     "first_registration_date": "29-09-2021",
     "previous_policy_end_date": "08-10-202*",
-    "claims_last_year": "0",
+    "claims_last_year": "1",
     "previous_ncb": "35 %",
     "registered_under": "Individual",
     "previous_policy_type": "Comprehensive Package",
     "no_change_of_ownership": true,
-    "idv": 351395,
-    "idv_min": 351395,
-    "idv_max": 584485,
     "plans_offered": {
         "plans": [
             {
@@ -213,6 +210,7 @@
                     "premium_summary": {
                         "base_premium": "₹10,594",
                         "additional_covers": "",
+                        "sub_total": "₹ 12,086",
                         "additional_covers_breakdown": [
                             {
                                 "name": "Road Side Assistance",
@@ -227,10 +225,9 @@
                                 "price": "₹ 750"
                             }
                         ],
-                        "sub_total": null,
+                        "net_premium": "₹ 12,086",
                         "discounts": null,
                         "discount_breakdown": [],
-                        "net_premium": "₹ 12,086",
                         "total_premium": "₹ 12,086",
                         "gst": "18%"
                     }
@@ -245,6 +242,7 @@
                     "premium_summary": {
                         "base_premium": "₹10,594",
                         "additional_covers": "",
+                        "sub_total": "₹ 15,247",
                         "additional_covers_breakdown": [
                             {
                                 "name": "Road Side Assistance",
@@ -275,10 +273,9 @@
                                 "price": "₹ 100"
                             }
                         ],
-                        "sub_total": null,
+                        "net_premium": "₹ 15,247",
                         "discounts": null,
                         "discount_breakdown": [],
-                        "net_premium": "₹ 15,247",
                         "total_premium": "₹ 15,247",
                         "gst": "18%"
                     }
@@ -293,6 +290,7 @@
                     "premium_summary": {
                         "base_premium": "₹10,594",
                         "additional_covers": "",
+                        "sub_total": "₹ 18,350",
                         "additional_covers_breakdown": [
                             {
                                 "name": "Loss of Personal Belongings",
@@ -339,10 +337,9 @@
                                 "price": "₹ 299"
                             }
                         ],
-                        "sub_total": null,
+                        "net_premium": "₹ 18,350",
                         "discounts": null,
                         "discount_breakdown": [],
-                        "net_premium": "₹ 18,350",
                         "total_premium": "₹ 18,350",
                         "gst": "18%"
                     }
@@ -357,6 +354,7 @@
                     "premium_summary": {
                         "base_premium": "₹7,128",
                         "additional_covers": "",
+                        "sub_total": "₹ 8,245",
                         "additional_covers_breakdown": [
                             {
                                 "name": "Road Side Assistance",
@@ -371,10 +369,9 @@
                                 "price": "₹ 543"
                             }
                         ],
-                        "sub_total": null,
+                        "net_premium": "₹ 8,245",
                         "discounts": null,
                         "discount_breakdown": [],
-                        "net_premium": "₹ 8,245",
                         "total_premium": "₹ 8,245",
                         "gst": "18%"
                     }
@@ -389,6 +386,7 @@
                     "premium_summary": {
                         "base_premium": "₹7,128",
                         "additional_covers": "",
+                        "sub_total": "₹ 11,156",
                         "additional_covers_breakdown": [
                             {
                                 "name": "Road Side Assistance",
@@ -415,10 +413,9 @@
                                 "price": "₹ 100"
                             }
                         ],
-                        "sub_total": null,
+                        "net_premium": "₹ 11,156",
                         "discounts": null,
                         "discount_breakdown": [],
-                        "net_premium": "₹ 11,156",
                         "total_premium": "₹ 11,156",
                         "gst": "18%"
                     }
@@ -433,6 +430,7 @@
                     "premium_summary": {
                         "base_premium": "₹7,128",
                         "additional_covers": "",
+                        "sub_total": "₹ 14,009",
                         "additional_covers_breakdown": [
                             {
                                 "name": "Loss of Personal Belongings",
@@ -475,10 +473,9 @@
                                 "price": "₹ 299"
                             }
                         ],
-                        "sub_total": null,
+                        "net_premium": "₹ 14,009",
                         "discounts": null,
                         "discount_breakdown": [],
-                        "net_premium": "₹ 14,009",
                         "total_premium": "₹ 14,009",
                         "gst": "18%"
                     }

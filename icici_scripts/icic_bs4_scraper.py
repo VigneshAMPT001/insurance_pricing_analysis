@@ -3,6 +3,7 @@ BeautifulSoup4 scraper for ICICI Lombard quote page.
 Takes HTML content as input and extracts plan/premium information.
 """
 
+from pathlib import Path
 import json, re
 from typing import Dict, List, Optional, Any
 from bs4 import BeautifulSoup
@@ -248,68 +249,77 @@ def extract_plans_from_cards(soup: BeautifulSoup) -> List[Dict[str, Any]]:
 def extract_premium_summary(soup: BeautifulSoup) -> Dict[str, Optional[str]]:
     summary = {}
 
-    # ---------- Base Premium ----------
-    base = soup.select_one(".basic-premium > li:nth-child(1) span")
-    summary["base_premium"] = base.get_text(strip=True) if base else None
+    # --------------------------
+    # Helper to extract pairs
+    # --------------------------
+    def extract_key_values(container_selector: str) -> Dict[str, str]:
+        data = {}
+        container = soup.select_one(container_selector)
+        if not container:
+            return data
 
-    # ---------- Additional Covers (Total Value) ----------
-    add_total = soup.select_one(".basic-premium > li:nth-child(2) span")
-    summary["additional_covers"] = add_total.get_text(strip=True) if add_total else None
+        for li in container.select("li"):
+            p = li.select_one("p")
+            span = li.select_one("span")
+            if not p or not span:
+                continue
+            key = p.get_text(strip=True)
+            value = span.get_text(strip=True)
+            data[key] = value
+        return data
 
-    # ---------- Additional Covers Breakdown ----------
+    # ---------- BASIC PREMIUM + ADDITIONAL COVERS + SUBTOTAL ----------
+    basic = extract_key_values(".basic-premium")
+
+    summary["base_premium"] = basic.get("Base premium")
+    summary["additional_covers"] = basic.get("Additional covers")
+    summary["sub_total"] = basic.get("Sub Total")
+
+    # ---------- ADDITIONAL COVERS BREAKDOWN ----------
     summary["additional_covers_breakdown"] = []
-    add_breakdown_ul = soup.select_one(".basic-premium .add-premium-details")
-
-    if add_breakdown_ul:
-        for li in add_breakdown_ul.select("li"):
+    add_ul = soup.select_one(".basic-premium .add-premium-details")
+    if add_ul:
+        for li in add_ul.select("li"):
             name = li.select_one("p")
             price = li.select_one("span")
-            summary["additional_covers_breakdown"].append(
-                {
-                    "name": name.get_text(strip=True) if name else None,
-                    "price": price.get_text(strip=True) if price else None,
-                }
-            )
+            if name and price:
+                summary["additional_covers_breakdown"].append(
+                    {
+                        "name": name.get_text(strip=True),
+                        "price": price.get_text(strip=True),
+                    }
+                )
 
-    # ---------- Sub Total ----------
-    sub_total = soup.select_one(".basic-premium > li:nth-child(3) span")
-    summary["sub_total"] = sub_total.get_text(strip=True) if sub_total else None
+    # ---------- NET PREMIUM (Comes under .additional-premium) ----------
+    additional = extract_key_values(".additional-premium")
+    summary["net_premium"] = additional.get("Net Premium")
+    summary["discounts"] = additional.get("Discounts")  # if ever present
 
-    # ---------- Discounts (Total) ----------
-    discounts = soup.select_one(".additional-premium > li:nth-child(1) span")
-    summary["discounts"] = discounts.get_text(strip=True) if discounts else None
-
-    # ---------- Discount Breakdown ----------
+    # ---------- DISCOUNT BREAKDOWN ----------
     summary["discount_breakdown"] = []
-    discount_breakdown_ul = soup.select_one(".additional-premium .add-premium-details")
-
-    if discount_breakdown_ul:
-        for li in discount_breakdown_ul.select("li"):
+    discount_ul = soup.select_one(".additional-premium .add-premium-details")
+    if discount_ul:
+        for li in discount_ul.select("li"):
             name = li.select_one("p")
             price = li.select_one("span")
-            summary["discount_breakdown"].append(
-                {
-                    "name": name.get_text(strip=True) if name else None,
-                    "price": price.get_text(strip=True) if price else None,
-                }
-            )
+            if name and price:
+                summary["discount_breakdown"].append(
+                    {
+                        "name": name.get_text(strip=True),
+                        "price": price.get_text(strip=True),
+                    }
+                )
 
-    # ---------- Net Premium ----------
-    net = soup.select_one(".additional-premium > li:nth-child(2) span")
-    summary["net_premium"] = net.get_text(strip=True) if net else None
+    # ---------- TOTAL PREMIUM + GST ----------
+    total_span = soup.select_one(".total-premium li span")
+    if total_span:
+        full_text = total_span.get_text(" ", strip=True)
 
-    # ---------- Total Premium ----------
-    total = soup.select_one(".total-premium li span")
-    if total:
-        # Extract numeric part before GST
-        premium_raw = total.get_text(" ", strip=True)
-        summary["total_premium"] = premium_raw.split("+")[0].strip()
+        summary["total_premium"] = full_text.split("+")[0].strip()
 
-        # Extract GST
-        gst_tag = total.select_one("sub.tp-gst")
-        if gst_tag:
-            gst_text = gst_tag.get_text(strip=True)
-            # Clean "+ (18%) GST" → "18%"
+        gst = total_span.select_one("sub.tp-gst")
+        if gst:
+            gst_text = gst.get_text(strip=True)
             gst_clean = (
                 gst_text.replace("+", "")
                 .replace("GST", "")
@@ -389,21 +399,21 @@ def scrape_from_file(html_file_path: str) -> Dict[str, Any]:
 
 def main():
     """Main function to test the scraper."""
-    html_file = "icic_quote_page.html"
+    html_file = Path(__file__).parent / "icici_prem.html"
 
     print(f">>> Scraping HTML from: {html_file}")
     result = scrape_from_file(html_file)
 
-    # Save results
-    output_file = "icic_scraped_output.json"
-    with open(output_file, "w", encoding="utf-8") as f:
-        json.dump(result, f, indent=4, ensure_ascii=False)
+    # # Save results
+    # output_file = "icic_scraped_output.json"
+    # with open(output_file, "w", encoding="utf-8") as f:
+    #     json.dump(result, f, indent=4, ensure_ascii=False)
 
-    print(f">>> Scraping completed!")
-    print(f">>> Output saved to: {output_file}")
-    print(f"\n>>> Summary:")
-    print(f"  - Plans found: {len(result['plans'])}")
-    print(f"  - Premium summary keys: {list(result['premium_summary'].keys())}")
+    # print(f">>> Scraping completed!")
+    # print(f">>> Output saved to: {output_file}")
+    # print(f"\n>>> Summary:")
+    # print(f"  - Plans found: {len(result['plans'])}")
+    # print(f"  - Premium summary keys: {list(result['premium_summary'].keys())}")
 
 
 if __name__ == "__main__":

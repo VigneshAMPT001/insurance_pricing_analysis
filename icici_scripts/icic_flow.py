@@ -307,13 +307,14 @@ async def open_close_idv_popup(page: Page, car_details: Dict):
 
         html_idv_popup = await get_html(page)
 
-        await page.locator("#idvPopup a.close.js-popup-close.triggerClick").click()
-
         # Copy car_details to avoid mutating the input dictionary
         recommended, min_idv, max_idv = extract_idv_values(html_idv_popup)
         updated_details["idv"] = recommended
         updated_details["idv_min"] = min_idv
         updated_details["idv_max"] = max_idv
+
+        await page.locator("#idvPopup a.close.js-popup-close.triggerClick").click()
+
     except Exception as e:
         print(f">>> Error opening/closing IDV popup: {e}")
         return updated_details
@@ -385,7 +386,7 @@ async def run():
         # ------------------------------------------------------
         # SAVE ALL SCRAPED DATA
         # ------------------------------------------------------
-        output_file = f"{output_path}/{CAR_NUMBER}-claimed.json"
+        output_file = f"{output_path}/{CAR_NUMBER}-not_claimed.json"
         with open(output_file, "w", encoding="utf-8") as f:
             json.dump(car_details, f, indent=4, ensure_ascii=False)
         print(f">>> All scraped data saved to: {output_file} ✔")

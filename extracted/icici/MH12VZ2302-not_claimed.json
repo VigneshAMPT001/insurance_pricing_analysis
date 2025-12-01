@@ -64,8 +64,8 @@
                 "Own Damage": [
                     {
                         "title": "No Frills, just basics",
-                        "premium": "₹2,215",
-                        "discount": "₹17,709",
+                        "premium": "₹6,056",
+                        "discount": "₹22,309",
                         "policy_year": "1 year policy",
                         "benefits": [
                             "Road Side Assistance",
@@ -75,8 +75,8 @@
                     },
                     {
                         "title": "Zero Dep, zero worries",
-                        "premium": "₹5,947",
-                        "discount": "₹22,113",
+                        "premium": "₹10,038",
+                        "discount": "₹27,007",
                         "policy_year": "1 year policy",
                         "benefits": [
                             "Road Side Assistance",
@@ -89,8 +89,8 @@
                     },
                     {
                         "title": "Smart Cover, better pricing",
-                        "premium": "₹8,957",
-                        "discount": "₹25,664",
+                        "premium": "₹13,298",
+                        "discount": "₹30,854",
                         "policy_year": "1 year policy",
                         "benefits": [
                             "Road Side Assistance",
@@ -158,8 +158,8 @@
                 "Own Damage": [
                     {
                         "title": "No Frills, just basics",
-                        "premium": "₹2,215",
-                        "discount": "₹17,709",
+                        "premium": "₹6,056",
+                        "discount": "₹22,309",
                         "policy_year": "1 year policy",
                         "benefits": [
                             "Road Side Assistance",
@@ -169,8 +169,8 @@
                     },
                     {
                         "title": "Zero Dep, zero worries",
-                        "premium": "₹5,947",
-                        "discount": "₹22,113",
+                        "premium": "₹10,038",
+                        "discount": "₹27,007",
                         "policy_year": "1 year policy",
                         "benefits": [
                             "Road Side Assistance",
@@ -183,8 +183,8 @@
                     },
                     {
                         "title": "Smart Cover, better pricing",
-                        "premium": "₹8,957",
-                        "discount": "₹25,664",
+                        "premium": "₹13,298",
+                        "discount": "₹30,854",
                         "policy_year": "1 year policy",
                         "benefits": [
                             "Road Side Assistance",
@@ -212,6 +212,7 @@
                     "premium_summary": {
                         "base_premium": "₹5,854",
                         "additional_covers": "",
+                        "sub_total": "₹ 7,346",
                         "additional_covers_breakdown": [
                             {
                                 "name": "Road Side Assistance",
@@ -226,7 +227,7 @@
                                 "price": "₹ 750"
                             }
                         ],
-                        "sub_total": null,
+                        "net_premium": "₹ 6,799",
                         "discounts": "",
                         "discount_breakdown": [
                             {
@@ -234,7 +235,6 @@
                                 "price": "-₹ 547"
                             }
                         ],
-                        "net_premium": null,
                         "total_premium": "₹ 6,799",
                         "gst": "18%"
                     }
@@ -249,6 +249,7 @@
                     "premium_summary": {
                         "base_premium": "₹5,854",
                         "additional_covers": "",
+                        "sub_total": "₹ 11,328",
                         "additional_covers_breakdown": [
                             {
                                 "name": "Road Side Assistance",
@@ -279,7 +280,7 @@
                                 "price": "₹ 100"
                             }
                         ],
-                        "sub_total": null,
+                        "net_premium": "₹ 10,781",
                         "discounts": "",
                         "discount_breakdown": [
                             {
@@ -287,7 +288,6 @@
                                 "price": "-₹ 547"
                             }
                         ],
-                        "net_premium": null,
                         "total_premium": "₹ 10,781",
                         "gst": "18%"
                     }
@@ -302,6 +302,7 @@
                     "premium_summary": {
                         "base_premium": "₹5,854",
                         "additional_covers": "",
+                        "sub_total": "₹ 14,588",
                         "additional_covers_breakdown": [
                             {
                                 "name": "Loss of Personal Belongings",
@@ -348,7 +349,7 @@
                                 "price": "₹ 299"
                             }
                         ],
-                        "sub_total": null,
+                        "net_premium": "₹ 14,041",
                         "discounts": "",
                         "discount_breakdown": [
                             {
@@ -356,7 +357,6 @@
                                 "price": "-₹ 547"
                             }
                         ],
-                        "net_premium": null,
                         "total_premium": "₹ 14,041",
                         "gst": "18%"
                     }
@@ -371,6 +371,7 @@
                     "premium_summary": {
                         "base_premium": "₹2,388",
                         "additional_covers": "",
+                        "sub_total": "₹ 3,505",
                         "additional_covers_breakdown": [
                             {
                                 "name": "Road Side Assistance",
@@ -385,7 +386,7 @@
                                 "price": "₹ 543"
                             }
                         ],
-                        "sub_total": null,
+                        "net_premium": "₹ 2,958",
                         "discounts": "",
                         "discount_breakdown": [
                             {
@@ -393,7 +394,6 @@
                                 "price": "-₹ 547"
                             }
                         ],
-                        "net_premium": null,
                         "total_premium": "₹ 2,958",
                         "gst": "18%"
                     }
@@ -408,6 +408,7 @@
                     "premium_summary": {
                         "base_premium": "₹2,388",
                         "additional_covers": "",
+                        "sub_total": "₹ 7,237",
                         "additional_covers_breakdown": [
                             {
                                 "name": "Road Side Assistance",
@@ -434,7 +435,7 @@
                                 "price": "₹ 100"
                             }
                         ],
-                        "sub_total": null,
+                        "net_premium": "₹ 6,690",
                         "discounts": "",
                         "discount_breakdown": [
                             {
@@ -442,7 +443,6 @@
                                 "price": "-₹ 547"
                             }
                         ],
-                        "net_premium": null,
                         "total_premium": "₹ 6,690",
                         "gst": "18%"
                     }
@@ -457,6 +457,7 @@
                     "premium_summary": {
                         "base_premium": "₹2,388",
                         "additional_covers": "",
+                        "sub_total": "₹ 10,247",
                         "additional_covers_breakdown": [
                             {
                                 "name": "Loss of Personal Belongings",
@@ -499,7 +500,7 @@
                                 "price": "₹ 299"
                             }
                         ],
-                        "sub_total": null,
+                        "net_premium": "₹ 9,700",
                         "discounts": "",
                         "discount_breakdown": [
                             {
@@ -507,7 +508,6 @@
                                 "price": "-₹ 547"
                             }
                         ],
-                        "net_premium": null,
                         "total_premium": "₹ 9,700",
                         "gst": "18%"
                     }

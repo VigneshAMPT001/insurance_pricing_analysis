@@ -8,10 +8,10 @@
     "previous_ncb": "45 %",
     "registered_under": "Individual",
     "previous_policy_type": "Comprehensive Package",
+    "no_change_of_ownership": true,
     "idv": 219701,
     "idv_min": 219701,
     "idv_max": 348053,
-    "no_change_of_ownership": true,
     "plans_offered": {
         "plans": [
             {
@@ -361,6 +361,7 @@
                     "premium_summary": {
                         "base_premium": "₹4,970",
                         "additional_covers": "",
+                        "sub_total": "₹ 6,387",
                         "additional_covers_breakdown": [
                             {
                                 "name": "Road Side Assistance",
@@ -375,7 +376,7 @@
                                 "price": "₹ 675"
                             }
                         ],
-                        "sub_total": null,
+                        "net_premium": "₹ 5,735",
                         "discounts": "",
                         "discount_breakdown": [
                             {
@@ -383,7 +384,6 @@
                                 "price": "-₹ 652"
                             }
                         ],
-                        "net_premium": null,
                         "total_premium": "₹ 5,735",
                         "gst": "18%"
                     }
@@ -398,6 +398,7 @@
                     "premium_summary": {
                         "base_premium": "₹4,602",
                         "additional_covers": "",
+                        "sub_total": "₹ 9,554",
                         "additional_covers_breakdown": [
                             {
                                 "name": "Road Side Assistance",
@@ -428,7 +429,7 @@
                                 "price": "₹ 100"
                             }
                         ],
-                        "sub_total": null,
+                        "net_premium": "₹ 9,086",
                         "discounts": "",
                         "discount_breakdown": [
                             {
@@ -436,7 +437,6 @@
                                 "price": "-₹ 468"
                             }
                         ],
-                        "net_premium": null,
                         "total_premium": "₹ 9,086",
                         "gst": "18%"
                     }
@@ -451,6 +451,7 @@
                     "premium_summary": {
                         "base_premium": "₹4,602",
                         "additional_covers": "",
+                        "sub_total": "₹ 11,603",
                         "additional_covers_breakdown": [
                             {
                                 "name": "Loss of Personal Belongings",
@@ -493,7 +494,7 @@
                                 "price": "₹ 299"
                             }
                         ],
-                        "sub_total": null,
+                        "net_premium": "₹ 11,135",
                         "discounts": "",
                         "discount_breakdown": [
                             {
@@ -501,7 +502,6 @@
                                 "price": "-₹ 468"
                             }
                         ],
-                        "net_premium": null,
                         "total_premium": "₹ 11,135",
                         "gst": "18%"
                     }
@@ -516,6 +516,7 @@
                     "premium_summary": {
                         "base_premium": "₹1,504",
                         "additional_covers": "",
+                        "sub_total": "₹ 2,621",
                         "additional_covers_breakdown": [
                             {
                                 "name": "Road Side Assistance",
@@ -530,7 +531,7 @@
                                 "price": "₹ 543"
                             }
                         ],
-                        "sub_total": null,
+                        "net_premium": "₹ 1,969",
                         "discounts": "",
                         "discount_breakdown": [
                             {
@@ -538,7 +539,6 @@
                                 "price": "-₹ 652"
                             }
                         ],
-                        "net_premium": null,
                         "total_premium": "₹ 1,969",
                         "gst": "18%"
                     }
@@ -553,6 +553,7 @@
                     "premium_summary": {
                         "base_premium": "₹1,136",
                         "additional_covers": "",
+                        "sub_total": "₹ 5,538",
                         "additional_covers_breakdown": [
                             {
                                 "name": "Road Side Assistance",
@@ -579,7 +580,7 @@
                                 "price": "₹ 100"
                             }
                         ],
-                        "sub_total": null,
+                        "net_premium": "₹ 5,070",
                         "discounts": "",
                         "discount_breakdown": [
                             {
@@ -587,7 +588,6 @@
                                 "price": "-₹ 468"
                             }
                         ],
-                        "net_premium": null,
                         "total_premium": "₹ 5,070",
                         "gst": "18%"
                     }
@@ -602,6 +602,7 @@
                     "premium_summary": {
                         "base_premium": "₹1,136",
                         "additional_covers": "",
+                        "sub_total": "₹ 7,337",
                         "additional_covers_breakdown": [
                             {
                                 "name": "Loss of Personal Belongings",
@@ -640,7 +641,7 @@
                                 "price": "₹ 299"
                             }
                         ],
-                        "sub_total": null,
+                        "net_premium": "₹ 6,869",
                         "discounts": "",
                         "discount_breakdown": [
                             {
@@ -648,7 +649,6 @@
                                 "price": "-₹ 468"
                             }
                         ],
-                        "net_premium": null,
                         "total_premium": "₹ 6,869",
                         "gst": "18%"
                     }
@@ -663,16 +663,16 @@
                     "premium_summary": {
                         "base_premium": "₹3,416",
                         "additional_covers": "",
+                        "sub_total": "₹ 4,091",
                         "additional_covers_breakdown": [
                             {
                                 "name": "Compulsory PA Cover for owner/driver",
                                 "price": "₹ 675"
                             }
                         ],
-                        "sub_total": null,
+                        "net_premium": "₹ 4,091",
                         "discounts": null,
                         "discount_breakdown": [],
-                        "net_premium": "₹ 4,091",
                         "total_premium": "₹ 4,091",
                         "gst": "18%"
                     }
