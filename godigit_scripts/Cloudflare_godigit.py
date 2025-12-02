@@ -5,6 +5,7 @@ import json
 
 from godigit_scripts.bs4_flow import scrape_plan_info
 from godigit_scripts.godigit_bs4_scraper import parse_comprehensive_plan_footer, scrape_idv_block, scrape_plan_card, scrape_policy_durations
+from godigit_scripts.test import extract_cost_breakup_from_html, parse_addon_pack, parse_popular, parse_popular_pack, parse_trust_card_numbers_only
 
 BASE_URL = "https://www.godigit.com/"
 REG_NO = "MH04KW1827"
@@ -259,6 +260,31 @@ async def main():
 
             print("=== PREMIUM FOOTER ===")
             print(json.dumps(parse_comprehensive_plan_footer(html_content), indent=2))
+            print("=== PREMIUM FOOTER (CLEAN NUMBERS) ===")
+            result = extract_cost_breakup_from_html(html_content)
+            print(json.dumps(result, indent=2))
+            
+            print("=== PREMIUM FOOTER (CLEAN NUMBERS) ===")
+            result = extract_cost_breakup_from_html(html_content)
+            print(json.dumps(result, indent=2))
+
+
+            print("=== add on pack ===")
+            result = parse_addon_pack(html_content)
+            print(json.dumps(result, indent=2))
+
+            print("=== Popular ===")
+            result = parse_popular_pack(html_content)
+            print(json.dumps(result, indent=2))
+            
+            print("=== Park2 ===")
+            result = parse_popular(html_content)
+            print(json.dumps(result, indent=2))
+            
+            print("=== Trust card  ===")
+            result = parse_trust_card_numbers_only(html_content)
+            print(json.dumps(result, indent=2))
+
         except:
             print("⚠ Could not select a plan")
 

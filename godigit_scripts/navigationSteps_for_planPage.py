@@ -6,7 +6,7 @@ import os
 from pathlib import Path
 from datetime import datetime
 from playwright.async_api import async_playwright
-from godigit_bs4 import parse_comprehensive_plan_footer, scrape_idv_block, scrape_plan_card, scrape_policy_durations ,scrape_plan_info ,extract_extra_addons, extract_ncb_percentage_and_value, extract_addon_names, extract_policy_durations, parse_trust_card_numbers_only, parse_popular, parse_popular_pack, parse_addon_pack, extract_cost_breakup_from_html
+from godigit_bs4 import parse_comprehensive_plan_footer, scrape_idv_block, scrape_plan_card, scrape_policy_durations ,scrape_plan_info ,extract_extra_addons, extract_ncb_percentage_and_value, extract_addon_names, extract_policy_durations, parse_trust_card_numbers_only, parse_popular, parse_popular_pack, parse_addon_pack, extract_cost_breakup_from_html, extract_idv_values
 
 
 # ----------------- CONFIG -----------------
@@ -40,7 +40,8 @@ from godigit_bs4 import (
     scrape_plan_card,
     scrape_policy_durations,
     scrape_idv_block,
-    parse_comprehensive_plan_footer
+    parse_comprehensive_plan_footer,
+    extract_idv_values
 )
 #
 # The script will attempt to call these functions if they exist.
@@ -283,6 +284,99 @@ async def wait_for_plan_page(page):
         print("⚠ Plan page did not load in time")
         await clear_backdrop(page)
     return plan_section
+# ----------------- NEW BLOCK YOU REQUESTED -----------------
+
+async def handle_pa_owner_cover(page):
+    print("[A] Handling PA Owner Cover…")
+
+    section = page.locator("#pa-cover.extra-package-addon.pa-owner-cover-section.d-block.package-addon-pa-owner")
+    await section.wait_for(timeout=20000)
+
+    checkbox = section.locator("input#paOwner.ng-tns-c136-2.ng-star-inserted[value='1500000.02']")
+    await click_force_js(page, checkbox)
+
+    # wait premium update
+    await page.wait_for_timeout(3000)
+
+
+async def handle_idv_edit_icons(page):
+    print("[B] Handling IDV and Edit Icons…")
+
+    idv_section = page.locator(".motor-idv-content.idv-mob-des.ng-tns-c110-39.ng-star-inserted")
+    await click_force_js(page, idv_section)
+    await page.wait_for_timeout(800)
+
+    container = page.locator(".ng-tns-c136-2")
+    await container.wait_for(timeout=15000)
+
+    edit_icons = container.locator(".editIcon.ml-auto.select-btn.font-extrabold.text-xs.ng-tns-c136-2.ng-star-inserted")
+    count = await edit_icons.count()
+
+    for i in range(count):
+        icon = edit_icons.nth(i)
+        await click_force_js(page, icon)
+        await page.wait_for_timeout(1000)
+
+        html_path = save_full_page_html(
+            page,
+            prefix=f"idv_editicon_{i}"
+        )
+        print(f"[B{i}] Saved editIcon HTML:", html_path)
+
+
+async def handle_select_modal(page):
+    print("[C] Clicking Select & Modal Options…")
+
+    select_btn = page.locator("button:has-text('Select')")
+    await click_force_js(page, select_btn)
+    await page.wait_for_timeout(1500)
+
+    modal = page.locator(".ng-tns-c60-45")
+    await modal.wait_for(timeout=20000)
+
+    radio = modal.locator(".zdPopUpRadioButton.mr-3.ng-tns-c136-2.previousZdOpt")
+    await click_force_js(page, radio)
+
+    await page.wait_for_timeout(3000)  # wait premium update
+
+
+async def handle_ncb_addon(page):
+    print("[D] Handling NCB Protector Add-on…")
+
+    addon_section = page.locator(".pl-2_5.desktop-idv-content.add-on-list.mb-24.ng-tns-c136-2.ng-star-inserted")
+    await addon_section.wait_for(timeout=20000)
+
+    checkbox = addon_section.locator("input.grey-border.tab-key-border.ng-tns-c136-2#ncb-protector")
+    await click_force_js(page, checkbox)
+    await page.wait_for_timeout(2000)
+
+    path = save_full_page_html(page, prefix="ncb_section")
+    print("[D] Saved updated Add-on Section:", path)
+
+
+async def handle_footer_card(page):
+    print("[E] Handling Footer Card…")
+
+    footer = page.locator(".footer-card")
+    await footer.wait_for(timeout=20000)
+
+    await click_force_js(page, footer)
+    await page.wait_for_timeout(1000)
+
+    path = save_full_page_html(page, prefix="footer_card")
+    print("[E] Footer HTML Saved:", path)
+
+
+# ----------------- MASTER FUNCTION TO RUN ALL -----------------
+
+async def run_additional_steps(page):
+    await handle_pa_owner_cover(page)
+    await handle_idv_edit_icons(page)
+    await handle_select_modal(page)
+    await handle_ncb_addon(page)
+    await handle_footer_card(page)
+    print("[✔] All extra steps completed")
+
 
 # ----------------- Snapshot helpers -----------------
 

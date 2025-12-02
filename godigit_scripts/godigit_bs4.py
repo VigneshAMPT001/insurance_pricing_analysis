@@ -491,6 +491,38 @@ def parse_comprehensive_plan_footer(html):
 
     return data
 
+def extract_idv_values(html):
+    soup = BeautifulSoup(html, "html.parser")
+
+    def clean_number(text):
+        if not text:
+            return None
+        return int(re.sub(r"[^\d]", "", text))
+
+    # --- Main IDV shown at top ---
+    main_idv_elem = soup.select_one("p span.notranslate")
+    main_idv = clean_number(main_idv_elem.get_text(strip=True)) if main_idv_elem else None
+
+    # --- Input box min/max attributes ---
+    input_field = soup.select_one("input#idvAmountField")
+    input_min = clean_number(input_field.get("min")) if input_field else None
+    input_max = clean_number(input_field.get("max")) if input_field else None
+
+    # --- Bottom min/max displayed text (₹ 3,13,000 etc.) ---
+    min_text_elem = soup.select_one("#minValue p")
+    max_text_elem = soup.select_one("#maxValue p")
+
+    slider_min = clean_number(min_text_elem.get_text(strip=True)) if min_text_elem else None
+    slider_max = clean_number(max_text_elem.get_text(strip=True)) if max_text_elem else None
+
+    return {
+        "main_idv": main_idv,
+        "input_min": input_min,
+        "input_max": input_max,
+        "slider_min": slider_min,
+        "slider_max": slider_max
+    }
+
 
 
 
@@ -569,3 +601,6 @@ if __name__ == "__main__":
 
     print("=== PREMIUM FOOTER ===")
     print(json.dumps(parse_comprehensive_plan_footer(html_content), indent=2))
+    
+    print("=== extra idv ===")
+    print(json.dumps(extract_idv_values(html_content), indent=2))
