@@ -350,19 +350,32 @@ async def handle_footer_premium_and_continue(page):
 def scrape_plan_card(html):
     soup = BeautifulSoup(html, "html.parser")
 
-    plan_data = {}
+    plan_data = {"plan_name": None, "details": []}
 
-    name_tag = soup.find("div", class_="plan-name")
+    # Select the .plan-card that has the active class
+    active_card = soup.select_one("div.plan-card.active")
+    if not active_card:
+        return plan_data
+
+    # Plan name inside the active card
+    name_tag = active_card.select_one(".plan-name")
     plan_data["plan_name"] = name_tag.get_text(strip=True) if name_tag else None
 
-    info_section = soup.find("div", id="ComprehensiveCoverPlanInfo")
-
+    # Collect all <p> elements inside any .plan-info within the active card
     details = []
-    if info_section:
-        for p in info_section.find_all("p"):
-            text = p.get_text(strip=True)
-            if text:
-                details.append(text)
+    for p in active_card.select(".plan-info p"):
+        text = p.get_text(strip=True)
+        if text:
+            details.append(text)
+
+    # Some info appears in <p> directly (not under .plan-info) — also collect them if present
+    # (optional, keep it if your HTML contains standalone <p> elements you want)
+    for p in active_card.select(
+        " .plan-details-wrap p, .plan-details-wrap > .plan-card-header p"
+    ):
+        text = p.get_text(strip=True)
+        if text and text not in details:
+            details.append(text)
 
     plan_data["details"] = details
     return plan_data
@@ -569,63 +582,64 @@ async def extract_cost_breakup(page):
 # -------------------------------
 if __name__ == "__main__":
 
-    html_file_path = Path(
-        "/home/ampara/Documents/insurance_pricing_analysis/godigit_scripts/go.html"
-    )
+    html_file_path = Path("godigit_scripts/test.html")
 
     with open(html_file_path, "r", encoding="utf-8") as f:
         html_content = f.read()
 
-    print("=== PREMIUM FOOTER (CLEAN NUMBERS) ===")
-    result = scrape_cost_breakup(html_content)
-    print(json.dumps(result, indent=2))
-
-    print("=== add on pack ===")
-    result = parse_addon_pack(html_content)
-    print(json.dumps(result, indent=2))
-
-    print("=== Popular ===")
-    result = parse_popular_pack(html_content)
-    print(json.dumps(result, indent=2))
-
-    print("=== Park2 ===")
-    result = parse_popular(html_content)
-    print(json.dumps(result, indent=2))
-
-    print("=== Trust card  ===")
-    result = parse_trust_card_numbers_only(html_content)
-    print(json.dumps(result, indent=2))
-
-    print("=== policy duration  ===")
-    result = extract_policy_durations(html_content)
-    print(json.dumps(result, indent=2))
-
-    print("=== extra add on  ===")
-    result = extract_addon_names(html_content)
-    print(json.dumps(result, indent=2))
-
-    print("=== extra NCB value ===")
-    result = extract_ncb_percentage_and_value(html_content)
-    print(json.dumps(result, indent=2))
-
-    print("=== extra add on ===")
-    result = extract_extra_addons(html_content)
-    print(json.dumps(result, indent=2))
-
-    print("=== PLAN INFO ===")
-    print(json.dumps(scrape_plan_info(html_content), indent=2))
-
     print("=== PLAN CARD ===")
     print(json.dumps(scrape_plan_card(html_content), indent=2))
 
-    print("=== POLICY DURATIONS ===")
-    print(json.dumps(scrape_policy_durations(html_content), indent=2))
+    # print("=== PREMIUM FOOTER (CLEAN NUMBERS) ===")
+    # result = scrape_cost_breakup(html_content)
+    # print(json.dumps(result, indent=2))
 
-    print("=== IDV BLOCK ===")
-    print(json.dumps(scrape_idv_block(html_content), indent=2))
+    # print("=== add on pack ===")
+    # result = parse_addon_pack(html_content)
+    # print(json.dumps(result, indent=2))
 
-    print("=== PREMIUM FOOTER ===")
-    print(json.dumps(parse_comprehensive_plan_footer(html_content), indent=2))
+    # print("=== Popular ===")
+    # result = parse_popular_pack(html_content)
+    # print(json.dumps(result, indent=2))
 
-    print("=== extra idv ===")
-    print(json.dumps(extract_idv_values(html_content), indent=2))
+    # print("=== Park2 ===")
+    # result = parse_popular(html_content)
+    # print(json.dumps(result, indent=2))
+
+    # print("=== Trust card  ===")
+    # result = parse_trust_card_numbers_only(html_content)
+    # print(json.dumps(result, indent=2))
+
+    # print("=== policy duration  ===")
+    # result = extract_policy_durations(html_content)
+    # print(json.dumps(result, indent=2))
+
+    # print("=== extra add on  ===")
+    # result = extract_addon_names(html_content)
+    # print(json.dumps(result, indent=2))
+
+    # print("=== extra NCB value ===")
+    # result = extract_ncb_percentage_and_value(html_content)
+    # print(json.dumps(result, indent=2))
+
+    # print("=== extra add on ===")
+    # result = extract_extra_addons(html_content)
+    # print(json.dumps(result, indent=2))
+
+    # print("=== PLAN INFO ===")
+    # print(json.dumps(scrape_plan_info(html_content), indent=2))
+
+    # print("=== PLAN CARD ===")
+    # print(json.dumps(scrape_plan_card(html_content), indent=2))
+
+    # print("=== POLICY DURATIONS ===")
+    # print(json.dumps(scrape_policy_durations(html_content), indent=2))
+
+    # print("=== IDV BLOCK ===")
+    # print(json.dumps(scrape_idv_block(html_content), indent=2))
+
+    # print("=== PREMIUM FOOTER ===")
+    # print(json.dumps(parse_comprehensive_plan_footer(html_content), indent=2))
+
+    # print("=== extra idv ===")
+    # print(json.dumps(extract_idv_values(html_content), indent=2))

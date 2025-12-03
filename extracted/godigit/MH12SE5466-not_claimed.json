@@ -2,28 +2,26 @@
   {
     "Comprehensive Cover -": {
       "addons": {
-        "pack_name": "Ultimate pack (8 add-on)",
-        "addon_count": "8 add-on",
+        "pack_name": "Ultimate pack (6 add-on)",
+        "addon_count": "6 add-on",
         "premium": null,
         "addons": [
           "Breakdown Assistance",
           "Tyre Protect",
           "Parts Depreciation Protect",
           "Consumable cover",
-          "Engine and Gear Box Protect",
-          "Return to Invoice",
           "Personal Belonging",
           "Key and Lock Protect"
         ]
       },
       "idv": {
-        "idv_value": "312000",
-        "popular_range": "80% of the users select IDV between ₹ 3,99,500 to ₹ 4,86,000",
-        "min_idv": "313000",
-        "max_idv": "486000",
-        "slider_min": "313000",
-        "slider_max": "486000",
-        "slider_value": "312000",
+        "idv_value": "273000",
+        "popular_range": "80% of the users select IDV between ₹ 3,49,500 to ₹ 4,25,000",
+        "min_idv": "274000",
+        "max_idv": "425000",
+        "slider_min": "274000",
+        "slider_max": "425000",
+        "slider_value": "273000",
         "edit_available": true
       },
       "plan_card": {
@@ -31,48 +29,46 @@
         "details": [
           "1 year Own Damage",
           "1 year Third Party",
-          "Up to 12000 km/year",
+          "Up to 15000 km/year",
           "Pre Inspection Required",
           "Pay as you Drive"
         ]
       },
       "premium_breakup": {
-        "own_damage": "5489",
+        "own_damage": "7073",
         "third_party": "3416",
-        "addons": "4108",
-        "ncb_discount": "-225",
-        "digit_discount": "-4990",
-        "net_premium": "7101",
-        "gst": "1278",
-        "final_premium": "8505"
+        "addons": "674",
+        "ncb_discount": "-354",
+        "digit_discount": "-5658",
+        "net_premium": "4726",
+        "gst": "851",
+        "final_premium": "5653"
       }
     }
   },
   {
     "Comprehensive Cover": {
       "addons": {
-        "pack_name": "Ultimate pack (8 add-on)",
-        "addon_count": "8 add-on",
-        "premium": "₹263 /month",
+        "pack_name": "Ultimate pack (6 add-on)",
+        "addon_count": "6 add-on",
+        "premium": null,
         "addons": [
           "Breakdown Assistance",
           "Tyre Protect",
           "Parts Depreciation Protect",
           "Consumable cover",
-          "Engine and Gear Box Protect",
-          "Return to Invoice",
           "Personal Belonging",
           "Key and Lock Protect"
         ]
       },
       "idv": {
-        "idv_value": "312000",
-        "popular_range": "80% of the users select IDV between ₹ 3,99,500 to ₹ 4,86,000",
-        "min_idv": "313000",
-        "max_idv": "486000",
-        "slider_min": "313000",
-        "slider_max": "486000",
-        "slider_value": "312000",
+        "idv_value": "273000",
+        "popular_range": "80% of the users select IDV between ₹ 3,49,500 to ₹ 4,25,000",
+        "min_idv": "274000",
+        "max_idv": "425000",
+        "slider_min": "274000",
+        "slider_max": "425000",
+        "slider_value": "273000",
         "edit_available": true
       },
       "plan_card": {
@@ -84,14 +80,14 @@
         ]
       },
       "premium_breakup": {
-        "own_damage": "5489",
+        "own_damage": "7073",
         "third_party": "3416",
-        "addons": "607",
-        "ncb_discount": "-314",
-        "digit_discount": "-4790",
-        "net_premium": "4049",
-        "gst": "729",
-        "final_premium": "4843"
+        "addons": "4420",
+        "ncb_discount": "-766",
+        "digit_discount": "-4008",
+        "net_premium": "10785",
+        "gst": "1941",
+        "final_premium": "12875"
       }
     }
   },

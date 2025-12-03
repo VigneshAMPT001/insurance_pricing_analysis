@@ -24,7 +24,7 @@ from godigit_bs4 import (
 
 # ----------------- CONFIG -----------------
 BASE_URL = "https://www.godigit.com/"
-REG_NO = "MH04KW1827"
+REG_NO = "MH12SE5466"
 MOBILE = "8712345645"
 
 OUTPUT_DIR = Path("extracted/godigit")
@@ -248,9 +248,29 @@ async def handle_pa_owner_cover(page):
     checkbox = section.locator(
         "input#paOwner.ng-tns-c136-2.ng-star-inserted[value='1500000.02']"
     )
-    # Skip if already checked
+
+    # Find the label for the checkbox
+    label = section.locator("label[for='paOwner']")
+
+    # Check: if the label has a ::after pseudo element, consider it as selected
+    label_after_content = await page.evaluate(
+        """
+        (el) => {
+            const style = window.getComputedStyle(el, '::after');
+            return style && style.content && style.content !== "none";
+        }
+        """,
+        await label.element_handle(),
+    )
+    if label_after_content:
+        print(
+            "  - PA Owner Cover already selected (label has ::after). Skipping click."
+        )
+        return
+
+    # Fallback: Skip if already checked
     if await checkbox.is_checked():
-        print("  - PA Owner Cover already selected. Skipping click.")
+        print("  - PA Owner Cover already selected (checkbox). Skipping click.")
         return
 
     await click_force_js(page, checkbox)
@@ -295,16 +315,33 @@ async def handle_idv_edit_icon(page):
 
 async def handle_ncb_addon(page):
     print("[D] Handling NCB Protector Add-on…")
-    # Find the checkbox input by id
-    ncb_checkbox = page.locator("input#ncb-protector-addon")
-    # If already checked, skip clicking
-    if await ncb_checkbox.is_checked():
-        print("  - NCB Protector Add-on already selected. Skipping click.")
-        return
-    # Otherwise, click the label to activate
+
+    # Find the label for NCB Protector Add-on
     ncb_protector_checkbox_label = page.locator(
         "label#ncb-protector[for='ncb-protector-addon']"
     )
+
+    # Check if the label has ::after, indicating already checked
+    has_after = await page.evaluate(
+        """(label) => {
+            const style = window.getComputedStyle(label, '::after');
+            return !!style && !!style.content && style.content !== "none" && style.content !== "";
+        }""",
+        await ncb_protector_checkbox_label.element_handle(),
+    )
+    if has_after:
+        print(
+            "  - NCB Protector Add-on already selected (label has ::after). Skipping click."
+        )
+        return
+
+    # Fallback: Find the checkbox input by id and check if already checked
+    ncb_checkbox = page.locator("input#ncb-protector-addon")
+    if await ncb_checkbox.is_checked():
+        print("  - NCB Protector Add-on already selected (checkbox). Skipping click.")
+        return
+
+    # Otherwise, click the label to activate
     await ncb_protector_checkbox_label.click(force=True)
     await page.wait_for_timeout(5000)
 
@@ -356,7 +393,7 @@ async def select_ultimate_addon_package(page: Page):
         addons_details = parse_addon_pack(addon_html)
         await last_package.scroll_into_view_if_needed()
 
-        select_btn = last_package.locator("div.editIcon.select-btn")
+        select_btn = last_package.locator("div.editIcon.select-btn:not(.remove-btn)")
 
         # Scroll + click
         # await click_force_js(page, select_btn)
@@ -379,7 +416,45 @@ async def select_ultimate_addon_package(page: Page):
         print(f"⚠ Error selecting the ultimate addon package: {e}")
 
 
-# ----------------- MASTER FUNCTION TO RUN ALL -----------------
+async def select_all_addons(page: Page):
+    addon_items = page.locator("div.add-on-list .extra-package-addon")
+
+    count = await addon_items.count()
+    print(f"Found {count} addons")
+
+    addons = []  # to store extracted data
+
+    for i in range(count):
+        item = addon_items.nth(i)
+
+        checkbox = item.locator("input[type='checkbox']")
+        label = item.locator("label")
+        title = await item.locator(".checkbox-label").inner_text()
+
+        # Extract addon details
+        addon_info = {
+            "id": await checkbox.get_attribute("id"),
+            "label": await item.locator(".checkbox-label").inner_text(),
+            "price": await item.locator(".price").inner_text(),
+        }
+        addons.append(addon_info)
+
+        # Check if already selected
+        is_checked = await checkbox.is_checked()
+        if is_checked:
+            print(f"Skipping '{title}' — already checked")
+            continue
+
+        # Scroll, click, and wait a bit
+        await label.scroll_into_view_if_needed()
+        await label.click(force=True)
+
+        print(f"Clicked addon: {title}")
+
+        await page.wait_for_timeout(3000)  # wait before next click
+
+    print("All addons processed.")
+    return addons
 
 
 async def click_continue_btn(page: Page):
@@ -419,29 +494,32 @@ async def click_back_breadcrumb(page: Page):
         return False
 
 
+# ----------------- MASTER FUNCTION TO RUN ALL -----------------
+
+
 async def run_additional_steps(page: Page, go_back):
     details = {}
-    addon_data = await select_ultimate_addon_package(page)
-    await handle_pa_owner_cover(page)
-    await handle_idv_edit_icon(page)
-    await handle_ncb_addon(page)
-    await page.wait_for_timeout(10000)
+    plan_details = {}
     initial_html = await page.content()
-
     plan_card = scrape_plan_card(initial_html)
     plan_name = plan_card.get("plan_name", "default")
+    if "third party" in plan_name.lower():
+        td_addons = await select_all_addons(page)
+        plan_details["addons"] = td_addons
+    else:
+        addon_data = await select_ultimate_addon_package(page)
+        await handle_pa_owner_cover(page)
+        await handle_idv_edit_icon(page)
+        await handle_ncb_addon(page)
+        await page.wait_for_timeout(10000)
+        plan_details["addons"] = addon_data
+        plan_details["idv"] = scrape_idv_block(initial_html)
+        plan_details["plan_card"] = plan_card
 
     # Gather all the data under the plan_name key
-    plan_details = {}
-    plan_details["idv"] = scrape_idv_block(initial_html)
-    print(plan_details["idv"])
-    plan_details["plan_card"] = plan_card
-    print(plan_card)
-
     await click_continue_btn(page)
     await page.wait_for_timeout(10000)
     plan_details["premium_breakup"] = await extract_cost_breakup(page)
-    print(plan_details["premium_breakup"])
 
     # Store under main details dict with plan_name as the main key
     details[plan_name] = plan_details
@@ -453,17 +531,6 @@ async def run_additional_steps(page: Page, go_back):
     if go_back:
         await click_back_breadcrumb(page)
     return details
-
-
-async def wait_for_and_click(selector, page, description="", timeout=15000):
-    try:
-        loc = page.locator(selector)
-        await loc.wait_for(state="attached", timeout=timeout)
-        await page.wait_for_timeout(200)
-        return await click_force_js(page, loc)
-    except Exception as e:
-        print(f"⚠ Could not click {description} ({selector}): {e}")
-        return False
 
 
 async def main():
