@@ -6,7 +6,23 @@ import os
 from pathlib import Path
 from datetime import datetime
 from playwright.async_api import async_playwright
-from godigit_bs4 import parse_comprehensive_plan_footer, scrape_idv_block, scrape_plan_card, scrape_policy_durations ,scrape_plan_info ,extract_extra_addons, extract_ncb_percentage_and_value, extract_addon_names, extract_policy_durations, parse_trust_card_numbers_only, parse_popular, parse_popular_pack, parse_addon_pack, extract_cost_breakup_from_html, extract_idv_values
+from godigit_bs4 import (
+    parse_comprehensive_plan_footer,
+    scrape_idv_block,
+    scrape_plan_card,
+    scrape_policy_durations,
+    scrape_plan_info,
+    extract_extra_addons,
+    extract_ncb_percentage_and_value,
+    extract_addon_names,
+    extract_policy_durations,
+    parse_trust_card_numbers_only,
+    parse_popular,
+    parse_popular_pack,
+    parse_addon_pack,
+    extract_cost_breakup_from_html,
+    extract_idv_values,
+)
 
 # ----------------- CONFIG -----------------
 BASE_URL = "https://www.godigit.com/"
@@ -40,26 +56,35 @@ from godigit_bs4 import (
     scrape_policy_durations,
     scrape_idv_block,
     parse_comprehensive_plan_footer,
-    extract_idv_values
+    extract_idv_values,
 )
+
 #
 # The script will attempt to call these functions if they exist.
 # --------------------------------------------------------------------
 
 # ----------------- Utilities -----------------
 
+
 def ts():
     return datetime.utcnow().isoformat().replace(":", "-").split(".")[0]
 
+
 def save_file_path(prefix, plan_name, tag):
-    safe_name = "".join(c if c.isalnum() or c in "-_." else "_" for c in str(plan_name))[:120]
+    safe_name = "".join(
+        c if c.isalnum() or c in "-_." else "_" for c in str(plan_name)
+    )[:120]
     filename = f"{prefix}_{safe_name}_{tag}_{ts()}.html"
     return OUTPUT_DIR / filename
 
+
 def save_json_path(prefix, plan_name, tag):
-    safe_name = "".join(c if c.isalnum() or c in "-_." else "_" for c in str(plan_name))[:120]
+    safe_name = "".join(
+        c if c.isalnum() or c in "-_." else "_" for c in str(plan_name)
+    )[:120]
     filename = f"{prefix}_{safe_name}_{tag}_{ts()}.json"
     return OUTPUT_DIR / filename
+
 
 async def save_outer_html(page, selector, filepath):
     try:
@@ -69,10 +94,12 @@ async def save_outer_html(page, selector, filepath):
             loc = page.locator(selector).first
             if await loc.count() == 0:
                 # fallback: try querySelector via evaluate
-                html = await page.evaluate(f"""() => {{
+                html = await page.evaluate(
+                    f"""() => {{
                     const el = document.querySelector("{selector.replace('"', '\\"')}");
                     return el ? el.outerHTML : null;
-                }}""")
+                }}"""
+                )
                 if not html:
                     html = ""
             else:
@@ -84,6 +111,7 @@ async def save_outer_html(page, selector, filepath):
     except Exception as e:
         print(f"⚠ Could not save {selector} -> {filepath}: {e}")
         return False
+
 
 async def save_full_page_html(page, prefix="plan_page_full"):
     try:
@@ -99,6 +127,7 @@ async def save_full_page_html(page, prefix="plan_page_full"):
         print(f"⚠ Failed to save full page HTML ({prefix}): {e}")
         return None
 
+
 async def click_force_js(page, locator):
     for attempt in range(5):
         try:
@@ -109,7 +138,9 @@ async def click_force_js(page, locator):
         try:
             box = await locator.bounding_box()
             if box:
-                await page.mouse.click(box["x"] + box["width"]/2, box["y"] + box["height"]/2)
+                await page.mouse.click(
+                    box["x"] + box["width"] / 2, box["y"] + box["height"] / 2
+                )
                 return True
         except Exception:
             pass
@@ -123,6 +154,7 @@ async def click_force_js(page, locator):
         await page.wait_for_timeout(500)
     return False
 
+
 async def fill_force_js(page, locator, value):
     try:
         await locator.fill(value)
@@ -133,26 +165,34 @@ async def fill_force_js(page, locator, value):
         handle = await locator.element_handle()
         if handle:
             # set value and dispatch events
-            await page.evaluate("""
+            await page.evaluate(
+                """
                 (el, val) => {
                   el.value = val;
                   el.dispatchEvent(new Event('input', { bubbles: true }));
                   el.dispatchEvent(new Event('change', { bubbles: true }));
                 }
-            """, handle, value)
+            """,
+                handle,
+                value,
+            )
     except Exception:
         pass
 
+
 async def clear_backdrop(page):
     try:
-        await page.evaluate("""
+        await page.evaluate(
+            """
         document.querySelectorAll('.modal-backdrop.show').forEach(e => e.remove());
         document.body.classList.remove('modal-open');
         document.body.style.overflow = 'auto';
-        """)
+        """
+        )
         await page.wait_for_timeout(300)
     except Exception:
         pass
+
 
 async def wait_for_cloudflare(page, timeout_s=30):
     for _ in range(timeout_s):
@@ -165,12 +205,20 @@ async def wait_for_cloudflare(page, timeout_s=30):
     print("⚠ Cloudflare check timeout")
     return False
 
+
 # Small helper to detect total premium changes (best-effort)
 async def _read_total_premium_text(page):
     # Try several common candidate selectors for total premium
     candidates = [
-        ".total-premium", ".total-price", ".grand-total", ".premium-amount",
-        ".totalPremium", ".total-amount", ".price.total", ".final-price", ".finalPremium"
+        ".total-premium",
+        ".total-price",
+        ".grand-total",
+        ".premium-amount",
+        ".totalPremium",
+        ".total-amount",
+        ".price.total",
+        ".final-price",
+        ".finalPremium",
     ]
     for sel in candidates:
         try:
@@ -189,6 +237,7 @@ async def _read_total_premium_text(page):
     except Exception:
         return ""
 
+
 async def wait_for_premium_update(page, prev_value=None, timeout_s=12):
     # If prev_value not provided, read once and then wait for change
     try:
@@ -205,7 +254,9 @@ async def wait_for_premium_update(page, prev_value=None, timeout_s=12):
         await page.wait_for_timeout(2000)
         return None
 
+
 # ----------------- Page actions -----------------
+
 
 async def click_car_insurance_tab(page):
     print("[1] Clicking Car Insurance tab…")
@@ -213,6 +264,7 @@ async def click_car_insurance_tab(page):
     await page.wait_for_timeout(500)
     await click_force_js(page, tab)
     await page.wait_for_timeout(1000)
+
 
 async def fill_registration_number(page):
     print("[2] Filling vehicle registration…")
@@ -229,6 +281,7 @@ async def fill_registration_number(page):
     except Exception:
         print("❌ Could not find registration input.")
 
+
 async def fill_mobile_number(page):
     print("[3] Filling mobile number…")
     try:
@@ -243,6 +296,7 @@ async def fill_mobile_number(page):
         await fill_force_js(page, textbox, MOBILE)
     except Exception:
         print("❌ Could not find mobile input.")
+
 
 async def click_view_prices(page):
     print("[4] Clicking View Prices…")
@@ -263,14 +317,14 @@ async def click_view_prices(page):
         await page.wait_for_function(
             """(el) => el && !el.disabled && !el.classList.contains('btn-loading')""",
             arg=el_handle,
-            timeout=15000
+            timeout=15000,
         )
     except Exception:
         print("⚠ Button stayed disabled; proceeding anyway")
     try:
         await page.evaluate(
             "(el) => el.scrollIntoView({behavior:'instant', block:'center'})",
-            await btn.element_handle()
+            await btn.element_handle(),
         )
     except Exception:
         pass
@@ -282,6 +336,7 @@ async def click_view_prices(page):
         return True
     print("❌ Could not click 'View Prices'.")
     return False
+
 
 async def handle_km_modal(page):
     print("[6] Checking for KM modal…")
@@ -298,6 +353,7 @@ async def handle_km_modal(page):
     except Exception:
         print("⚠ KM modal not found — continuing…")
 
+
 async def wait_for_plan_page(page):
     print("[8] Waiting for Plan Page to load…")
     plan_section = page.locator(".plans-container, .plan-cards, .plan-cards-wrapper")
@@ -311,7 +367,9 @@ async def wait_for_plan_page(page):
         await clear_backdrop(page)
     return plan_section
 
+
 # ----------------- NEW STEPS YOU REQUESTED -----------------
+
 
 async def handle_pa_owner_cover(page):
     print("[A] Handling PA Owner Cover…")
@@ -329,7 +387,9 @@ async def handle_pa_owner_cover(page):
             await save_full_page_html(page, prefix="pa_owner_after_click")
             return
         # fallback: wrapper then checkbox inside
-        wrapper = page.locator("#pa-cover, .extra-package-addon.pa-owner-cover-section, .package-addon-pa-owner")
+        wrapper = page.locator(
+            "#pa-cover, .extra-package-addon.pa-owner-cover-section, .package-addon-pa-owner"
+        )
         await wrapper.first.wait_for(state="visible", timeout=15000)
         cb = wrapper.locator("input[type='checkbox']").first
         if await cb.count() > 0:
@@ -342,8 +402,11 @@ async def handle_pa_owner_cover(page):
     except Exception as e:
         print(f"[A] PA owner cover step failed: {e}")
 
+
 async def handle_motor_idv_and_edit_icons(page):
-    print("[B] Handling motor-idv-content -> find edit icons -> click each and save HTML")
+    print(
+        "[B] Handling motor-idv-content -> find edit icons -> click each and save HTML"
+    )
     try:
         # wait for motor idv content
         midv = page.locator(".motor-idv-content, .idv-mob-des")
@@ -363,7 +426,9 @@ async def handle_motor_idv_and_edit_icons(page):
         ecount = await edit_icons.count()
         if ecount == 0:
             # try a more specific class used in your description
-            edit_icons = page.locator(".editIcon.ml-auto.select-btn.font-extrabold.text-xs")
+            edit_icons = page.locator(
+                ".editIcon.ml-auto.select-btn.font-extrabold.text-xs"
+            )
             ecount = await edit_icons.count()
         for i in range(ecount):
             try:
@@ -377,11 +442,14 @@ async def handle_motor_idv_and_edit_icons(page):
     except Exception as e:
         print(f"[B] motor idv / edit icons step failed: {e}")
 
+
 async def handle_select_modal_and_choose(page):
     print("[C] Click Select button and choose radio in modal")
     try:
         # click first 'Select' button visible
-        select_btn = page.locator("button:has-text('Select'), .select-button, button.select")
+        select_btn = page.locator(
+            "button:has-text('Select'), .select-button, button.select"
+        )
         if await select_btn.count() == 0:
             print("⚠ No select button found")
             return
@@ -391,7 +459,9 @@ async def handle_select_modal_and_choose(page):
         await modal.first.wait_for(state="visible", timeout=15000)
         await page.wait_for_timeout(500)
         # choose the preferred radio option
-        radio = modal.locator(".zdPopUpRadioButton.previousZdOpt, .zdPopUpRadioButton, input[type='radio']")
+        radio = modal.locator(
+            ".zdPopUpRadioButton.previousZdOpt, .zdPopUpRadioButton, input[type='radio']"
+        )
         if await radio.count() > 0:
             prev = await _read_total_premium_text(page)
             await click_force_js(page, radio.first)
@@ -404,11 +474,14 @@ async def handle_select_modal_and_choose(page):
     except Exception as e:
         print(f"[C] select modal step failed: {e}")
 
+
 async def handle_ncb_protector_addon(page):
     print("[D] Handling NCB Protector Add-on")
     try:
         # wait for add-on list wrapper
-        addon_wrappers = page.locator(".pl-2_5.desktop-idv-content.add-on-list, .add-on-list, .desktop-idv-content.add-on-list")
+        addon_wrappers = page.locator(
+            ".pl-2_5.desktop-idv-content.add-on-list, .add-on-list, .desktop-idv-content.add-on-list"
+        )
         if await addon_wrappers.count() == 0:
             # try a more general wrapper
             addon_wrappers = page.locator(".pl-2_5, .desktop-idv-content, .add-on-wrap")
@@ -425,18 +498,23 @@ async def handle_ncb_protector_addon(page):
                 print("[D] Clicked #ncb-protector")
                 return
             # fallback: find grey-border tab-key-border checkbox inside wrapper
-            cb2 = wrapper.locator("input.grey-border.tab-key-border, .grey-border.tab-key-border input[type='checkbox'], input[type='checkbox']")
+            cb2 = wrapper.locator(
+                "input.grey-border.tab-key-border, .grey-border.tab-key-border input[type='checkbox'], input[type='checkbox']"
+            )
             if await cb2.count() > 0:
                 prev = await _read_total_premium_text(page)
                 await click_force_js(page, cb2.first)
                 await wait_for_premium_update(page, prev)
-                await save_full_page_html(page, prefix="ncb_protector_after_click_fallback")
+                await save_full_page_html(
+                    page, prefix="ncb_protector_after_click_fallback"
+                )
                 print("[D] Clicked addon checkbox fallback")
                 return
         else:
             print("⚠ addon wrapper not found")
     except Exception as e:
         print(f"[D] ncb protector step failed: {e}")
+
 
 async def capture_addon_section_html(page):
     print("[E] Capturing addon section HTML")
@@ -448,10 +526,13 @@ async def capture_addon_section_html(page):
     except Exception as e:
         print(f"[E] capture addon html failed: {e}")
 
+
 async def handle_footer_capture(page):
     print("[F] Capturing footer card HTML and clicking footer-card")
     try:
-        footer = page.locator(".footer-card, .footer-card-container, .footer-card-wrapper")
+        footer = page.locator(
+            ".footer-card, .footer-card-container, .footer-card-wrapper"
+        )
         await footer.first.wait_for(state="visible", timeout=20000)
         # click footer if interactive
         try:
@@ -459,12 +540,16 @@ async def handle_footer_capture(page):
         except Exception:
             pass
         path = OUTPUT_DIR / f"footer_card_{ts()}.html"
-        await save_outer_html(page, ".footer-card, .footer-card-container, .footer-card-wrapper", path)
+        await save_outer_html(
+            page, ".footer-card, .footer-card-container, .footer-card-wrapper", path
+        )
         print("[F] Footer card saved:", path)
     except Exception as e:
         print(f"[F] footer capture failed: {e}")
 
+
 # ----------------- MASTER FUNCTION TO RUN ALL NEW STEPS -----------------
+
 
 async def run_additional_steps(page):
     # 1. PA owner cover checkbox
@@ -481,7 +566,9 @@ async def run_additional_steps(page):
     await handle_footer_capture(page)
     print("[✔] All extra steps completed")
 
+
 # ----------------- MAIN -----------------
+
 
 async def main():
     async with async_playwright() as pw:
@@ -528,6 +615,7 @@ async def main():
             await browser.close()
         except Exception:
             pass
+
 
 if __name__ == "__main__":
     asyncio.run(main())

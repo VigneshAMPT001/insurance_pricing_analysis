@@ -17,14 +17,14 @@ def clean_price(value):
 # -------------------------------
 # 1) BEAUTIFULSOUP VERSION (HTML FILE TESTING)
 # -------------------------------
-def extract_cost_breakup_from_html(html_content):
+def scrape_cost_breakup(html_content):
     soup = BeautifulSoup(html_content, "html.parser")
 
     def get_val(elem_id, nth=0):
         elements = soup.select(f"#{elem_id}")
         if elements and len(elements) > nth:
             raw = elements[nth].get_text(strip=True)
-            return clean_price(raw)       # CLEAN HERE
+            return clean_price(raw)  # CLEAN HERE
         return None
 
     data = {
@@ -35,10 +35,11 @@ def extract_cost_breakup_from_html(html_content):
         "digit_discount": get_val("ncbDiscountValue", 1),
         "net_premium": get_val("netPremiumValue"),
         "gst": get_val("GSTValue"),
-        "final_premium": get_val("finalPremiumValue")
+        "final_premium": get_val("finalPremiumValue"),
     }
 
     return data
+
 
 def parse_addon_pack(html):
     soup = BeautifulSoup(html, "html.parser")
@@ -53,6 +54,7 @@ def parse_addon_pack(html):
     if data["pack_name"]:
         # Example: "Ultimate pack (8 add-on)"
         import re
+
         match = re.search(r"\((.*?)\)", data["pack_name"])
         data["addon_count"] = match.group(1) if match else None
 
@@ -74,7 +76,8 @@ def parse_addon_pack(html):
 
     return data
 
-def parse_popular (html):
+
+def parse_popular(html):
     soup = BeautifulSoup(html, "html.parser")
 
     result = {}
@@ -107,6 +110,7 @@ def parse_popular (html):
 
     return result
 
+
 def extract_policy_durations(html):
     """
     Extracts all policy durations (like '1 year', '3 year') from the given HTML.
@@ -117,12 +121,12 @@ def extract_policy_durations(html):
 
     # Select all divs that contain the duration text
     duration_divs = soup.select("div.radio-button-group div.text-xs.font-bold")
-    
+
     for div in duration_divs:
         text = div.get_text(strip=True)
         if text:  # only add non-empty strings
             durations.append(text)
-    
+
     return durations
 
 
@@ -132,7 +136,7 @@ def extract_ncb_percentage_and_value(html):
     Returns a tuple: (percentage, value) as integers.
     """
     soup = BeautifulSoup(html, "html.parser")
-    
+
     # Extract NCB percentage (e.g., 45%)
     perc_elem = soup.select_one("div.ncb-protect-cover-section p.font-extrabold")
     percentage = None
@@ -150,8 +154,9 @@ def extract_ncb_percentage_and_value(html):
         value_match = re.search(r"(\d+)", value_text.replace(",", ""))
         if value_match:
             value = int(value_match.group())
-    
+
     return percentage, value
+
 
 def parse_popular_pack(html):
     soup = BeautifulSoup(html, "html.parser")
@@ -185,6 +190,7 @@ def parse_popular_pack(html):
     result["premium"] = None  # popular pack has no premium value
 
     return result
+
 
 def extract_extra_addons(html):
     soup = BeautifulSoup(html, "html.parser")
@@ -222,14 +228,16 @@ def extract_extra_addons(html):
         subcover_elem = block.select_one("span.checkbox-subcover")
         subcover = subcover_elem.get_text(strip=True) if subcover_elem else None
 
-        addons.append({
-            "id": addon_id,
-            "value": addon_value,
-            "name": name,
-            "subcover": subcover,
-            "price": price,
-            "price_term": price_term
-        })
+        addons.append(
+            {
+                "id": addon_id,
+                "value": addon_value,
+                "name": name,
+                "subcover": subcover,
+                "price": price,
+                "price_term": price_term,
+            }
+        )
 
     return addons
 
@@ -244,7 +252,7 @@ def extract_addon_names(html):
 
     # Select all label elements inside the subcover-list div
     labels = soup.select("div.subcover-list label")
-    
+
     for label in labels:
         # Get text, remove extra whitespace, and ignore empty strings
         text = label.get_text(strip=True)
@@ -252,24 +260,22 @@ def extract_addon_names(html):
         text = text.replace("done", "").strip()
         if text:
             addon_names.append(text)
-    
+
     return addon_names
+
 
 def clean_number(text):
     """Extract only digits and decimal values."""
     if not text:
         return None
-    text = re.sub(r"[^0-9.]", "", text)  
+    text = re.sub(r"[^0-9.]", "", text)
     return text.strip() if text else None
 
 
 def parse_trust_card_numbers_only(html):
     soup = BeautifulSoup(html, "html.parser")
 
-    result = {
-        "highlights": [],
-        "disclaimer": None
-    }
+    result = {"highlights": [], "disclaimer": None}
 
     items = soup.select("div.carousel-item")
 
@@ -282,10 +288,12 @@ def parse_trust_card_numbers_only(html):
             # Extract ONLY numeric value from title
             number_value = clean_number(title_raw)
 
-            result["highlights"].append({
-                "value": number_value,   # ONLY number
-                "subtitle": subtitle_raw  # full sentence untouched
-            })
+            result["highlights"].append(
+                {
+                    "value": number_value,  # ONLY number
+                    "subtitle": subtitle_raw,  # full sentence untouched
+                }
+            )
 
     # Extract disclaimer without modifying it
     disclaimer_tag = soup.find("span", string=lambda x: x and "Disclaimer" in x)
@@ -293,7 +301,6 @@ def parse_trust_card_numbers_only(html):
         result["disclaimer"] = disclaimer_tag.get_text(strip=True)
 
     return result
-
 
 
 # 1. SCRAPE PLAN INFO
@@ -316,7 +323,9 @@ async def handle_footer_premium_and_continue(page):
     await page.wait_for_selector("#continue-btn", timeout=15000)
 
     # CLEANED HERE
-    actual_premium = clean_price(await page.locator("#actualPremiumAmount").inner_text())
+    actual_premium = clean_price(
+        await page.locator("#actualPremiumAmount").inner_text()
+    )
     discounted_premium = clean_price(await page.locator("#premiumAmount").inner_text())
     gst_msg = await page.locator("#gstTextMessage").inner_text()
 
@@ -331,7 +340,7 @@ async def handle_footer_premium_and_continue(page):
     return {
         "actual_premium": actual_premium,
         "discounted_premium": discounted_premium,
-        "gst_text": gst_msg
+        "gst_text": gst_msg,
     }
 
 
@@ -375,7 +384,9 @@ def scrape_policy_durations(html):
         info["duration"] = duration_tag.get_text(strip=True) if duration_tag else None
 
         protected_tag = block.find("div", class_="tp-change-multiYear")
-        info["protected_till"] = protected_tag.get_text(strip=True) if protected_tag else None
+        info["protected_till"] = (
+            protected_tag.get_text(strip=True) if protected_tag else None
+        )
 
         best_deal_tag = block.find("span", class_="best-deal")
         info["best_deal"] = best_deal_tag is not None
@@ -394,10 +405,14 @@ def scrape_idv_block(html):
     result = {}
 
     idv_value_tag = soup.select_one(".idv-content-container span.notranslate")
-    result["idv_value"] = clean_price(idv_value_tag.get_text(strip=True)) if idv_value_tag else None
+    result["idv_value"] = (
+        clean_price(idv_value_tag.get_text(strip=True)) if idv_value_tag else None
+    )
 
     user_range_tag = soup.find("p", class_="motor-idv-titl-text")
-    result["popular_range"] = user_range_tag.get_text(strip=True) if user_range_tag else None
+    result["popular_range"] = (
+        user_range_tag.get_text(strip=True) if user_range_tag else None
+    )
 
     # CLEANED VALUES
     min_tag = soup.find("div", id="minValue")
@@ -428,7 +443,7 @@ async def select_addon_package(page, package_name: str):
     package_ids = {
         "Popular": "#Popularaddon",
         "Popular+": "#Popular\\+addon",
-        "Ultimate": "#Ultimateaddon"
+        "Ultimate": "#Ultimateaddon",
     }
 
     if package_name not in package_ids:
@@ -450,8 +465,12 @@ async def handle_claim_ncb_and_ownership(page):
 
     await page.wait_for_selector(".claim-sub-heading", timeout=15000)
 
-    claim_last_year = await page.locator(".claim-sub-heading span.claim-value").nth(0).inner_text()
-    ncb_last_year = await page.locator(".claim-sub-heading span.claim-value").nth(1).inner_text()
+    claim_last_year = (
+        await page.locator(".claim-sub-heading span.claim-value").nth(0).inner_text()
+    )
+    ncb_last_year = (
+        await page.locator(".claim-sub-heading span.claim-value").nth(1).inner_text()
+    )
 
     print("🔵 Claim & NCB Extracted:")
     print(f"   👉 Claim Last Year: {claim_last_year}")
@@ -466,10 +485,7 @@ async def handle_claim_ncb_and_ownership(page):
 
     print("🟢 Ownership transfer toggle clicked")
 
-    return {
-        "claim_last_year": claim_last_year,
-        "ncb_last_year": ncb_last_year
-    }
+    return {"claim_last_year": claim_last_year, "ncb_last_year": ncb_last_year}
 
 
 # -----------------------------------------------------------
@@ -481,15 +497,20 @@ def parse_comprehensive_plan_footer(html):
     data = {}
 
     actual = soup.find("p", id="actualPremiumAmount")
-    data["actual_premium"] = clean_price(actual.get_text(strip=True)) if actual else None
+    data["actual_premium"] = (
+        clean_price(actual.get_text(strip=True)) if actual else None
+    )
 
     discounted = soup.find("p", id="premiumAmount")
-    data["discounted_premium"] = clean_price(discounted.get_text(strip=True)) if discounted else None
+    data["discounted_premium"] = (
+        clean_price(discounted.get_text(strip=True)) if discounted else None
+    )
 
     gst = soup.find("p", id="gstTextMessage")
     data["gst_text"] = gst.get_text(strip=True) if gst else None
 
     return data
+
 
 def extract_idv_values(html):
     soup = BeautifulSoup(html, "html.parser")
@@ -501,7 +522,9 @@ def extract_idv_values(html):
 
     # --- Main IDV shown at top ---
     main_idv_elem = soup.select_one("p span.notranslate")
-    main_idv = clean_number(main_idv_elem.get_text(strip=True)) if main_idv_elem else None
+    main_idv = (
+        clean_number(main_idv_elem.get_text(strip=True)) if main_idv_elem else None
+    )
 
     # --- Input box min/max attributes ---
     input_field = soup.select_one("input#idvAmountField")
@@ -512,18 +535,20 @@ def extract_idv_values(html):
     min_text_elem = soup.select_one("#minValue p")
     max_text_elem = soup.select_one("#maxValue p")
 
-    slider_min = clean_number(min_text_elem.get_text(strip=True)) if min_text_elem else None
-    slider_max = clean_number(max_text_elem.get_text(strip=True)) if max_text_elem else None
+    slider_min = (
+        clean_number(min_text_elem.get_text(strip=True)) if min_text_elem else None
+    )
+    slider_max = (
+        clean_number(max_text_elem.get_text(strip=True)) if max_text_elem else None
+    )
 
     return {
         "main_idv": main_idv,
         "input_min": input_min,
         "input_max": input_max,
         "slider_min": slider_min,
-        "slider_max": slider_max
+        "slider_max": slider_max,
     }
-
-
 
 
 # -------------------------------
@@ -536,7 +561,7 @@ async def extract_cost_breakup(page):
 
     # Extract HTML portion
     html = await page.locator(".cost-breakup-card-body").inner_html()
-    return extract_cost_breakup_from_html(html)  # reuse BeautifulSoup parser
+    return scrape_cost_breakup(html)  # reuse BeautifulSoup parser
 
 
 # -------------------------------
@@ -544,15 +569,16 @@ async def extract_cost_breakup(page):
 # -------------------------------
 if __name__ == "__main__":
 
-    html_file_path = Path("/home/ampara/Documents/insurance_pricing_analysis/godigit_scripts/go.html")
+    html_file_path = Path(
+        "/home/ampara/Documents/insurance_pricing_analysis/godigit_scripts/go.html"
+    )
 
     with open(html_file_path, "r", encoding="utf-8") as f:
         html_content = f.read()
 
     print("=== PREMIUM FOOTER (CLEAN NUMBERS) ===")
-    result = extract_cost_breakup_from_html(html_content)
+    result = scrape_cost_breakup(html_content)
     print(json.dumps(result, indent=2))
-
 
     print("=== add on pack ===")
     result = parse_addon_pack(html_content)
@@ -561,28 +587,27 @@ if __name__ == "__main__":
     print("=== Popular ===")
     result = parse_popular_pack(html_content)
     print(json.dumps(result, indent=2))
-    
+
     print("=== Park2 ===")
     result = parse_popular(html_content)
     print(json.dumps(result, indent=2))
-    
+
     print("=== Trust card  ===")
     result = parse_trust_card_numbers_only(html_content)
     print(json.dumps(result, indent=2))
 
-
     print("=== policy duration  ===")
     result = extract_policy_durations(html_content)
     print(json.dumps(result, indent=2))
-    
+
     print("=== extra add on  ===")
     result = extract_addon_names(html_content)
     print(json.dumps(result, indent=2))
-    
+
     print("=== extra NCB value ===")
     result = extract_ncb_percentage_and_value(html_content)
     print(json.dumps(result, indent=2))
-    
+
     print("=== extra add on ===")
     result = extract_extra_addons(html_content)
     print(json.dumps(result, indent=2))
@@ -601,6 +626,6 @@ if __name__ == "__main__":
 
     print("=== PREMIUM FOOTER ===")
     print(json.dumps(parse_comprehensive_plan_footer(html_content), indent=2))
-    
+
     print("=== extra idv ===")
     print(json.dumps(extract_idv_values(html_content), indent=2))

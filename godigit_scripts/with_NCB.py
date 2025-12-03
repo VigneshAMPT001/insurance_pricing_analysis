@@ -7,13 +7,22 @@ from pathlib import Path
 from datetime import datetime
 from playwright.async_api import async_playwright
 from godigit_bs4 import (
-    parse_comprehensive_plan_footer, scrape_idv_block, scrape_plan_card,
-    scrape_policy_durations, scrape_plan_info, extract_extra_addons,
-    extract_ncb_percentage_and_value, extract_addon_names,
-    extract_policy_durations, parse_trust_card_numbers_only,
-    parse_popular, parse_popular_pack, parse_addon_pack,
-    extract_cost_breakup_from_html, extract_idv_values,
-    extract_cost_breakup_from_html as _dup_placeholder  # keep import parity
+    parse_comprehensive_plan_footer,
+    scrape_idv_block,
+    scrape_plan_card,
+    scrape_policy_durations,
+    scrape_plan_info,
+    extract_extra_addons,
+    extract_ncb_percentage_and_value,
+    extract_addon_names,
+    extract_policy_durations,
+    parse_trust_card_numbers_only,
+    parse_popular,
+    parse_popular_pack,
+    parse_addon_pack,
+    extract_cost_breakup_from_html,
+    extract_idv_values,
+    extract_cost_breakup_from_html as _dup_placeholder,  # keep import parity
 )
 
 # ----------------- CONFIG -----------------
@@ -32,44 +41,26 @@ delete navigator.__proto__.webdriver;
 
 # ----------------- Utilities -----------------
 
+
 def ts():
     return datetime.utcnow().isoformat().replace(":", "-").split(".")[0]
 
+
 def safe_name(name: str) -> str:
     return "".join(c if c.isalnum() or c in "-_." else "_" for c in str(name))[:120]
+
 
 def save_file_path(prefix, plan_name, tag):
     safe = safe_name(plan_name)
     filename = f"{prefix}_{safe}_{tag}_{ts()}.html"
     return OUTPUT_DIR / filename
 
+
 def save_json_path(prefix, plan_name, tag):
     safe = safe_name(plan_name)
     filename = f"{prefix}_{safe}_{tag}_{ts()}.json"
     return OUTPUT_DIR / filename
 
-async def save_outer_html(page, selector, filepath):
-    try:
-        if selector is None:
-            html = await page.content()
-        else:
-            loc = page.locator(selector).first
-            if await loc.count() == 0:
-                html = await page.evaluate(f"""() => {{
-                    const el = document.querySelector("{selector.replace('"', '\\"')}");
-                    return el ? el.outerHTML : null;
-                }}""")
-                if not html:
-                    html = ""
-            else:
-                handle = await loc.element_handle()
-                html = await page.evaluate("(el) => el.outerHTML", handle)
-        with open(filepath, "w", encoding="utf-8") as f:
-            f.write(html or "")
-        return True
-    except Exception as e:
-        print(f"⚠ Could not save {selector} -> {filepath}: {e}")
-        return False
 
 async def save_string_to_file(text, filepath):
     try:
@@ -80,19 +71,6 @@ async def save_string_to_file(text, filepath):
         print(f"⚠ Could not save text to {filepath}: {e}")
         return False
 
-async def save_full_page_html(page, prefix="plan_page_full"):
-    try:
-        content = await page.content()
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        filename = f"{prefix}_{timestamp}.html"
-        filepath = OUTPUT_DIR / filename
-        with open(filepath, "w", encoding="utf-8") as f:
-            f.write(content)
-        print(f"[INFO] Full page HTML saved at: {filepath}")
-        return filepath
-    except Exception as e:
-        print(f"⚠ Failed to save full page HTML ({prefix}): {e}")
-        return None
 
 async def click_force_js(page, locator):
     for attempt in range(5):
@@ -104,7 +82,9 @@ async def click_force_js(page, locator):
         try:
             box = await locator.bounding_box()
             if box:
-                await page.mouse.click(box["x"] + box["width"]/2, box["y"] + box["height"]/2)
+                await page.mouse.click(
+                    box["x"] + box["width"] / 2, box["y"] + box["height"] / 2
+                )
                 return True
         except Exception:
             pass
@@ -118,6 +98,7 @@ async def click_force_js(page, locator):
         await page.wait_for_timeout(500)
     return False
 
+
 async def fill_force_js(page, locator, value):
     try:
         await locator.fill(value)
@@ -127,26 +108,34 @@ async def fill_force_js(page, locator, value):
     try:
         handle = await locator.element_handle()
         if handle:
-            await page.evaluate("""
+            await page.evaluate(
+                """
                 (el, val) => {
                   el.value = val;
                   el.dispatchEvent(new Event('input', { bubbles: true }));
                   el.dispatchEvent(new Event('change', { bubbles: true }));
                 }
-            """, handle, value)
+            """,
+                handle,
+                value,
+            )
     except Exception:
         pass
 
+
 async def clear_backdrop(page):
     try:
-        await page.evaluate("""
+        await page.evaluate(
+            """
         document.querySelectorAll('.modal-backdrop.show').forEach(e => e.remove());
         document.body.classList.remove('modal-open');
         document.body.style.overflow = 'auto';
-        """)
+        """
+        )
         await page.wait_for_timeout(300)
     except Exception:
         pass
+
 
 async def wait_for_cloudflare(page, timeout_s=30):
     for _ in range(timeout_s):
@@ -159,11 +148,17 @@ async def wait_for_cloudflare(page, timeout_s=30):
     print("⚠ Cloudflare check timeout")
     return False
 
+
 # Helper: try multiple selectors to read the total premium shown on page
 async def get_total_premium_text(page):
     selectors = [
-        ".total-premium", ".totalPremium", ".premium-amount", ".total-amount",
-        ".grand-total .amount", ".footer-card .price", ".footer-card-container .price"
+        ".total-premium",
+        ".totalPremium",
+        ".premium-amount",
+        ".total-amount",
+        ".grand-total .amount",
+        ".footer-card .price",
+        ".footer-card-container .price",
     ]
     for sel in selectors:
         try:
@@ -189,6 +184,7 @@ async def get_total_premium_text(page):
         pass
     return None
 
+
 async def wait_for_premium_change(page, before_text, timeout_s=8):
     # If before_text is None, just wait a short fixed time
     if before_text is None:
@@ -199,14 +195,18 @@ async def wait_for_premium_change(page, before_text, timeout_s=8):
         now = await get_total_premium_text(page)
         if now is None:
             continue
+
         # compare normalized digits only
         def norm(s):
             return "".join(ch for ch in (s or "") if ch.isdigit())
+
         if norm(now) != norm(before_text):
             return True
     return False
 
+
 # ----------------- Page actions (original working steps) -----------------
+
 
 async def click_car_insurance_tab(page):
     print("[1] Clicking Car Insurance tab…")
@@ -214,6 +214,7 @@ async def click_car_insurance_tab(page):
     await page.wait_for_timeout(500)
     await click_force_js(page, tab)
     await page.wait_for_timeout(1000)
+
 
 async def fill_registration_number(page):
     print("[2] Filling vehicle registration…")
@@ -230,6 +231,7 @@ async def fill_registration_number(page):
     except Exception:
         print("❌ Could not find registration input.")
 
+
 async def fill_mobile_number(page):
     print("[3] Filling mobile number…")
     try:
@@ -244,6 +246,7 @@ async def fill_mobile_number(page):
         await fill_force_js(page, textbox, MOBILE)
     except Exception:
         print("❌ Could not find mobile input.")
+
 
 async def click_view_prices(page):
     print("[4] Clicking View Prices…")
@@ -264,14 +267,14 @@ async def click_view_prices(page):
         await page.wait_for_function(
             """(el) => el && !el.disabled && !el.classList.contains('btn-loading')""",
             arg=el_handle,
-            timeout=15000
+            timeout=15000,
         )
     except Exception:
         print("⚠ Button stayed disabled; proceeding anyway")
     try:
         await page.evaluate(
             "(el) => el.scrollIntoView({behavior:'instant', block:'center'})",
-            await btn.element_handle()
+            await btn.element_handle(),
         )
     except Exception:
         pass
@@ -284,12 +287,15 @@ async def click_view_prices(page):
     print("❌ Could not click 'View Prices'.")
     return False
 
+
 async def handle_km_modal(page):
     print("[6] Checking for KM modal…")
     try:
         km_modal = page.locator(".sticky.motor-question-modal")
         await km_modal.wait_for(state="visible", timeout=15000)
-        km_option = km_modal.locator("input.kmRangeRadio[value='0-4000 km (0-10 km/day)']")
+        km_option = km_modal.locator(
+            "input.kmRangeRadio[value='0-4000 km (0-10 km/day)']"
+        )
         await click_force_js(page, km_option)
         submit_btn = km_modal.locator("button:has-text('Continue')")
         if await submit_btn.count() > 0:
@@ -298,6 +304,7 @@ async def handle_km_modal(page):
         print("[7] KM modal answered")
     except Exception:
         print("⚠ KM modal not found — continuing…")
+
 
 async def wait_for_plan_page(page):
     print("[8] Waiting for Plan Page to load…")
@@ -312,7 +319,9 @@ async def wait_for_plan_page(page):
         await clear_backdrop(page)
     return plan_section
 
+
 # ----------------- Additional steps you requested (Option A selectors) -----------------
+
 
 async def capture_multiyear_addon(page):
     sel = ".desktop-idv-content-multiyear"
@@ -327,6 +336,7 @@ async def capture_multiyear_addon(page):
     except Exception as e:
         print("⚠ multiyear block not found:", e)
 
+
 async def capture_motor_idv_content(page):
     sel = ".motor-idv-content"
     print(f"[STEP] Waiting for motor idv block ({sel})")
@@ -340,6 +350,7 @@ async def capture_motor_idv_content(page):
     except Exception as e:
         print("⚠ motor idv block not found:", e)
 
+
 async def capture_desktop_idv_addon_wrap(page):
     sel = ".desktop-idv-content.add-on-wrap"
     print(f"[STEP] Waiting for desktop idv add-on wrap ({sel})")
@@ -352,6 +363,7 @@ async def capture_desktop_idv_addon_wrap(page):
         print("[SAVED] desktop_idv_addon_wrap ->", path)
     except Exception as e:
         print("⚠ desktop idv addon wrap not found:", e)
+
 
 async def click_checkbox_label_sequence(page):
     sel = ".checkbox-label"
@@ -372,6 +384,7 @@ async def click_checkbox_label_sequence(page):
     except Exception as e:
         print("⚠ checkbox-label sequence failed:", e)
 
+
 async def click_price_rows(page):
     sel = ".price"
     print(f"[STEP] Clicking price rows ({sel}) sequentially")
@@ -390,6 +403,7 @@ async def click_price_rows(page):
                 print(f" ⚠ error clicking price {i}: {e}")
     except Exception as e:
         print("⚠ price rows click failed:", e)
+
 
 async def click_checkbox_subcover_sequence(page):
     sel = ".checkbox-subcover"
@@ -410,6 +424,7 @@ async def click_checkbox_subcover_sequence(page):
     except Exception as e:
         print("⚠ checkbox-subcover sequence failed:", e)
 
+
 async def capture_footer_container(page):
     sel = ".footer-card-container"
     print(f"[STEP] Capturing footer container ({sel})")
@@ -423,7 +438,9 @@ async def capture_footer_container(page):
     except Exception as e:
         print("⚠ footer container not found:", e)
 
+
 # ----------------- MASTER function to run all new steps -----------------
+
 
 async def run_additional_steps(page):
     await capture_multiyear_addon(page)
@@ -440,7 +457,9 @@ async def run_additional_steps(page):
 
     await capture_footer_container(page)
 
+
 # ----------------- MAIN -----------------
+
 
 async def main():
     async with async_playwright() as pw:
@@ -473,13 +492,13 @@ async def main():
         await wait_for_plan_page(page)
 
         # Save a snapshot of the plan page before additional interactions
-        await save_full_page_html(page, prefix="plan_page_before_addons")
+        # await save_full_page_html(page, prefix="plan_page_before_addons")
 
         # RUN added steps
         await run_additional_steps(page)
 
         # Save final snapshot
-        await save_full_page_html(page, prefix="plan_page_after_addons")
+        # await save_full_page_html(page, prefix="plan_page_after_addons")
 
         print("✔ Script finished")
 
@@ -488,6 +507,7 @@ async def main():
             await browser.close()
         except Exception:
             pass
+
 
 if __name__ == "__main__":
     asyncio.run(main())
