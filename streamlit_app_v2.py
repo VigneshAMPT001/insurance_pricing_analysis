@@ -1,8 +1,9 @@
 import re
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 import streamlit as st
 import pandas as pd
+import altair as alt
 
 from app_v2_utils import (
     format_claim_status,
@@ -421,79 +422,9 @@ def comparison_page():
             st.rerun()
         return
 
-    # Filters
-    st.sidebar.header("Filters")
-
-    # Plan type filter
-    available_categories = sorted(
-        set(plan.get("category", "") for plan in all_plans if plan.get("category"))
-    )
-    category_options = ["All Plan Types"] + [
-        get_plan_category_label(cat) for cat in available_categories
-    ]
-    selected_category_label = st.sidebar.selectbox(
-        "Plan Type", options=category_options, index=0
-    )
-
-    selected_category = ""
-    if selected_category_label != "All Plan Types":
-        # Find the category key for the selected label
-        for cat in available_categories:
-            if get_plan_category_label(cat) == selected_category_label:
-                selected_category = cat
-                break
-
-    # Filter plans
-    filtered_plans = all_plans
-    if selected_category:
-        filtered_plans = [
-            p for p in all_plans if p.get("category") == selected_category
-        ]
-
-    # Insurer filter
-    available_insurers = sorted(set(plan.get("insurer", "") for plan in filtered_plans))
-    selected_insurers = st.sidebar.multiselect(
-        "Insurers", options=available_insurers, default=available_insurers
-    )
-
-    if selected_insurers:
-        filtered_plans = [
-            p for p in filtered_plans if p.get("insurer") in selected_insurers
-        ]
-
-    # Claim status filter
-    claim_status_option = st.sidebar.radio(
-        "Claim Status", options=["Both", "Not Claimed", "Claimed"], index=0
-    )
-    if claim_status_option != "Both":
-        target_status = (
-            "not_claimed" if claim_status_option == "Not Claimed" else "claimed"
-        )
-        filtered_plans = [
-            p
-            for p in filtered_plans
-            if normalize_claim_status(p.get("claim_status")) == target_status
-        ]
-
-    # Price range filter
-    price_range = None
-    if filtered_plans:
-        premiums = [p.get("premium_value", 0) for p in filtered_plans]
-        min_premium = min(premiums)
-        max_premium = max(premiums)
-
-        price_range = st.sidebar.slider(
-            "Price Range (₹)",
-            min_value=int(min_premium),
-            max_value=int(max_premium),
-            value=(int(min_premium), int(max_premium)),
-        )
-
-        filtered_plans = [
-            p
-            for p in filtered_plans
-            if price_range[0] <= p.get("premium_value", 0) <= price_range[1]
-        ]
+    # Apply shared sidebar filters
+    filtered_plans, filter_meta = apply_sidebar_filters(all_plans)
+    price_range = filter_meta.get("price_range")
 
     # Display comparison
     st.markdown("---")
@@ -586,6 +517,325 @@ def comparison_page():
         st.rerun()
 
 
+def _collect_all_plans_for_current_car() -> List[Dict[str, Any]]:
+    """Helper to collect all plans with insurer name for the car in session."""
+    if (
+        "selected_car_key" not in st.session_state
+        or "all_plans_by_insurer" not in st.session_state
+    ):
+        return []
+
+    all_plans_by_insurer = st.session_state.all_plans_by_insurer
+    all_plans: List[Dict[str, Any]] = []
+    for insurer, plans in all_plans_by_insurer.items():
+        for plan in plans:
+            plan_copy = plan.copy()
+            plan_copy["insurer"] = insurer
+            all_plans.append(plan_copy)
+    return all_plans
+
+
+def apply_sidebar_filters(
+    all_plans: List[Dict[str, Any]],
+) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
+    """Apply sidebar filters (plan type, insurer, claim status, price range).
+
+    Returns filtered plans and metadata (e.g., price_range) for downstream use.
+    """
+    if not all_plans:
+        return [], {"price_range": None}
+
+    st.sidebar.header("Filters")
+
+    # Plan type filter
+    available_categories = sorted(
+        set(plan.get("category", "") for plan in all_plans if plan.get("category"))
+    )
+    category_options = ["All Plan Types"] + [
+        get_plan_category_label(cat) for cat in available_categories
+    ]
+    selected_category_label = st.sidebar.selectbox(
+        "Plan Type", options=category_options, index=0
+    )
+
+    selected_category = ""
+    if selected_category_label != "All Plan Types":
+        # Find the category key for the selected label
+        for cat in available_categories:
+            if get_plan_category_label(cat) == selected_category_label:
+                selected_category = cat
+                break
+
+    # Filter plans by type
+    filtered_plans = all_plans
+    if selected_category:
+        filtered_plans = [
+            p for p in all_plans if p.get("category") == selected_category
+        ]
+
+    # Insurer filter
+    available_insurers = sorted(set(plan.get("insurer", "") for plan in filtered_plans))
+    selected_insurers = st.sidebar.multiselect(
+        "Insurers", options=available_insurers, default=available_insurers
+    )
+
+    if selected_insurers:
+        filtered_plans = [
+            p for p in filtered_plans if p.get("insurer") in selected_insurers
+        ]
+
+    # Claim status filter
+    claim_status_option = st.sidebar.radio(
+        "Claim Status", options=["Both", "Not Claimed", "Claimed"], index=0
+    )
+    if claim_status_option != "Both":
+        target_status = (
+            "not_claimed" if claim_status_option == "Not Claimed" else "claimed"
+        )
+        filtered_plans = [
+            p
+            for p in filtered_plans
+            if normalize_claim_status(p.get("claim_status")) == target_status
+        ]
+
+    # Price range filter
+    price_range = None
+    if filtered_plans:
+        premiums = [p.get("premium_value", 0) for p in filtered_plans]
+        min_premium = min(premiums)
+        max_premium = max(premiums)
+
+        price_range = st.sidebar.slider(
+            "Price Range (₹)",
+            min_value=int(min_premium),
+            max_value=int(max_premium),
+            value=(int(min_premium), int(max_premium)),
+        )
+
+        filtered_plans = [
+            p
+            for p in filtered_plans
+            if price_range[0] <= p.get("premium_value", 0) <= price_range[1]
+        ]
+
+    return filtered_plans, {"price_range": price_range}
+
+
+def insights_page():
+    """Insights page showing higher-level analytics for the filtered plans."""
+    st.title("Plan Insights")
+    st.markdown(
+        "<p style='color:#475569'>Use the same sidebar filters to uncover where the real value lies across insurers, plan types, and add‑ons.</p>",
+        unsafe_allow_html=True,
+    )
+
+    if (
+        "selected_car_key" not in st.session_state
+        or "all_plans_by_insurer" not in st.session_state
+    ):
+        st.warning("Please select a car from the homepage first.")
+        if st.button("Back to Homepage"):
+            st.session_state.page = "homepage"
+            st.rerun()
+        return
+
+    selected_car_key = st.session_state.selected_car_key
+    make, model, variant = selected_car_key
+    st.markdown(f"**Insights for:** {make} {model} {variant}")
+
+    all_plans = _collect_all_plans_for_current_car()
+    if not all_plans:
+        st.warning("No plans available to generate insights.")
+        if st.button("Back to Homepage"):
+            st.session_state.page = "homepage"
+            st.rerun()
+        return
+
+    # Apply same sidebar filters used on comparison page
+    filtered_plans, filter_meta = apply_sidebar_filters(all_plans)
+    price_range = filter_meta.get("price_range")
+
+    if not filtered_plans:
+        st.info("No plans match the selected filters for insights.")
+        return
+
+    # ---- Key numerical insights ----
+    premiums = [p.get("premium_value", 0) for p in filtered_plans]
+    min_premium = min(premiums)
+    max_premium = max(premiums)
+    avg_premium = sum(premiums) / len(premiums) if premiums else 0
+    premium_saving_pct = (
+        (max_premium - min_premium) / max_premium * 100 if max_premium else 0
+    )
+
+    unique_insurers = sorted(set(p.get("insurer", "") for p in filtered_plans))
+
+    def _addons_count(plan: Dict[str, Any]) -> int:
+        addons = plan.get("addons") or []
+        if isinstance(addons, list):
+            return len(addons)
+        return 0
+
+    addons_counts = [_addons_count(p) for p in filtered_plans]
+    avg_addons = sum(addons_counts) / len(addons_counts) if addons_counts else 0
+
+    # Simple heuristic: how often do strong protection add‑ons appear?
+    protection_keywords = ["zero dep", "zero depreciation", "engine", "ncb", "rsa"]
+
+    def _has_protection_addon(plan: Dict[str, Any]) -> bool:
+        addons = plan.get("addons") or []
+        addon_names: List[str] = []
+        for addon in addons:
+            if isinstance(addon, dict):
+                name = addon.get("name") or addon.get("display_name") or ""
+                addon_names.append(str(name).lower())
+            else:
+                addon_names.append(str(addon).lower())
+        return any(
+            any(keyword in name for keyword in protection_keywords)
+            for name in addon_names
+        )
+
+    protection_plans = [p for p in filtered_plans if _has_protection_addon(p)]
+    protection_share = (
+        len(protection_plans) / len(filtered_plans) * 100 if filtered_plans else 0
+    )
+
+    st.subheader("Key Insights at a Glance")
+    kpi_cols = st.columns(4)
+    kpi_cols[0].metric(
+        "Cheapest vs Costliest",
+        f"{format_premium(min_premium)} – {format_premium(max_premium)}",
+        f"{premium_saving_pct:.1f}% savings potential",
+    )
+    kpi_cols[1].metric("Average Premium (Filtered)", format_premium(avg_premium))
+    kpi_cols[2].metric("Insurers in Play", len(unique_insurers))
+    kpi_cols[3].metric(
+        "Avg Add-ons per Plan",
+        f"{avg_addons:.1f}",
+        f"{protection_share:.1f}% include strong protection add-ons",
+    )
+
+    # ---- Charts section ----
+    st.markdown("---")
+    st.subheader("Premium & Mix Overview")
+
+    # Bar: average premium by insurer
+    insurer_stats = []
+    for insurer in unique_insurers:
+        insurer_plans = [p for p in filtered_plans if p.get("insurer") == insurer]
+        if not insurer_plans:
+            continue
+        ips = [p.get("premium_value", 0) for p in insurer_plans]
+        insurer_stats.append(
+            {
+                "Insurer": insurer,
+                "Average Premium": sum(ips) / len(ips) if ips else 0,
+                "Cheapest Premium": min(ips) if ips else 0,
+                "Costliest Premium": max(ips) if ips else 0,
+                "Number of Plans": len(insurer_plans),
+            }
+        )
+
+    if insurer_stats:
+        df_insurer = pd.DataFrame(insurer_stats)
+        left_col, right_col = st.columns(2)
+
+        with left_col:
+            st.caption("Average premium by insurer (after filters)")
+            bar_chart = (
+                alt.Chart(df_insurer)
+                .mark_bar(cornerRadiusTopLeft=4, cornerRadiusTopRight=4)
+                .encode(
+                    x=alt.X("Insurer:N", sort="-y", title="Insurer"),
+                    y=alt.Y("Average Premium:Q", title="Average Premium (₹)"),
+                    color=alt.Color("Insurer:N", legend=None),
+                    tooltip=[
+                        "Insurer",
+                        alt.Tooltip("Average Premium:Q", format=",.0f"),
+                        alt.Tooltip("Cheapest Premium:Q", format=",.0f"),
+                        alt.Tooltip("Costliest Premium:Q", format=",.0f"),
+                        "Number of Plans",
+                    ],
+                )
+                .properties(height=320)
+            )
+            st.altair_chart(bar_chart, use_container_width=True)
+
+        # Donut: plan mix by type (or fallback to insurer if type missing)
+        plan_type_rows = []
+        for p in filtered_plans:
+            p_type = p.get("category_display") or p.get("category") or "Other"
+            plan_type_rows.append({"Plan Type": str(p_type)})
+
+        df_types = pd.DataFrame(plan_type_rows)
+        with right_col:
+            st.caption("Mix of plan types in your filtered view")
+            type_chart = (
+                alt.Chart(df_types)
+                .mark_arc(innerRadius=60)
+                .encode(
+                    theta=alt.Theta("count():Q", stack=True),
+                    color=alt.Color("Plan Type:N", legend=alt.Legend(title="Plan Type")),
+                    tooltip=[alt.Tooltip("Plan Type:N"), alt.Tooltip("count():Q", title="Number of Plans")],
+                )
+                .properties(height=320)
+            )
+            st.altair_chart(type_chart, use_container_width=True)
+
+    # ---- Table: richer insurer-level view ----
+    st.markdown("---")
+    st.subheader("Insurer Value Summary Table")
+
+    table_rows = []
+    for insurer in unique_insurers:
+        insurer_plans = [p for p in filtered_plans if p.get("insurer") == insurer]
+        if not insurer_plans:
+            continue
+
+        ips = [p.get("premium_value", 0) for p in insurer_plans]
+        addon_counts = [_addons_count(p) for p in insurer_plans]
+        claimed_share = (
+            sum(
+                1
+                for p in insurer_plans
+                if normalize_claim_status(p.get("claim_status")) == "claimed"
+            )
+            / len(insurer_plans)
+            * 100
+            if insurer_plans
+            else 0
+        )
+
+        table_rows.append(
+            {
+                "Insurer": insurer,
+                "Plans": len(insurer_plans),
+                "Cheapest Premium": format_premium(min(ips) if ips else 0),
+                "Average Premium": format_premium(
+                    sum(ips) / len(ips) if ips else 0
+                ),
+                "Costliest Premium": format_premium(max(ips) if ips else 0),
+                "Avg Add-ons per Plan": round(
+                    sum(addon_counts) / len(addon_counts), 1
+                )
+                if addon_counts
+                else 0.0,
+                "% Plans with Claims History": f"{claimed_share:.1f}%",
+            }
+        )
+
+    if table_rows:
+        df_table = pd.DataFrame(table_rows)
+        st.dataframe(df_table, use_container_width=True, hide_index=True)
+
+    # Optional contextual note if user narrowed with price slider
+    if price_range:
+        st.caption(
+            f"Insights are based on plans priced between {format_premium(price_range[0])} and {format_premium(price_range[1])}."
+        )
+
+
 def main():
     st.set_page_config(
         page_title="Insurance Plans Comparison",
@@ -597,11 +847,30 @@ def main():
     if "page" not in st.session_state:
         st.session_state.page = "homepage"
 
+    # Sidebar navigation
+    page_labels = {
+        "homepage": "Overview",
+        "comparison": "Comparison",
+        "insights": "Insights",
+    }
+    current_label = page_labels.get(st.session_state.page, "Overview")
+    label_list = list(page_labels.values())
+    current_index = label_list.index(current_label)
+    selected_label = st.sidebar.radio("Navigation", options=label_list, index=current_index)
+
+    # Sync selected label back to internal page key
+    for key, label in page_labels.items():
+        if label == selected_label:
+            st.session_state.page = key
+            break
+
     # Navigation
     if st.session_state.page == "homepage":
         homepage()
     elif st.session_state.page == "comparison":
         comparison_page()
+    elif st.session_state.page == "insights":
+        insights_page()
 
 
 if __name__ == "__main__":
