@@ -22,7 +22,13 @@ BADGE_TEXTS_TO_REMOVE = {"recommended for your car"}
 
 def init_car_file_entry() -> Dict[str, List[Dict[str, Any]]]:
     """Return default storage structure for car files across insurers."""
-    return {"acko": [], "icici": [], "cholams": [], "royal_sundaram": []}
+    return {
+        "acko": [],
+        "icici": [],
+        "cholams": [],
+        "royal_sundaram": [],
+        "godigit": [],
+    }
 
 
 def sanitize_badge_text(badge: Any) -> str:
@@ -104,7 +110,7 @@ def extract_signed_amount(value: Any) -> float:
 def build_idv_info(*sources: Dict[str, Any]) -> Dict[str, float]:
     """Merge IDV information from multiple sources into a normalized dict."""
     field_map = {
-        "current": ["current_idv", "idv", "default_idv"],
+        "current": ["current_idv", "idv", "default_idv", "idv_value", "slider_value"],
         "recommended": ["recommended_idv"],
         "min": ["min_idv", "idv_min"],
         "max": ["max_idv", "idv_max"],
@@ -343,6 +349,7 @@ load_acko_data = load_json_data
 load_icici_data = load_json_data
 load_cholams_data = load_json_data
 load_royal_sundaram_data = load_json_data
+load_godigit_data = load_json_data
 
 
 def get_acko_plans(
@@ -585,6 +592,52 @@ def build_royal_sundaram_pricing(plan: Dict[str, Any]) -> Dict[str, Any]:
     return finalize_pricing_breakdown(pricing)
 
 
+def build_godigit_pricing(premium_breakup: Dict[str, Any]) -> Dict[str, Any]:
+    """Build pricing breakdown for Go Digit plans."""
+    pricing = init_pricing_template()
+    if not isinstance(premium_breakup, dict):
+        return finalize_pricing_breakdown(pricing)
+
+    od = extract_signed_amount(premium_breakup.get("own_damage"))
+    tp = extract_signed_amount(premium_breakup.get("third_party"))
+    addons_amount = extract_signed_amount(premium_breakup.get("addons"))
+    ncb_discount = extract_signed_amount(premium_breakup.get("ncb_discount"))
+    digit_discount = extract_signed_amount(premium_breakup.get("digit_discount"))
+    net_premium = extract_signed_amount(premium_breakup.get("net_premium"))
+    gst_amount = extract_signed_amount(premium_breakup.get("gst"))
+    final_premium = extract_signed_amount(premium_breakup.get("final_premium"))
+
+    pricing["own_damage_premium"] = od if od else None
+    pricing["third_party_premium"] = tp if tp else None
+    pricing["base_premium"] = od + tp if (od and tp) else None
+
+    if addons_amount:
+        pricing["addons_breakdown"].append({"name": "Add-ons", "price": addons_amount})
+        pricing["addons_total"] = addons_amount
+
+    discounts_total = 0.0
+    if ncb_discount:
+        pricing["discount_breakdown"].append(
+            {"name": "NCB Discount", "price": ncb_discount}
+        )
+        discounts_total += ncb_discount
+    if digit_discount:
+        pricing["discount_breakdown"].append(
+            {"name": "Digit Discount", "price": digit_discount}
+        )
+        discounts_total += digit_discount
+    pricing["discounts_total"] = (
+        discounts_total if pricing["discount_breakdown"] else None
+    )
+
+    pricing["gst_amount"] = gst_amount if gst_amount else None
+    pricing["net_premium"] = net_premium if net_premium else None
+    pricing["total_premium"] = final_premium if final_premium else None
+    pricing["sections"] = []
+
+    return finalize_pricing_breakdown(pricing)
+
+
 def format_selected_addons(selected_addons: Dict[str, Any]) -> List[str]:
     """Return a readable list of selected addon labels."""
     benefits = []
@@ -609,6 +662,34 @@ def normalize_royal_sundaram_addons(addons: Dict[str, Any]) -> List[Any]:
             normalized.append({"name": label, "price": float(value)})
         else:
             normalized.append(f"{label}: {value}")
+    return normalized
+
+
+def _normalize_godigit_addons(addons_block: Any) -> List[Any]:
+    """Convert Go Digit addons structure into a normalized list."""
+    normalized: List[Any] = []
+
+    if isinstance(addons_block, dict):
+        for label in addons_block.get("addons", []) or []:
+            normalized.append(str(label))
+
+        ncb_protection = addons_block.get("ncb_protection") or {}
+        for name, value in ncb_protection.items():
+            normalized.append(f"{name}: {value}")
+
+    elif isinstance(addons_block, list):
+        for addon in addons_block:
+            if isinstance(addon, dict):
+                label = str(addon.get("label") or addon.get("name") or "Addon")
+                price_raw = addon.get("price") or addon.get("amount")
+                amount = extract_signed_amount(price_raw)
+                if amount:
+                    normalized.append({"name": label, "price": amount})
+                else:
+                    normalized.append(label)
+            else:
+                normalized.append(str(addon))
+
     return normalized
 
 
@@ -662,6 +743,74 @@ def get_royal_sundaram_plans(
             "claim_status": normalized_claim_status,
         }
         plans.append(plan_info)
+
+    return plans
+
+
+def get_godigit_plans(
+    data: Dict[str, Any], claim_status: str = ""
+) -> List[Dict[str, Any]]:
+    """Extract plans from Go Digit data structure."""
+    if not isinstance(data, dict):
+        return []
+
+    plans_offered = data.get("plans_offered", []) or []
+    normalized_claim_status = normalize_claim_status(claim_status)
+
+    idv_sources: List[Dict[str, Any]] = []
+    for plan_entry in plans_offered:
+        if not isinstance(plan_entry, dict):
+            continue
+        for _, details in plan_entry.items():
+            if isinstance(details, dict) and isinstance(details.get("idv"), dict):
+                idv_sources.append(details.get("idv") or {})
+    shared_idv_info = build_idv_info(*idv_sources)
+
+    plans: List[Dict[str, Any]] = []
+
+    for plan_entry in plans_offered:
+        if not isinstance(plan_entry, dict):
+            continue
+
+        for plan_name, details in plan_entry.items():
+            if not isinstance(details, dict):
+                continue
+
+            plan_card = details.get("plan_card", {}) or {}
+            premium_breakup = details.get("premium_breakup", {}) or {}
+            addons_block = details.get("addons")
+            idv_block = details.get("idv") or {}
+
+            normalized_category = normalize_plan_category(plan_name)
+
+            premium_value = extract_signed_amount(premium_breakup.get("final_premium"))
+            premium_display = format_premium(premium_value) if premium_value else ""
+
+            description = ", ".join(plan_card.get("details", []) or [])
+
+            addons = _normalize_godigit_addons(addons_block)
+
+            plan_info = {
+                "plan_id": plan_name.lower().replace(" ", "_"),
+                "plan_name": plan_name,
+                "category": normalized_category or plan_name.lower(),
+                "category_display": get_plan_category_label(
+                    normalized_category, plan_name
+                ),
+                "premium_display": premium_display,
+                "premium_value": premium_value,
+                "description": description,
+                "is_selected": "Most Popular" in description,
+                "badge": "",
+                "addons": addons,
+                "benefits": plan_card.get("details", []) or [],
+                "insurer": "Go Digit",
+                "idv": build_idv_info(idv_block, shared_idv_info),
+                "pricing_breakdown": build_godigit_pricing(premium_breakup),
+                "claim_status": normalized_claim_status,
+            }
+
+            plans.append(plan_info)
 
     return plans
 
@@ -801,6 +950,7 @@ def scan_all_car_data() -> Dict[str, Any]:
     icici_data_list = []
     cholams_data_list = []
     royal_sundaram_data_list = []
+    godigit_data_list = []
 
     acko_dir = extracted_dir / "acko"
     if acko_dir.exists():
@@ -919,6 +1069,35 @@ def scan_all_car_data() -> Dict[str, Any]:
                     }
                 )
 
+    godigit_dir = extracted_dir / "godigit"
+    if godigit_dir.exists():
+        for file in godigit_dir.glob("*.json"):
+            try:
+                data = load_godigit_data(str(file))
+            except Exception:
+                continue
+            car_info = data.get("car_info", {}) or {}
+            make_raw = str(car_info.get("vehicle_make", "")).strip()
+            model_raw = str(car_info.get("vehicle_model", "")).strip()
+            variant_raw = str(car_info.get("vehicle_variant", "")).strip()
+
+            make = normalize_make_display(make_raw)
+            model = normalize_model_display(model_raw)
+            variant = variant_raw
+
+            if make and model:
+                claim_status = infer_claim_status_from_filename(str(file))
+                godigit_data_list.append(
+                    {
+                        "make": make,
+                        "model": model,
+                        "variant": variant,
+                        "file": str(file),
+                        "registration": car_info.get("registration_number", ""),
+                        "claim_status": claim_status,
+                    }
+                )
+
     merge_insurer_data_into_car_map(
         car_data_map,
         icici_data_list,
@@ -939,6 +1118,13 @@ def scan_all_car_data() -> Dict[str, Any]:
         extra_fields_func=lambda entry: {
             "claim_status": normalize_claim_status(entry.get("claim_status", ""))
         },
+    )
+
+    merge_insurer_data_into_car_map(
+        car_data_map,
+        godigit_data_list,
+        "godigit",
+        ["file", "registration", "claim_status"],
     )
 
     return car_data_map

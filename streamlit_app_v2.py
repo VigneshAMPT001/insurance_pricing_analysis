@@ -13,12 +13,14 @@ from app_v2_utils import (
     get_cholams_plans,
     get_icici_plans,
     get_royal_sundaram_plans,
+    get_godigit_plans,
     get_plan_category_label,
     get_unique_makes_models_variants,
     load_acko_data,
     load_cholams_data,
     load_icici_data,
     load_royal_sundaram_data,
+    load_godigit_data,
     scan_all_car_data,
 )
 
@@ -280,6 +282,7 @@ def homepage():
             and not car_files.get("icici")
             and not car_files.get("cholams")
             and not car_files.get("royal_sundaram")
+            and not car_files.get("godigit")
         ):
             st.warning(
                 f"No insurance data found for {selected_make} {selected_model} {selected_variant}"
@@ -294,71 +297,95 @@ def homepage():
         # Load and display plans grouped by insurer
         all_plans_by_insurer = {}
 
-        # Load Acko plans
-        acko_plans = []
+        # Load Acko plans (all available claim statuses)
+        acko_plans: List[Dict[str, Any]] = []
         if car_files.get("acko"):
-            # Use not_claimed by default, or first available
-            acko_file_info = next(
-                (
-                    f
-                    for f in car_files["acko"]
-                    if f.get("claim_status") == "not_claimed"
-                ),
-                car_files["acko"][0],
-            )
-            try:
-                acko_data = load_acko_data(acko_file_info["file"])
-                acko_plans = get_acko_plans(
-                    acko_data, acko_file_info.get("claim_status", "")
-                )
+            for acko_file_info in car_files["acko"]:
+                try:
+                    acko_data = load_acko_data(acko_file_info["file"])
+                    acko_plans.extend(
+                        get_acko_plans(
+                            acko_data, acko_file_info.get("claim_status", "")
+                        )
+                    )
+                except Exception as e:
+                    st.error(
+                        f"Error loading Acko data from {acko_file_info['file']}: {e}"
+                    )
+            if acko_plans:
                 all_plans_by_insurer["Acko"] = acko_plans
-            except Exception as e:
-                st.error(f"Error loading Acko data: {e}")
 
-        # Load ICICI plans
-        icici_plans = []
+        # Load ICICI plans (all available claim statuses)
+        icici_plans: List[Dict[str, Any]] = []
         if car_files.get("icici"):
-            icici_file_info = car_files["icici"][0]
-            try:
-                icici_data = load_icici_data(icici_file_info["file"])
-                icici_plans = get_icici_plans(
-                    icici_data, icici_file_info.get("claim_status", "")
-                )
+            for icici_file_info in car_files["icici"]:
+                try:
+                    icici_data = load_icici_data(icici_file_info["file"])
+                    icici_plans.extend(
+                        get_icici_plans(
+                            icici_data, icici_file_info.get("claim_status", "")
+                        )
+                    )
+                except Exception as e:
+                    st.error(
+                        f"Error loading ICICI data from {icici_file_info['file']}: {e}"
+                    )
+            if icici_plans:
                 all_plans_by_insurer["ICICI"] = icici_plans
-            except Exception as e:
-                st.error(f"Error loading ICICI data: {e}")
 
-        # Load Cholams plans
-        cholams_plans = []
+        # Load Cholams plans (all available claim statuses)
+        cholams_plans: List[Dict[str, Any]] = []
         if car_files.get("cholams"):
-            cholams_file_info = car_files["cholams"][0]
-            try:
-                cholams_data = load_cholams_data(cholams_file_info["file"])
-                cholams_plans = get_cholams_plans(
-                    cholams_data, cholams_file_info.get("claim_status", "")
-                )
+            for cholams_file_info in car_files["cholams"]:
+                try:
+                    cholams_data = load_cholams_data(cholams_file_info["file"])
+                    cholams_plans.extend(
+                        get_cholams_plans(
+                            cholams_data, cholams_file_info.get("claim_status", "")
+                        )
+                    )
+                except Exception as e:
+                    st.error(
+                        f"Error loading Cholams data from {cholams_file_info['file']}: {e}"
+                    )
+            if cholams_plans:
                 all_plans_by_insurer["Cholams"] = cholams_plans
-            except Exception as e:
-                st.error(f"Error loading Cholams data: {e}")
 
-        royal_sundaram_plans = []
+        # Load Royal Sundaram plans (all available claim statuses)
+        royal_sundaram_plans: List[Dict[str, Any]] = []
         if car_files.get("royal_sundaram"):
-            royal_file_info = next(
-                (
-                    f
-                    for f in car_files["royal_sundaram"]
-                    if f.get("claim_status") == "not_claimed"
-                ),
-                car_files["royal_sundaram"][0],
-            )
-            try:
-                royal_data = load_royal_sundaram_data(royal_file_info["file"])
-                royal_sundaram_plans = get_royal_sundaram_plans(
-                    royal_data, royal_file_info.get("claim_status", "")
-                )
+            for royal_file_info in car_files["royal_sundaram"]:
+                try:
+                    royal_data = load_royal_sundaram_data(royal_file_info["file"])
+                    royal_sundaram_plans.extend(
+                        get_royal_sundaram_plans(
+                            royal_data, royal_file_info.get("claim_status", "")
+                        )
+                    )
+                except Exception as e:
+                    st.error(
+                        f"Error loading Royal Sundaram data from {royal_file_info['file']}: {e}"
+                    )
+            if royal_sundaram_plans:
                 all_plans_by_insurer["Royal Sundaram"] = royal_sundaram_plans
-            except Exception as e:
-                st.error(f"Error loading Royal Sundaram data: {e}")
+
+        # Load Go Digit plans (all available claim statuses)
+        godigit_plans: List[Dict[str, Any]] = []
+        if car_files.get("godigit"):
+            for godigit_file_info in car_files["godigit"]:
+                try:
+                    godigit_data = load_godigit_data(godigit_file_info["file"])
+                    godigit_plans.extend(
+                        get_godigit_plans(
+                            godigit_data, godigit_file_info.get("claim_status", "")
+                        )
+                    )
+                except Exception as e:
+                    st.error(
+                        f"Error loading Go Digit data from {godigit_file_info['file']}: {e}"
+                    )
+            if godigit_plans:
+                all_plans_by_insurer["Go Digit"] = godigit_plans
 
         # Display plans in accordions grouped by insurer
         for insurer_name, plans in all_plans_by_insurer.items():
@@ -776,8 +803,13 @@ def insights_page():
                 .mark_arc(innerRadius=60)
                 .encode(
                     theta=alt.Theta("count():Q", stack=True),
-                    color=alt.Color("Plan Type:N", legend=alt.Legend(title="Plan Type")),
-                    tooltip=[alt.Tooltip("Plan Type:N"), alt.Tooltip("count():Q", title="Number of Plans")],
+                    color=alt.Color(
+                        "Plan Type:N", legend=alt.Legend(title="Plan Type")
+                    ),
+                    tooltip=[
+                        alt.Tooltip("Plan Type:N"),
+                        alt.Tooltip("count():Q", title="Number of Plans"),
+                    ],
                 )
                 .properties(height=320)
             )
@@ -812,16 +844,14 @@ def insights_page():
                 "Insurer": insurer,
                 "Plans": len(insurer_plans),
                 "Cheapest Premium": format_premium(min(ips) if ips else 0),
-                "Average Premium": format_premium(
-                    sum(ips) / len(ips) if ips else 0
-                ),
+                "Average Premium": format_premium(sum(ips) / len(ips) if ips else 0),
                 "Costliest Premium": format_premium(max(ips) if ips else 0),
-                "Avg Add-ons per Plan": round(
-                    sum(addon_counts) / len(addon_counts), 1
-                )
-                if addon_counts
-                else 0.0,
-                "% Plans with Claims History": f"{claimed_share:.1f}%",
+                "Avg Add-ons per Plan": (
+                    round(sum(addon_counts) / len(addon_counts), 1)
+                    if addon_counts
+                    else 0.0
+                ),
+                # "% Plans with Claims History": f"{claimed_share:.1f}%",
             }
         )
 
@@ -856,7 +886,9 @@ def main():
     current_label = page_labels.get(st.session_state.page, "Overview")
     label_list = list(page_labels.values())
     current_index = label_list.index(current_label)
-    selected_label = st.sidebar.radio("Navigation", options=label_list, index=current_index)
+    selected_label = st.sidebar.radio(
+        "Navigation", options=label_list, index=current_index
+    )
 
     # Sync selected label back to internal page key
     for key, label in page_labels.items():
