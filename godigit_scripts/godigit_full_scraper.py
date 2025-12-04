@@ -343,6 +343,11 @@ async def handle_ncb_addon(page: Page):
     # Main add-on label
     ncb_label = page.locator("label#ncb-protector[for='ncb-protector-addon']")
     ncb_checkbox = page.locator("input#ncb-protector-addon")
+
+    if await ncb_label.count() == 0 or await ncb_checkbox.count() == 0:
+        print("  - NCB Protector add-on not found. Skipping.")
+        return None
+
     await ncb_label.scroll_into_view_if_needed()
 
     # -----------------------------
@@ -630,13 +635,13 @@ async def main():
 
         # Wait for plan page to load
         # await page.wait_for_load_state("networkidle")
-        await page.wait_for_timeout(20000)
+        await page.wait_for_timeout(30000)
 
         all_plans_data = await iterate_over_plans(page)
 
         # Write the plans data to a JSON file only if there is data
         if all_plans_data and len(all_plans_data.get("plans_offered")) > 0:
-            output_path = OUTPUT_DIR / f"{REG_NO}-not_claimed.json"
+            output_path = OUTPUT_DIR / f"{REG_NO}-claimed.json"
             with open(output_path, "w", encoding="utf-8") as f:
                 import json
 

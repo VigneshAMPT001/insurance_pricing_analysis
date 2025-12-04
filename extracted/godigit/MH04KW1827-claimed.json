@@ -1,0 +1,137 @@
+{
+  "ncb_status": {
+    "claim_last_year": "Yes",
+    "ncb_last_year": "35%"
+  },
+  "plans_offered": [
+    {
+      "Comprehensive Cover -": {
+        "addons": {
+          "pack_name": "Ultimate pack (8 add-on)",
+          "addon_count": "8 add-on",
+          "premium": null,
+          "addons": [
+            "Breakdown Assistance",
+            "Tyre Protect",
+            "Parts Depreciation Protect",
+            "Consumable cover",
+            "Engine and Gear Box Protect",
+            "Return to Invoice",
+            "Personal Belonging",
+            "Key and Lock Protect"
+          ]
+        },
+        "idv": {
+          "idv_value": "312000",
+          "popular_range": "80% of the users select IDV between ₹ 3,99,500 to ₹ 4,86,000",
+          "min_idv": "313000",
+          "max_idv": "486000",
+          "slider_min": "313000",
+          "slider_max": "486000",
+          "slider_value": "312000",
+          "edit_available": true
+        },
+        "plan_card": {
+          "plan_name": "Comprehensive Cover -",
+          "details": [
+            "1 year Own Damage",
+            "1 year Third Party",
+            "Up to 12000 km/year",
+            "Pre Inspection Required",
+            "Pay as you Drive"
+          ]
+        },
+        "premium_breakup": {
+          "own_damage": "9980",
+          "third_party": "3416",
+          "addons": "3191",
+          "ncb_discount": "-9198",
+          "digit_discount": null,
+          "net_premium": "7389",
+          "gst": "1330",
+          "final_premium": "8719"
+        }
+      }
+    },
+    {
+      "Comprehensive Cover": {
+        "addons": {},
+        "idv": {
+          "idv_value": "312000",
+          "popular_range": "80% of the users select IDV between ₹ 3,99,500 to ₹ 4,86,000",
+          "min_idv": "313000",
+          "max_idv": "486000",
+          "slider_min": "313000",
+          "slider_max": "486000",
+          "slider_value": "312000",
+          "edit_available": true
+        },
+        "plan_card": {
+          "plan_name": "Comprehensive Cover",
+          "details": [
+            "1 year Own Damage",
+            "1 year Third Party",
+            "Unlimited km"
+          ]
+        },
+        "premium_breakup": {
+          "own_damage": "9980",
+          "third_party": "3416",
+          "addons": "3191",
+          "ncb_discount": "-8862",
+          "digit_discount": null,
+          "net_premium": "8731",
+          "gst": "1572",
+          "final_premium": "10303"
+        }
+      }
+    },
+    {
+      "Third Party Cover": {
+        "addons": [
+          {
+            "id": "addon0",
+            "label": "Personal Accident Cover of ₹15 Lakhs",
+            "price": "₹21 /month"
+          },
+          {
+            "id": "addon1",
+            "label": "Passenger Cover",
+            "price": "₹21 /month"
+          },
+          {
+            "id": "addon2",
+            "label": "PA cover for Paid Driver - IMT 17",
+            "price": "₹8 /month"
+          }
+        ],
+        "idv": {
+          "idv_value": null,
+          "popular_range": null,
+          "min_idv": null,
+          "max_idv": null,
+          "slider_min": null,
+          "slider_max": null,
+          "slider_value": null,
+          "edit_available": false
+        },
+        "plan_card": {
+          "plan_name": "Third Party Cover",
+          "details": [
+            "Only 1 year Third Party"
+          ]
+        },
+        "premium_breakup": {
+          "own_damage": null,
+          "third_party": "3416",
+          "addons": "599",
+          "ncb_discount": null,
+          "digit_discount": null,
+          "net_premium": "4015",
+          "gst": "723",
+          "final_premium": "4738"
+        }
+      }
+    }
+  ]
+}
