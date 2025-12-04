@@ -8,7 +8,11 @@
     "engine_cc": "1198",
     "registration_year": 2021
   },
-  "plans": [
+  "ncb_status": {
+    "claim_last_year": "No",
+    "ncb_last_year": "35%"
+  },
+  "plans_offered": [
     {
       "Comprehensive Cover -": {
         "addons": {
@@ -24,7 +28,10 @@
             "Return to Invoice",
             "Personal Belonging",
             "Key and Lock Protect"
-          ]
+          ],
+          "ncb_protection": {
+            "Same NCB Slab": "₹698"
+          }
         },
         "idv": {
           "idv_value": "312000",
@@ -61,19 +68,9 @@
     {
       "Comprehensive Cover": {
         "addons": {
-          "pack_name": "Ultimate pack (8 add-on)",
-          "addon_count": "8 add-on",
-          "premium": "₹263 /month",
-          "addons": [
-            "Breakdown Assistance",
-            "Tyre Protect",
-            "Parts Depreciation Protect",
-            "Consumable cover",
-            "Engine and Gear Box Protect",
-            "Return to Invoice",
-            "Personal Belonging",
-            "Key and Lock Protect"
-          ]
+          "ncb_protection": {
+            "Same NCB Slab": "₹698"
+          }
         },
         "idv": {
           "idv_value": "312000",
@@ -96,12 +93,12 @@
         "premium_breakup": {
           "own_damage": "5489",
           "third_party": "3416",
-          "addons": "607",
+          "addons": "4108",
           "ncb_discount": "-314",
           "digit_discount": "-4790",
-          "net_premium": "4049",
-          "gst": "729",
-          "final_premium": "4843"
+          "net_premium": "8311",
+          "gst": "1496",
+          "final_premium": "9933"
         }
       }
     },
@@ -124,15 +121,31 @@
             "price": "₹8 /month"
           }
         ],
+        "idv": {
+          "idv_value": null,
+          "popular_range": null,
+          "min_idv": null,
+          "max_idv": null,
+          "slider_min": null,
+          "slider_max": null,
+          "slider_value": null,
+          "edit_available": false
+        },
+        "plan_card": {
+          "plan_name": "Third Party Cover",
+          "details": [
+            "Only 1 year Third Party"
+          ]
+        },
         "premium_breakup": {
           "own_damage": null,
           "third_party": "3416",
-          "addons": "499",
+          "addons": "599",
           "ncb_discount": null,
           "digit_discount": null,
-          "net_premium": "3915",
-          "gst": "705",
-          "final_premium": "4620"
+          "net_premium": "4015",
+          "gst": "723",
+          "final_premium": "4738"
         }
       }
     }

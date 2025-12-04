@@ -27,7 +27,7 @@ from godigit_bs4 import (
 
 # ----------------- CONFIG -----------------
 BASE_URL = "https://www.godigit.com/"
-REG_NO = "MH49BB1307"
+REG_NO = "MH12VZ2302"
 MOBILE = "8712347645"
 
 OUTPUT_DIR = Path("extracted/godigit")
@@ -316,13 +316,7 @@ async def handle_idv_edit_icon(page):
 #     await page.wait_for_timeout(5000)  # wait premium update
 
 
-async def handle_ncb_addon(page):
-    print("[D] Handling NCB Protector Add-on…")
-
-    # Main add-on label
-    ncb_label = page.locator("label#ncb-protector[for='ncb-protector-addon']")
-    ncb_checkbox = page.locator("input#ncb-protector-addon")
-
+async def extract_ncb_protect(page: Page):
     # -----------------------------
     # Extract Label + Price
     # -----------------------------
@@ -340,6 +334,17 @@ async def handle_ncb_addon(page):
     print(f"  - Sub-cover Label: {sub_label.strip()}")
     print(f"  - Price: {price.strip()}")
 
+    return {"ncb_protection": {sub_label: price}}
+
+
+async def handle_ncb_addon(page: Page):
+    print("[D] Handling NCB Protector Add-on…")
+
+    # Main add-on label
+    ncb_label = page.locator("label#ncb-protector[for='ncb-protector-addon']")
+    ncb_checkbox = page.locator("input#ncb-protector-addon")
+    await ncb_label.scroll_into_view_if_needed()
+
     # -----------------------------
     # Skip click if already selected
     # -----------------------------
@@ -354,21 +359,20 @@ async def handle_ncb_addon(page):
     )
     if has_after:
         print("  - Already selected (via ::after). Skipping.")
-        return
+        return await extract_ncb_protect(page)
 
     # Check using checkbox
     if await ncb_checkbox.is_checked():
         print("  - Already selected (checkbox). Skipping.")
-        return
+        return await extract_ncb_protect(page)
 
     # -----------------------------
     # Activate the add-on
     # -----------------------------
     await ncb_label.click(force=True)
-    await page.wait_for_timeout(2000)
     print("  - NCB Protector Add-on selected.")
-
-    return {"ncb_protection": {sub_label: price}}
+    await page.wait_for_timeout(4000)
+    return await extract_ncb_protect(page)
 
 
 async def select_ultimate_addon_package(page: Page):
@@ -425,9 +429,10 @@ async def select_ultimate_addon_package(page: Page):
 async def select_all_addons(page: Page):
     addon_items = page.locator("div.add-on-list .extra-package-addon")
 
-    addons_extender = page.locator("addon-card-extend")
+    addons_extender = page.locator("div.addon-card-extend")
     if await addons_extender.count() > 0:
-        await addons_extender.first.click(force=True)
+        await addons_extender.scroll_into_view_if_needed()
+        await addons_extender.click(force=True)
 
     count = await addon_items.count()
     print(f"Found {count} addons")
@@ -442,11 +447,16 @@ async def select_all_addons(page: Page):
         label = item.locator("label")
         title = await item.locator(".checkbox-label").inner_text()
 
-        # Extract addon details
+        # Extract addon details, with price as value or "N/A" if not present
+        price_val = (
+            await item.locator(".price").inner_text()
+            if await item.locator(".price").count() > 0
+            else "N/A"
+        )
         addon_info = {
             "id": await checkbox.get_attribute("id"),
             "label": await item.locator(".checkbox-label").inner_text(),
-            "price": await item.locator(".price").inner_text(),
+            "price": price_val,
         }
         addons.append(addon_info)
 
@@ -462,7 +472,7 @@ async def select_all_addons(page: Page):
 
         print(f"Clicked addon: {title}")
 
-        await page.wait_for_timeout(5000)  # wait before next click
+        await page.wait_for_timeout(15000)  # wait before next click
 
     print("All addons processed.")
     return addons
@@ -515,24 +525,35 @@ async def run_additional_steps(page: Page, go_back):
     initial_html = await page.content()
     plan_card = scrape_plan_card(initial_html)
     plan_name = plan_card.get("plan_name", "default")
+    locator = page.locator("div.add-on-list")
+
+    found = True
     try:
-        locator = page.locator("desktop-idv-content add-on-wrap")
-        await locator.wait_for(state="attached", timeout=2000)
+        # Try with a small timeout, does NOT block long
+        await locator.wait_for(timeout=2000)
+    except Exception:
+        found = False
+
+    if found:
+        print("[**] Found add-on-wrap → selecting standard addons")
+        await locator.scroll_into_view_if_needed()
         td_addons = await select_all_addons(page)
         plan_details["addons"] = td_addons
-    except Exception:
-        pass
+
     else:
+        print("[**] No add-on-wrap → selecting ultimate addon package")
         addon_data = await select_ultimate_addon_package(page)
         await handle_pa_owner_cover(page)
         await handle_idv_edit_icon(page)
         ncb_protection = await handle_ncb_addon(page)
         await page.wait_for_timeout(10000)
-        plan_details["addons"] = addon_data
-        plan_details["addons"].update(ncb_protection)
-        plan_details["idv"] = scrape_idv_block(initial_html)
-        plan_details["plan_card"] = plan_card
 
+        plan_details["addons"] = addon_data if addon_data else {}
+        if ncb_protection:
+            plan_details["addons"].update(ncb_protection)
+
+    plan_details["idv"] = scrape_idv_block(initial_html)
+    plan_details["plan_card"] = plan_card
     # Gather all the data under the plan_name key
     await click_continue_btn(page)
     await page.wait_for_timeout(10000)
@@ -614,7 +635,7 @@ async def main():
         all_plans_data = await iterate_over_plans(page)
 
         # Write the plans data to a JSON file only if there is data
-        if all_plans_data:
+        if all_plans_data and len(all_plans_data.get("plans_offered")) > 0:
             output_path = OUTPUT_DIR / f"{REG_NO}-not_claimed.json"
             with open(output_path, "w", encoding="utf-8") as f:
                 import json

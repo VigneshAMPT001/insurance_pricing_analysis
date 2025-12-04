@@ -1,37 +1,47 @@
-[
-  {
-    "Comprehensive Cover": {
-      "addons": [
-        {
-          "id": "addon0",
-          "label": "Personal Accident Cover of ₹15 Lakhs",
-          "price": "₹21 /month"
-        },
-        {
-          "id": "addon1",
-          "label": "Breakdown Assistance (RSA)",
-          "price": "₹10 /month"
-        },
-        {
-          "id": "addon2",
-          "label": "Tyre Protect Cover",
-          "price": "₹17 /month"
+{
+  "car_info": {
+    "registration_number": "MH12VZ2302",
+    "vehicle_make": "Tata",
+    "vehicle_model": "Nexon",
+    "vehicle_variant": "Fearless plus S Dark Edition",
+    "fuel_type": "petrol",
+    "engine_cc": "1199"
+  },
+  "ncb_status": {
+    "claim_last_year": "No",
+    "ncb_last_year": "0%"
+  },
+  "plans_offered": [
+    {
+      "Comprehensive Cover": {
+        "addons": [
+          {
+            "id": "addon0",
+            "label": "Personal Accident Cover of ₹15 Lakhs",
+            "price": "₹21 /month"
+          },
+          {
+            "id": "addon1",
+            "label": "Breakdown Assistance (RSA)",
+            "price": "₹10 /month"
+          },
+          {
+            "id": "addon2",
+            "label": "Tyre Protect Cover",
+            "price": "₹17 /month"
+          }
+        ],
+        "premium_breakup": {
+          "own_damage": "18506",
+          "third_party": "3416",
+          "addons": "371",
+          "ncb_discount": "-571",
+          "digit_discount": "-16224",
+          "net_premium": "5499",
+          "gst": "990",
+          "final_premium": "6489"
         }
-      ],
-      "premium_breakup": {
-        "own_damage": "18506",
-        "third_party": "3416",
-        "addons": "620",
-        "ncb_discount": "-571",
-        "digit_discount": "-16224",
-        "net_premium": "5748",
-        "gst": "1035",
-        "final_premium": "6782"
       }
-    },
-    "ncb_status": {
-      "claim_last_year": "No",
-      "ncb_last_year": "0%"
     }
-  }
-]
+  ]
+}
