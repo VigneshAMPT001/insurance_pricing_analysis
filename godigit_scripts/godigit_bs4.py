@@ -489,14 +489,14 @@ async def handle_claim_ncb_and_ownership(page):
     print(f"   👉 Claim Last Year: {claim_last_year}")
     print(f"   👉 NCB Last Year:   {ncb_last_year}")
 
-    await page.locator(".material-icons-edit").click()
-    print("🟢 Clicked Edit Icon")
+    # await page.locator(".material-icons-edit").click()
+    # print("🟢 Clicked Edit Icon")
 
-    switch_locator = page.locator("#switch-2")
-    await switch_locator.scroll_into_view_if_needed()
-    await switch_locator.click()
+    # switch_locator = page.locator("#switch-2")
+    # await switch_locator.scroll_into_view_if_needed()
+    # await switch_locator.click()
 
-    print("🟢 Ownership transfer toggle clicked")
+    # print("🟢 Ownership transfer toggle clicked")
 
     return {"claim_last_year": claim_last_year, "ncb_last_year": ncb_last_year}
 

@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 import asyncio
+from operator import sub
 from pathlib import Path
 from datetime import datetime
+from pandas.core.dtypes.dtypes import time
 from playwright.async_api import Page, async_playwright
 from godigit_bs4 import (
+    handle_claim_ncb_and_ownership,
     parse_comprehensive_plan_footer,
     scrape_idv_block,
     scrape_plan_card,
@@ -24,8 +27,8 @@ from godigit_bs4 import (
 
 # ----------------- CONFIG -----------------
 BASE_URL = "https://www.godigit.com/"
-REG_NO = "MH12SE5466"
-MOBILE = "8712345645"
+REG_NO = "MH49BB1307"
+MOBILE = "8712347645"
 
 OUTPUT_DIR = Path("extracted/godigit")
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -316,53 +319,56 @@ async def handle_idv_edit_icon(page):
 async def handle_ncb_addon(page):
     print("[D] Handling NCB Protector Add-on…")
 
-    # Find the label for NCB Protector Add-on
-    ncb_protector_checkbox_label = page.locator(
-        "label#ncb-protector[for='ncb-protector-addon']"
-    )
+    # Main add-on label
+    ncb_label = page.locator("label#ncb-protector[for='ncb-protector-addon']")
+    ncb_checkbox = page.locator("input#ncb-protector-addon")
 
-    # Check if the label has ::after, indicating already checked
+    # -----------------------------
+    # Extract Label + Price
+    # -----------------------------
+
+    # Extract subcover label (example: "Same NCB Slab")
+    sub_label = await page.locator(
+        "div.ncb-protect-cover-section.active p.text-xs.text-grey-800"
+    ).inner_text()
+
+    # Extract price text (example: "₹698")
+    price = await page.locator(
+        "div.ncb-protect-cover-section.active p.font-bold.text-grey-800.text-base"
+    ).inner_text()
+
+    print(f"  - Sub-cover Label: {sub_label.strip()}")
+    print(f"  - Price: {price.strip()}")
+
+    # -----------------------------
+    # Skip click if already selected
+    # -----------------------------
+
+    # Check using ::after
     has_after = await page.evaluate(
         """(label) => {
             const style = window.getComputedStyle(label, '::after');
-            return !!style && !!style.content && style.content !== "none" && style.content !== "";
+            return style && style.content && style.content !== 'none' && style.content !== '';
         }""",
-        await ncb_protector_checkbox_label.element_handle(),
+        await ncb_label.element_handle(),
     )
     if has_after:
-        print(
-            "  - NCB Protector Add-on already selected (label has ::after). Skipping click."
-        )
+        print("  - Already selected (via ::after). Skipping.")
         return
 
-    # Fallback: Find the checkbox input by id and check if already checked
-    ncb_checkbox = page.locator("input#ncb-protector-addon")
+    # Check using checkbox
     if await ncb_checkbox.is_checked():
-        print("  - NCB Protector Add-on already selected (checkbox). Skipping click.")
+        print("  - Already selected (checkbox). Skipping.")
         return
 
-    # Otherwise, click the label to activate
-    await ncb_protector_checkbox_label.click(force=True)
-    await page.wait_for_timeout(5000)
+    # -----------------------------
+    # Activate the add-on
+    # -----------------------------
+    await ncb_label.click(force=True)
+    await page.wait_for_timeout(2000)
+    print("  - NCB Protector Add-on selected.")
 
-
-async def iterate_over_plans(page: Page):
-    plans = []
-    plans_container = page.locator("div#planCards")
-    plan_cards = plans_container.locator("div.plan-card")
-    total_plans_count = await plan_cards.count()
-
-    should_go_back = True
-    for i in range(total_plans_count):
-        # Click the i-th plan card before running additional steps
-        plan_card = plan_cards.nth(i)
-        await plan_card.scroll_into_view_if_needed()
-        await plan_card.click(force=True)
-        await page.wait_for_timeout(4000)
-        plan_data = await run_additional_steps(page, should_go_back)
-        plans.append(plan_data)
-
-    return plans
+    return {"ncb_protection": {sub_label: price}}
 
 
 async def select_ultimate_addon_package(page: Page):
@@ -419,6 +425,10 @@ async def select_ultimate_addon_package(page: Page):
 async def select_all_addons(page: Page):
     addon_items = page.locator("div.add-on-list .extra-package-addon")
 
+    addons_extender = page.locator("addon-card-extend")
+    if await addons_extender.count() > 0:
+        await addons_extender.first.click(force=True)
+
     count = await addon_items.count()
     print(f"Found {count} addons")
 
@@ -426,6 +436,7 @@ async def select_all_addons(page: Page):
 
     for i in range(count):
         item = addon_items.nth(i)
+        await item.scroll_into_view_if_needed()
 
         checkbox = item.locator("input[type='checkbox']")
         label = item.locator("label")
@@ -451,7 +462,7 @@ async def select_all_addons(page: Page):
 
         print(f"Clicked addon: {title}")
 
-        await page.wait_for_timeout(3000)  # wait before next click
+        await page.wait_for_timeout(5000)  # wait before next click
 
     print("All addons processed.")
     return addons
@@ -463,6 +474,7 @@ async def click_continue_btn(page: Page):
     Uses JS force click fallback if needed.
     """
     try:
+        await page.wait_for_load_state(state="load", timeout=3000)
         print("[*] Trying to click continue button to proceed...")
         continue_btn_to_next_page = page.locator("button#continue-btn")
         await continue_btn_to_next_page.scroll_into_view_if_needed()
@@ -498,21 +510,26 @@ async def click_back_breadcrumb(page: Page):
 
 
 async def run_additional_steps(page: Page, go_back):
-    details = {}
+    plan_data = {}
     plan_details = {}
     initial_html = await page.content()
     plan_card = scrape_plan_card(initial_html)
     plan_name = plan_card.get("plan_name", "default")
-    if "third party" in plan_name.lower():
+    try:
+        locator = page.locator("desktop-idv-content add-on-wrap")
+        await locator.wait_for(state="attached", timeout=2000)
         td_addons = await select_all_addons(page)
         plan_details["addons"] = td_addons
+    except Exception:
+        pass
     else:
         addon_data = await select_ultimate_addon_package(page)
         await handle_pa_owner_cover(page)
         await handle_idv_edit_icon(page)
-        await handle_ncb_addon(page)
+        ncb_protection = await handle_ncb_addon(page)
         await page.wait_for_timeout(10000)
         plan_details["addons"] = addon_data
+        plan_details["addons"].update(ncb_protection)
         plan_details["idv"] = scrape_idv_block(initial_html)
         plan_details["plan_card"] = plan_card
 
@@ -522,15 +539,39 @@ async def run_additional_steps(page: Page, go_back):
     plan_details["premium_breakup"] = await extract_cost_breakup(page)
 
     # Store under main details dict with plan_name as the main key
-    details[plan_name] = plan_details
-
+    plan_data[plan_name] = plan_details
     # await handle_select_modal(page)
     print("[✔] All extra steps completed")
     print("\n=== Aggregated details ===")
-    print(details)
+    print(plan_data)
     if go_back:
         await click_back_breadcrumb(page)
-    return details
+    return plan_data
+
+
+async def iterate_over_plans(page: Page):
+    await page.wait_for_load_state(timeout=10000)
+    plans = []
+    overall_data = {}
+    plans_container = page.locator("div#planCards")
+    plan_cards = plans_container.locator("div.plan-card")
+    total_plans_count = await plan_cards.count()
+
+    ncb_details = await handle_claim_ncb_and_ownership(page)
+
+    should_go_back = True
+    for i in range(total_plans_count):
+        # Click the i-th plan card before running additional steps
+        plan_card = plan_cards.nth(i)
+        await plan_card.scroll_into_view_if_needed()
+        await plan_card.click(force=True)
+        await page.wait_for_timeout(4000)
+        plan_data = await run_additional_steps(page, should_go_back)
+        plans.append(plan_data)
+
+    overall_data["ncb_status"] = ncb_details
+    overall_data["plans_offered"] = plans
+    return overall_data
 
 
 async def main():
@@ -568,17 +609,20 @@ async def main():
 
         # Wait for plan page to load
         # await page.wait_for_load_state("networkidle")
-        await page.wait_for_timeout(10000)
+        await page.wait_for_timeout(20000)
 
         all_plans_data = await iterate_over_plans(page)
 
-        # Write the plans data to a JSON file
-        output_path = OUTPUT_DIR / f"{REG_NO}-not_claimed.json"
-        with open(output_path, "w", encoding="utf-8") as f:
-            import json
+        # Write the plans data to a JSON file only if there is data
+        if all_plans_data:
+            output_path = OUTPUT_DIR / f"{REG_NO}-not_claimed.json"
+            with open(output_path, "w", encoding="utf-8") as f:
+                import json
 
-            json.dump(all_plans_data, f, ensure_ascii=False, indent=2)
-        print(f"Plans data written to {output_path}")
+                json.dump(all_plans_data, f, ensure_ascii=False, indent=2)
+            print(f"Plans data written to {output_path}")
+        else:
+            print("No plans data found. Skipping file write.")
 
         await browser.close()
 

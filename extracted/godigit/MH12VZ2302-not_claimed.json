@@ -1,0 +1,37 @@
+[
+  {
+    "Comprehensive Cover": {
+      "addons": [
+        {
+          "id": "addon0",
+          "label": "Personal Accident Cover of ₹15 Lakhs",
+          "price": "₹21 /month"
+        },
+        {
+          "id": "addon1",
+          "label": "Breakdown Assistance (RSA)",
+          "price": "₹10 /month"
+        },
+        {
+          "id": "addon2",
+          "label": "Tyre Protect Cover",
+          "price": "₹17 /month"
+        }
+      ],
+      "premium_breakup": {
+        "own_damage": "18506",
+        "third_party": "3416",
+        "addons": "620",
+        "ncb_discount": "-571",
+        "digit_discount": "-16224",
+        "net_premium": "5748",
+        "gst": "1035",
+        "final_premium": "6782"
+      }
+    },
+    "ncb_status": {
+      "claim_last_year": "No",
+      "ncb_last_year": "0%"
+    }
+  }
+]

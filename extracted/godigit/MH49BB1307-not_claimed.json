@@ -1,0 +1,36 @@
+{
+  "ncb_status": {
+    "claim_last_year": "Yes",
+    "ncb_last_year": "0%"
+  },
+  "plans_offered": [
+    {
+      "Comprehensive Cover": {
+        "premium_breakup": {
+          "own_damage": "8191",
+          "third_party": "3416",
+          "addons": null,
+          "ncb_discount": "-2867",
+          "digit_discount": null,
+          "net_premium": "8740",
+          "gst": "1573",
+          "final_premium": "10314"
+        }
+      }
+    },
+    {
+      "Third Party Cover": {
+        "premium_breakup": {
+          "own_damage": null,
+          "third_party": "3416",
+          "addons": null,
+          "ncb_discount": null,
+          "digit_discount": null,
+          "net_premium": "3416",
+          "gst": "615",
+          "final_premium": "4031"
+        }
+      }
+    }
+  ]
+}
