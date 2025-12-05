@@ -71,7 +71,7 @@ def comparison_page():
         st.download_button(
             "⬇️ Download Filtered CSV",
             data=csv_data,
-            file_name="filtered_plans.csv",
+            file_name=f"filtered_{make}_{model}_{variant}_plans.csv",
             mime="text/csv",
             use_container_width=False,
         )

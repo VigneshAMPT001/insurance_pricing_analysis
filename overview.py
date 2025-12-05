@@ -476,7 +476,7 @@ def homepage():
             st.download_button(
                 "⬇️ Download Plans CSV",
                 data=csv_data,
-                file_name="plans_flat.csv",
+                file_name=f"plans_{selected_make}_{selected_model}_{selected_variant}.csv",
                 mime="text/csv",
                 use_container_width=True,
             )
@@ -498,7 +498,7 @@ def homepage():
                 st.download_button(
                     "⬇️ Download Grouped CSV (Insurer x Plan Type)",
                     data=grouped_csv,
-                    file_name="plans_grouped.csv",
+                    file_name=f"plans_sum_{selected_make}_{selected_model}_{selected_variant}.csv",
                     mime="text/csv",
                     use_container_width=True,
                 )
