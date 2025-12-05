@@ -1,0 +1,1169 @@
+{
+  "car_info": {
+    "make": "Hyundai",
+    "model": "I20",
+    "variant": "Elite Sportz VTVT BSIV"
+  },
+  "plans_by_insurer": {
+    "Acko": [
+      {
+        "plan_id": "car_tp",
+        "plan_name": "Third-party Plan",
+        "category": "tp",
+        "category_display": "Third Party",
+        "premium_display": "3,416",
+        "premium_value": 3416.0,
+        "description": "This plan covers damage caused by your car to others and their property, but does not cover any damage caused to your car.",
+        "is_selected": false,
+        "badge": "",
+        "addons": [
+          {
+            "id": "pa_owner_car",
+            "display_name": "Personal Accident Cover",
+            "description": "Pays <b>up to ₹50 lakh</b> if the car owner is permanently disabled or dies in an accident.",
+            "title": "For you",
+            "net_premium": 399.0,
+            "gross_premium": 471.0,
+            "display_net_premium": "399",
+            "is_selected": true,
+            "badge": "Mandatory by law"
+          },
+          {
+            "id": "pa_unnamed_passenger_car",
+            "display_name": "Passenger Protection",
+            "description": "Pays <b>up to ₹2 lakh per passenger</b> if they are permanently disabled or die in an accident.",
+            "title": "For your loved ones",
+            "net_premium": 500.0,
+            "gross_premium": 590.0,
+            "display_net_premium": "500",
+            "is_selected": true,
+            "badge": null
+          },
+          {
+            "id": "rsa_car",
+            "display_name": "Roadside Assistance",
+            "description": "Get 24x7 help with towing, jump-starts, flat tyres, fuel delivery, lockouts, and more.",
+            "title": "For car breakdowns",
+            "net_premium": 199.0,
+            "gross_premium": 235.0,
+            "display_net_premium": "199",
+            "is_selected": true,
+            "badge": null
+          },
+          {
+            "id": "legal_liability_car",
+            "display_name": "Paid Driver Protection",
+            "description": "Pays up to your legal obligation amount if your paid driver is permanently disabled or dies in an accident.",
+            "title": "For your driver",
+            "net_premium": 50.0,
+            "gross_premium": 59.0,
+            "display_net_premium": "50",
+            "is_selected": true,
+            "badge": null
+          }
+        ],
+        "insurer": "Acko",
+        "idv": {
+          "current": 266040.0,
+          "recommended": 266040.0,
+          "min": 147800.0,
+          "max": 474233.0,
+          "selected": 266040.0
+        },
+        "pricing_breakdown": {
+          "base_premium": 2268.0,
+          "own_damage_premium": null,
+          "third_party_premium": null,
+          "addons_total": 1148.0,
+          "addons_breakdown": [
+            {
+              "name": "Personal Accident Cover",
+              "price": 399.0
+            },
+            {
+              "name": "Passenger Protection",
+              "price": 500.0
+            },
+            {
+              "name": "Roadside Assistance",
+              "price": 199.0
+            },
+            {
+              "name": "Paid Driver Protection",
+              "price": 50.0
+            }
+          ],
+          "discounts_total": null,
+          "discount_breakdown": [],
+          "gst_amount": null,
+          "gst_rate": "",
+          "net_premium": 3416.0,
+          "total_premium": 3416.0,
+          "sections": []
+        },
+        "claim_status": "claimed"
+      },
+      {
+        "plan_id": "zero_dep_deductible",
+        "plan_name": "Zero Depreciation Plans",
+        "category": "comp",
+        "category_display": "Comprehensive",
+        "premium_display": "12,454",
+        "premium_value": 12454.0,
+        "description": "<p style='margin-bottom : 12px'>This plan covers theft, damage from fire, accidents, and natural disasters, as well as the <b>full cost of replaced parts during repairs.</b></p><p style='display : inline'>It also covers accidental damage caused by your car to others and their property.</p>",
+        "is_selected": false,
+        "badge": "",
+        "addons": [
+          {
+            "id": "engine_protect_car",
+            "display_name": "Engine Protection",
+            "description": "Cover engine and gearbox damage due to floods or heavy rains, as well as engine damage from oil/coolant leakage during an accident.",
+            "title": "Save yourself from costly engine repairs",
+            "net_premium": 665.0,
+            "gross_premium": 785.0,
+            "display_net_premium": "665",
+            "is_selected": true,
+            "badge": "Recommended for you"
+          },
+          {
+            "id": "pa_owner_car",
+            "display_name": "Personal Accident Cover",
+            "description": "Pays <b>up to ₹50 lakh</b> if the car owner is permanently disabled or dies in an accident.",
+            "title": "For you",
+            "net_premium": 399.0,
+            "gross_premium": 471.0,
+            "display_net_premium": "399",
+            "is_selected": true,
+            "badge": "Mandatory by law"
+          },
+          {
+            "id": "pa_unnamed_passenger_car",
+            "display_name": "Passenger Protection",
+            "description": "Pays <b>up to ₹2 lakh per passenger</b> if they are permanently disabled or die in an accident.",
+            "title": "For your loved ones",
+            "net_premium": 500.0,
+            "gross_premium": 590.0,
+            "display_net_premium": "500",
+            "is_selected": true,
+            "badge": null
+          },
+          {
+            "id": "rsa_outstation_keyprotect_combo_car",
+            "display_name": "Extra Car Protection",
+            "description": "<ul><li>24x7 car breakdown assistance</li><li>Key repair/replacement up to ₹7,000</li><li>Accommodation expenses up to ₹6,500 during outstation repairs</li></ul>",
+            "title": "Be prepared for roadside emergencies",
+            "net_premium": 299.0,
+            "gross_premium": 353.0,
+            "display_net_premium": "299",
+            "is_selected": true,
+            "badge": null
+          },
+          {
+            "id": "consumables_car",
+            "display_name": "Consumables Cover",
+            "description": "Cover the cost of consumables like nuts, bolts, brake oil, engine oil, etc. that get replaced during repairs.",
+            "title": "Save on repair extras",
+            "net_premium": 213.0,
+            "gross_premium": 251.0,
+            "display_net_premium": "213",
+            "is_selected": true,
+            "badge": null
+          },
+          {
+            "id": "legal_liability_car",
+            "display_name": "Paid Driver Protection",
+            "description": "Pays up to your legal obligation amount if your paid driver is permanently disabled or dies in an accident.",
+            "title": "For your driver",
+            "net_premium": 50.0,
+            "gross_premium": 59.0,
+            "display_net_premium": "50",
+            "is_selected": true,
+            "badge": null
+          },
+          {
+            "id": "electrical_accessories_own_damage_basic_car",
+            "display_name": "Electrical Accessories Cover ",
+            "description": "Cover theft or damage of items like music system, speakers, and other electrical car accessories",
+            "title": "Protect your car accessories",
+            "net_premium": 0.0,
+            "gross_premium": 0.0,
+            "display_net_premium": "0",
+            "is_selected": true,
+            "badge": null
+          },
+          {
+            "id": "non_electrical_accessories_own_damage_basic_car",
+            "display_name": "Non-electrical Accessories Cover",
+            "description": "Cover theft or damage of items like alloy wheels, seat covers, and other non-electrical accessories.",
+            "title": "Secure non-electrical items",
+            "net_premium": 0.0,
+            "gross_premium": 0.0,
+            "display_net_premium": "0",
+            "is_selected": true,
+            "badge": null
+          }
+        ],
+        "insurer": "Acko",
+        "idv": {
+          "current": 266040.0,
+          "recommended": 266040.0,
+          "min": 147800.0,
+          "max": 474233.0,
+          "selected": 266040.0
+        },
+        "pricing_breakdown": {
+          "base_premium": 10328.0,
+          "own_damage_premium": null,
+          "third_party_premium": null,
+          "addons_total": 2126.0,
+          "addons_breakdown": [
+            {
+              "name": "Engine Protection",
+              "price": 665.0
+            },
+            {
+              "name": "Personal Accident Cover",
+              "price": 399.0
+            },
+            {
+              "name": "Passenger Protection",
+              "price": 500.0
+            },
+            {
+              "name": "Extra Car Protection",
+              "price": 299.0
+            },
+            {
+              "name": "Consumables Cover",
+              "price": 213.0
+            },
+            {
+              "name": "Paid Driver Protection",
+              "price": 50.0
+            }
+          ],
+          "discounts_total": null,
+          "discount_breakdown": [],
+          "gst_amount": null,
+          "gst_rate": "",
+          "net_premium": 12454.0,
+          "total_premium": 12454.0,
+          "sections": []
+        },
+        "claim_status": "claimed"
+      },
+      {
+        "plan_id": "car_comprehensive",
+        "plan_name": "Comprehensive Plan",
+        "category": "comp",
+        "category_display": "Comprehensive",
+        "premium_display": "9,020",
+        "premium_value": 9020.0,
+        "description": "This plan covers theft and damage to your car from accidents, fire, and natural disasters. It also covers accidental damage caused by your car to others and their property.",
+        "is_selected": true,
+        "badge": "",
+        "addons": [
+          {
+            "id": "engine_protect_car",
+            "display_name": "Engine Protection",
+            "description": "Cover engine and gearbox damage due to floods or heavy rains, as well as engine damage from oil/coolant leakage during an accident.",
+            "title": "Save yourself from costly engine repairs",
+            "net_premium": 665.0,
+            "gross_premium": 785.0,
+            "display_net_premium": "665",
+            "is_selected": true,
+            "badge": "Recommended for you"
+          },
+          {
+            "id": "pa_owner_car",
+            "display_name": "Personal Accident Cover",
+            "description": "Pays <b>up to ₹50 lakh</b> if the car owner is permanently disabled or dies in an accident.",
+            "title": "For you",
+            "net_premium": 399.0,
+            "gross_premium": 471.0,
+            "display_net_premium": "399",
+            "is_selected": true,
+            "badge": "Mandatory by law"
+          },
+          {
+            "id": "pa_unnamed_passenger_car",
+            "display_name": "Passenger Protection",
+            "description": "Pays <b>up to ₹2 lakh per passenger</b> if they are permanently disabled or die in an accident.",
+            "title": "For your loved ones",
+            "net_premium": 500.0,
+            "gross_premium": 590.0,
+            "display_net_premium": "500",
+            "is_selected": true,
+            "badge": null
+          },
+          {
+            "id": "rsa_outstation_keyprotect_combo_car",
+            "display_name": "Extra Car Protection",
+            "description": "<ul><li>24x7 car breakdown assistance</li><li>Key repair/replacement up to ₹7,000</li><li>Accommodation expenses up to ₹6,500 during outstation repairs</li></ul>",
+            "title": "Be prepared for roadside emergencies",
+            "net_premium": 299.0,
+            "gross_premium": 353.0,
+            "display_net_premium": "299",
+            "is_selected": true,
+            "badge": null
+          },
+          {
+            "id": "consumables_car",
+            "display_name": "Consumables Cover",
+            "description": "Cover the cost of consumables like nuts, bolts, brake oil, engine oil, etc. that get replaced during repairs.",
+            "title": "Save on repair extras",
+            "net_premium": 213.0,
+            "gross_premium": 251.0,
+            "display_net_premium": "213",
+            "is_selected": true,
+            "badge": null
+          },
+          {
+            "id": "legal_liability_car",
+            "display_name": "Paid Driver Protection",
+            "description": "Pays up to your legal obligation amount if your paid driver is permanently disabled or dies in an accident.",
+            "title": "For your driver",
+            "net_premium": 50.0,
+            "gross_premium": 59.0,
+            "display_net_premium": "50",
+            "is_selected": true,
+            "badge": null
+          },
+          {
+            "id": "electrical_accessories_own_damage_basic_car",
+            "display_name": "Electrical Accessories Cover ",
+            "description": "Cover theft or damage of items like music system, speakers, and other electrical car accessories",
+            "title": "Protect your car accessories",
+            "net_premium": 0.0,
+            "gross_premium": 0.0,
+            "display_net_premium": "0",
+            "is_selected": true,
+            "badge": null
+          },
+          {
+            "id": "non_electrical_accessories_own_damage_basic_car",
+            "display_name": "Non-electrical Accessories Cover",
+            "description": "Cover theft or damage of items like alloy wheels, seat covers, and other non-electrical accessories.",
+            "title": "Secure non-electrical items",
+            "net_premium": 0.0,
+            "gross_premium": 0.0,
+            "display_net_premium": "0",
+            "is_selected": true,
+            "badge": null
+          }
+        ],
+        "insurer": "Acko",
+        "idv": {
+          "current": 266040.0,
+          "recommended": 266040.0,
+          "min": 147800.0,
+          "max": 474233.0,
+          "selected": 266040.0
+        },
+        "pricing_breakdown": {
+          "base_premium": 6894.0,
+          "own_damage_premium": null,
+          "third_party_premium": null,
+          "addons_total": 2126.0,
+          "addons_breakdown": [
+            {
+              "name": "Engine Protection",
+              "price": 665.0
+            },
+            {
+              "name": "Personal Accident Cover",
+              "price": 399.0
+            },
+            {
+              "name": "Passenger Protection",
+              "price": 500.0
+            },
+            {
+              "name": "Extra Car Protection",
+              "price": 299.0
+            },
+            {
+              "name": "Consumables Cover",
+              "price": 213.0
+            },
+            {
+              "name": "Paid Driver Protection",
+              "price": 50.0
+            }
+          ],
+          "discounts_total": null,
+          "discount_breakdown": [],
+          "gst_amount": null,
+          "gst_rate": "",
+          "net_premium": 9020.0,
+          "total_premium": 9020.0,
+          "sections": []
+        },
+        "claim_status": "claimed"
+      }
+    ],
+    "Cholams": [
+      {
+        "plan_id": "comprehensive_cover",
+        "plan_name": "Comprehensive Cover",
+        "category": "comp",
+        "category_display": "Comprehensive",
+        "premium_display": "₹8821",
+        "premium_value": 8821.0,
+        "base_premium": 7475.0,
+        "description": "Accidents, Fire, Theft",
+        "is_selected": false,
+        "badge": "",
+        "addons": [
+          {
+            "name": "Personal Accident Cover",
+            "price": 650.0
+          }
+        ],
+        "benefits": [
+          "Accidents: Covers repair/replacement costs if your car is damaged in an accident.",
+          "Fire: Covers the damages caused due to self-ignition, explosion or lightning.",
+          "Theft: If your car is stolen, we will pay you the value of your car as per your policy.",
+          "Calamities: We will cover damage caused by natural or man-made calamities such as earthquakes, riots, etc.",
+          "Rat bite damages: Cover the damages caused by rat bites.",
+          "Third-party injury/death: We provide coverage for death/ injuries caused to individuals outside of your vehicle in accidents involving your car.",
+          "Third-party property: We also cover any damage/loss to third-party property."
+        ],
+        "insurer": "Cholams",
+        "idv": {
+          "min": 155926.0,
+          "max": 207901.0,
+          "selected": 194908.0
+        },
+        "pricing_breakdown": {
+          "base_premium": 6719.0,
+          "own_damage_premium": 4009.0,
+          "third_party_premium": 3416.0,
+          "addons_total": 650.0,
+          "addons_breakdown": [
+            {
+              "name": "Personal Accident Cover",
+              "price": 650.0
+            }
+          ],
+          "discounts_total": -3360.0,
+          "discount_breakdown": [
+            {
+              "name": "DTD Discounts",
+              "price": -3360.0
+            }
+          ],
+          "gst_amount": 1346.0,
+          "gst_rate": "",
+          "net_premium": 7475.0,
+          "total_premium": 8821.0,
+          "sections": [
+            {
+              "section": "(A) Basic Premium",
+              "label": "Own Damage",
+              "amount": 6719.0
+            },
+            {
+              "section": "(B) Discounts",
+              "label": "DTD Discounts",
+              "amount": 3360.0
+            },
+            {
+              "section": "(C) Add-On Cover",
+              "label": "Personal Accident Cover",
+              "amount": 650.0
+            },
+            {
+              "section": "(C) Add-On Cover",
+              "label": "(D) Own Damage Premium after Discount (A - B + C)",
+              "amount": 4009.0
+            },
+            {
+              "section": "(E) Liability Premium",
+              "label": "Basic Third Party Premium",
+              "amount": 3416.0
+            },
+            {
+              "section": "(E) Liability Premium",
+              "label": "Legal Liability to paid driver",
+              "amount": 50.0
+            },
+            {
+              "section": "(F) Total Premium",
+              "label": "Net Premium",
+              "amount": 7475.0
+            },
+            {
+              "section": "(F) Total Premium",
+              "label": "GST (18%)",
+              "amount": 1346.0
+            },
+            {
+              "section": "(F) Total Premium",
+              "label": "Total Premium",
+              "amount": 8821.0
+            }
+          ]
+        },
+        "claim_status": "claimed"
+      },
+      {
+        "plan_id": "comprehensive_+_zero_dep_cover",
+        "plan_name": "Comprehensive + Zero Dep Cover",
+        "category": "comp",
+        "category_display": "Comprehensive",
+        "premium_display": "₹10960",
+        "premium_value": 10960.0,
+        "base_premium": 9288.0,
+        "description": "Accidents, Fire, Theft",
+        "is_selected": false,
+        "badge": "",
+        "addons": [
+          {
+            "name": "Personal Accident Cover",
+            "price": 650.0
+          },
+          {
+            "name": "Zero Depreciation",
+            "price": 1813.0
+          }
+        ],
+        "benefits": [
+          "Accidents: Covers repair/replacement costs if your car is damaged in an accident.",
+          "Fire: Covers the damages caused due to self-ignition, explosion or lightning.",
+          "Theft: If your car is stolen, we will pay you the value of your car as per your policy.",
+          "Calamities: We will cover damage caused by natural or man-made calamities such as earthquakes, riots, etc.",
+          "Rat bite damages: Cover the damages caused by rat bites.",
+          "Third-party injury/death: We provide coverage for death/ injuries caused to individuals outside of your vehicle in accidents involving your car.",
+          "Third-party property: We also cover any damage/loss to third-party property.",
+          "Zero Depreciation: Covers total cost of parts replaced, due to loss or damage to the insured vehicle, without any deduction towards depreciation"
+        ],
+        "insurer": "Cholams",
+        "idv": {
+          "min": 155926.0,
+          "max": 207901.0,
+          "selected": 194908.0
+        },
+        "pricing_breakdown": {
+          "base_premium": 6719.0,
+          "own_damage_premium": 5822.0,
+          "third_party_premium": 3416.0,
+          "addons_total": 2463.0,
+          "addons_breakdown": [
+            {
+              "name": "Personal Accident Cover",
+              "price": 650.0
+            },
+            {
+              "name": "Zero Depreciation",
+              "price": 1813.0
+            }
+          ],
+          "discounts_total": -3360.0,
+          "discount_breakdown": [
+            {
+              "name": "DTD Discounts",
+              "price": -3360.0
+            }
+          ],
+          "gst_amount": 1672.0,
+          "gst_rate": "",
+          "net_premium": 9288.0,
+          "total_premium": 10960.0,
+          "sections": [
+            {
+              "section": "(A) Basic Premium",
+              "label": "Own Damage",
+              "amount": 6719.0
+            },
+            {
+              "section": "(B) Discounts",
+              "label": "DTD Discounts",
+              "amount": 3360.0
+            },
+            {
+              "section": "(C) Add-On Cover",
+              "label": "Personal Accident Cover",
+              "amount": 650.0
+            },
+            {
+              "section": "(C) Add-On Cover",
+              "label": "Zero Depreciation",
+              "amount": 1813.0
+            },
+            {
+              "section": "(C) Add-On Cover",
+              "label": "(D) Own Damage Premium after Discount (A - B + C)",
+              "amount": 5822.0
+            },
+            {
+              "section": "(E) Liability Premium",
+              "label": "Basic Third Party Premium",
+              "amount": 3416.0
+            },
+            {
+              "section": "(E) Liability Premium",
+              "label": "Legal Liability to paid driver",
+              "amount": 50.0
+            },
+            {
+              "section": "(F) Total Premium",
+              "label": "Net Premium",
+              "amount": 9288.0
+            },
+            {
+              "section": "(F) Total Premium",
+              "label": "GST (18%)",
+              "amount": 1672.0
+            },
+            {
+              "section": "(F) Total Premium",
+              "label": "Total Premium",
+              "amount": 10960.0
+            }
+          ]
+        },
+        "claim_status": "claimed"
+      },
+      {
+        "plan_id": "third_party_cover",
+        "plan_name": "Third Party Cover",
+        "category": "tp",
+        "category_display": "Third Party",
+        "premium_display": "₹4857",
+        "premium_value": 4857.0,
+        "base_premium": 4116.0,
+        "description": "Third-party injury/death, Third-party property",
+        "is_selected": false,
+        "badge": "",
+        "addons": [],
+        "benefits": [
+          "Third-party injury/death: We provide coverage for death/ injuries caused to individuals outside of your vehicle in accidents involving your car.",
+          "Third-party property: We also cover any damage/loss to third-party property."
+        ],
+        "insurer": "Cholams",
+        "idv": {},
+        "pricing_breakdown": {
+          "base_premium": null,
+          "own_damage_premium": null,
+          "third_party_premium": null,
+          "addons_total": null,
+          "addons_breakdown": [],
+          "discounts_total": null,
+          "discount_breakdown": [],
+          "gst_amount": 741.0,
+          "gst_rate": "",
+          "net_premium": 4116.0,
+          "total_premium": 4857.0,
+          "sections": [
+            {
+              "section": "(A) Liability Premium",
+              "label": "Basic TP",
+              "amount": 3416.0
+            },
+            {
+              "section": "(A) Liability Premium",
+              "label": "Personal Accident Cover",
+              "amount": 650.0
+            },
+            {
+              "section": "(A) Liability Premium",
+              "label": "Legal Liability to paid driver",
+              "amount": 50.0
+            },
+            {
+              "section": "(C) Total Premium",
+              "label": "Net Premium (A+B)",
+              "amount": 4116.0
+            },
+            {
+              "section": "(C) Total Premium",
+              "label": "GST (18%)",
+              "amount": 741.0
+            },
+            {
+              "section": "(C) Total Premium",
+              "label": "Total Premium",
+              "amount": 4857.0
+            }
+          ]
+        },
+        "claim_status": "claimed"
+      }
+    ],
+    "Royal Sundaram": [
+      {
+        "plan_id": "comprehensive_plan",
+        "plan_name": "Comprehensive Plan",
+        "category": "comp",
+        "category_display": "Comprehensive",
+        "premium_display": "₹9,998",
+        "premium_value": 9998.14,
+        "description": "",
+        "is_selected": false,
+        "badge": "",
+        "addons": [
+          "Personal Accident Cover: Mandatory (₹15L cover)",
+          "Accessory Protection: Recommended",
+          "Deductible: Recommended",
+          {
+            "name": "Smart Use Pay As You Drive",
+            "price": 4099.0
+          },
+          {
+            "name": "Zero Depreciation",
+            "price": 4099.0
+          },
+          {
+            "name": "Aggravation Cover",
+            "price": 503.2
+          },
+          {
+            "name": "Engine Protection",
+            "price": 503.2
+          },
+          {
+            "name": "Windshield Glass",
+            "price": 302.4
+          },
+          {
+            "name": "Key Replacement",
+            "price": 160.8
+          },
+          {
+            "name": "Loss Of Baggage",
+            "price": 100.0
+          },
+          {
+            "name": "Roadside Assistance",
+            "price": 199.0
+          },
+          {
+            "name": "Spare Car",
+            "price": 144.0
+          },
+          {
+            "name": "Towing Cover",
+            "price": 25.0
+          },
+          {
+            "name": "Tyre Cover",
+            "price": 537.0
+          },
+          {
+            "name": "Smart Save",
+            "price": -86.8
+          },
+          {
+            "name": "Consumable Cover",
+            "price": 570.8
+          }
+        ],
+        "benefits": [
+          "Personal Accident Cover",
+          "Accessory Protection",
+          "Deductible",
+          "Smart Use Pay As You Drive",
+          "Zero Depreciation",
+          "Aggravation Cover",
+          "Engine Protection",
+          "Windshield Glass",
+          "Key Replacement",
+          "Loss Of Baggage",
+          "Roadside Assistance",
+          "Spare Car",
+          "Towing Cover",
+          "Tyre Cover",
+          "Smart Save",
+          "Consumable Cover"
+        ],
+        "insurer": "Royal Sundaram",
+        "idv": {
+          "current": 419574.0,
+          "min": 377616.6,
+          "max": 461531.4
+        },
+        "pricing_breakdown": {
+          "base_premium": 5062.0,
+          "own_damage_premium": 5057.200000000001,
+          "third_party_premium": 3416.0,
+          "addons_total": 501.4,
+          "addons_breakdown": [
+            {
+              "name": "Windshield Glass",
+              "price": 302.4
+            },
+            {
+              "name": "Roadside Assistance",
+              "price": 199.0
+            }
+          ],
+          "discounts_total": -506.2,
+          "discount_breakdown": [
+            {
+              "name": "Smart Save",
+              "price": -506.2
+            }
+          ],
+          "gst_amount": 1525.14,
+          "gst_rate": "18%",
+          "net_premium": 8473.2,
+          "total_premium": 9998.14,
+          "sections": []
+        },
+        "claim_status": "claimed"
+      },
+      {
+        "plan_id": "comprehensive__basic",
+        "plan_name": "Comprehensive Plan",
+        "category": "comp",
+        "category_display": "Comprehensive",
+        "premium_display": "₹5,055",
+        "premium_value": 5055.12,
+        "description": "",
+        "is_selected": false,
+        "badge": "",
+        "addons": [
+          "Personal Accident Cover: Recommended",
+          "Accessory Protection: Recommended",
+          "Deductible: Recommended",
+          {
+            "name": "Smart Use Pay As You Drive",
+            "price": 4099.0
+          },
+          {
+            "name": "Zero Depreciation",
+            "price": 4099.0
+          },
+          {
+            "name": "Aggravation Cover",
+            "price": 503.2
+          },
+          {
+            "name": "Engine Protection",
+            "price": 503.2
+          },
+          {
+            "name": "Windshield Glass",
+            "price": 268.8
+          },
+          {
+            "name": "Key Replacement",
+            "price": 160.8
+          },
+          {
+            "name": "Loss Of Baggage",
+            "price": 100.0
+          },
+          {
+            "name": "Roadside Assistance",
+            "price": 199.0
+          },
+          {
+            "name": "Spare Car",
+            "price": 144.0
+          },
+          {
+            "name": "Towing Cover",
+            "price": 25.0
+          },
+          {
+            "name": "Tyre Cover",
+            "price": 537.0
+          },
+          {
+            "name": "Smart Save",
+            "price": -93.8
+          },
+          {
+            "name": "Consumable Cover",
+            "price": 570.8
+          }
+        ],
+        "benefits": [
+          "Personal Accident Cover",
+          "Accessory Protection",
+          "Deductible",
+          "Smart Use Pay As You Drive",
+          "Zero Depreciation",
+          "Aggravation Cover",
+          "Engine Protection",
+          "Windshield Glass",
+          "Key Replacement",
+          "Loss Of Baggage",
+          "Roadside Assistance",
+          "Spare Car",
+          "Towing Cover",
+          "Tyre Cover",
+          "Smart Save",
+          "Consumable Cover"
+        ],
+        "insurer": "Royal Sundaram",
+        "idv": {
+          "current": 419574.0,
+          "min": 377616.6,
+          "max": 461531.4
+        },
+        "pricing_breakdown": {
+          "base_premium": 1736.0,
+          "own_damage_premium": 868.0,
+          "third_party_premium": 3416.0,
+          "addons_total": null,
+          "addons_breakdown": [],
+          "discounts_total": -868.0,
+          "discount_breakdown": [
+            {
+              "name": "No Claim Bonus",
+              "price": -868.0
+            }
+          ],
+          "gst_amount": 771.12,
+          "gst_rate": "18%",
+          "net_premium": 4284.0,
+          "total_premium": 5055.12,
+          "sections": []
+        },
+        "claim_status": "claimed"
+      },
+      {
+        "plan_id": "third_party_plan",
+        "plan_name": "Third Party Plan",
+        "category": "tp",
+        "category_display": "Third Party",
+        "premium_display": "₹4,031",
+        "premium_value": 4030.88,
+        "description": "",
+        "is_selected": false,
+        "badge": "",
+        "addons": [
+          "Personal Accident Cover: Mandatory (₹15L cover)"
+        ],
+        "benefits": [
+          "Personal Accident Cover"
+        ],
+        "insurer": "Royal Sundaram",
+        "idv": {
+          "current": 419574.0,
+          "min": 377616.6,
+          "max": 461531.4
+        },
+        "pricing_breakdown": {
+          "base_premium": null,
+          "own_damage_premium": null,
+          "third_party_premium": 3416.0,
+          "addons_total": null,
+          "addons_breakdown": [],
+          "discounts_total": null,
+          "discount_breakdown": [],
+          "gst_amount": 614.88,
+          "gst_rate": "18%",
+          "net_premium": 3416.0,
+          "total_premium": 4030.88,
+          "sections": []
+        },
+        "claim_status": "claimed"
+      }
+    ],
+    "Go Digit": [
+      {
+        "plan_id": "comprehensive_cover_-",
+        "plan_name": "Comprehensive Cover -",
+        "category": "comp",
+        "category_display": "Comprehensive",
+        "premium_display": "₹8,508",
+        "premium_value": 8508.0,
+        "description": "1 year Own Damage, 1 year Third Party, Up to 15000 km/year, Pre Inspection Required, Pay as you Drive",
+        "is_selected": false,
+        "badge": "",
+        "addons": [
+          {
+            "name": "Personal Accident Cover of ₹15 Lakhs",
+            "price": 21.0
+          },
+          {
+            "name": "Advantage Plus",
+            "price": 8.0
+          },
+          "CNG Kit - IMT 25",
+          {
+            "name": "Passenger Cover",
+            "price": 21.0
+          },
+          {
+            "name": "PA cover for Paid Driver - IMT 17",
+            "price": 8.0
+          }
+        ],
+        "benefits": [
+          "1 year Own Damage",
+          "1 year Third Party",
+          "Up to 15000 km/year",
+          "Pre Inspection Required",
+          "Pay as you Drive"
+        ],
+        "insurer": "Go Digit",
+        "idv": {
+          "current": 273000.0,
+          "min": 274000.0,
+          "max": 425000.0
+        },
+        "pricing_breakdown": {
+          "base_premium": 12907.0,
+          "own_damage_premium": 9431.0,
+          "third_party_premium": 3476.0,
+          "addons_total": 698.0,
+          "addons_breakdown": [
+            {
+              "name": "Add-ons",
+              "price": 698.0
+            }
+          ],
+          "discounts_total": -6311.0,
+          "discount_breakdown": [
+            {
+              "name": "NCB Discount",
+              "price": -6311.0
+            }
+          ],
+          "gst_amount": 1295.0,
+          "gst_rate": "",
+          "net_premium": 7195.0,
+          "total_premium": 8508.0,
+          "sections": []
+        },
+        "claim_status": "claimed"
+      },
+      {
+        "plan_id": "comprehensive_cover",
+        "plan_name": "Comprehensive Cover",
+        "category": "comp",
+        "category_display": "Comprehensive",
+        "premium_display": "₹9,890",
+        "premium_value": 9890.0,
+        "description": "1 year Own Damage, 1 year Third Party, Unlimited km",
+        "is_selected": false,
+        "badge": "",
+        "addons": [
+          {
+            "name": "Personal Accident Cover of ₹15 Lakhs",
+            "price": 21.0
+          },
+          {
+            "name": "Advantage Plus",
+            "price": 8.0
+          },
+          "CNG Kit - IMT 25",
+          {
+            "name": "Passenger Cover",
+            "price": 21.0
+          },
+          {
+            "name": "PA cover for Paid Driver - IMT 17",
+            "price": 8.0
+          }
+        ],
+        "benefits": [
+          "1 year Own Damage",
+          "1 year Third Party",
+          "Unlimited km"
+        ],
+        "insurer": "Go Digit",
+        "idv": {
+          "current": 273000.0,
+          "min": 274000.0,
+          "max": 425000.0
+        },
+        "pricing_breakdown": {
+          "base_premium": 12907.0,
+          "own_damage_premium": 9431.0,
+          "third_party_premium": 3476.0,
+          "addons_total": 698.0,
+          "addons_breakdown": [
+            {
+              "name": "Add-ons",
+              "price": 698.0
+            }
+          ],
+          "discounts_total": -5140.0,
+          "discount_breakdown": [
+            {
+              "name": "NCB Discount",
+              "price": -5140.0
+            }
+          ],
+          "gst_amount": 1506.0,
+          "gst_rate": "",
+          "net_premium": 8366.0,
+          "total_premium": 9890.0,
+          "sections": []
+        },
+        "claim_status": "claimed"
+      },
+      {
+        "plan_id": "third_party_cover",
+        "plan_name": "Third Party Cover",
+        "category": "tp",
+        "category_display": "Third Party",
+        "premium_display": "₹4,738",
+        "premium_value": 4738.0,
+        "description": "Only 1 year Third Party",
+        "is_selected": false,
+        "badge": "",
+        "addons": [
+          {
+            "name": "Personal Accident Cover of ₹15 Lakhs",
+            "price": 21.0
+          },
+          {
+            "name": "Passenger Cover",
+            "price": 21.0
+          },
+          {
+            "name": "PA cover for Paid Driver - IMT 17",
+            "price": 8.0
+          }
+        ],
+        "benefits": [
+          "Only 1 year Third Party"
+        ],
+        "insurer": "Go Digit",
+        "idv": {},
+        "pricing_breakdown": {
+          "base_premium": null,
+          "own_damage_premium": null,
+          "third_party_premium": 3416.0,
+          "addons_total": 599.0,
+          "addons_breakdown": [
+            {
+              "name": "Add-ons",
+              "price": 599.0
+            }
+          ],
+          "discounts_total": null,
+          "discount_breakdown": [],
+          "gst_amount": 723.0,
+          "gst_rate": "",
+          "net_premium": 4015.0,
+          "total_premium": 4738.0,
+          "sections": []
+        },
+        "claim_status": "claimed"
+      }
+    ]
+  },
+  "summary": {
+    "total_plans": 12,
+    "insurers": [
+      "Acko",
+      "Cholams",
+      "Royal Sundaram",
+      "Go Digit"
+    ],
+    "insurer_counts": {
+      "Acko": 3,
+      "Cholams": 3,
+      "Royal Sundaram": 3,
+      "Go Digit": 3
+    }
+  }
+}

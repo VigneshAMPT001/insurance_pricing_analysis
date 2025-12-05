@@ -344,14 +344,6 @@ def load_json_data(file_path: str) -> Dict[str, Any]:
         return json.load(f)
 
 
-# Aliases for backwards compatibility or readability
-load_acko_data = load_json_data
-load_icici_data = load_json_data
-load_cholams_data = load_json_data
-load_royal_sundaram_data = load_json_data
-load_godigit_data = load_json_data
-
-
 def get_acko_plans(
     data: Dict[str, Any], claim_status: str = ""
 ) -> List[Dict[str, Any]]:
@@ -956,7 +948,7 @@ def scan_all_car_data() -> Dict[str, Any]:
     if acko_dir.exists():
         for file in acko_dir.glob("*.json"):
             try:
-                data = load_acko_data(str(file))
+                data = load_json_data(str(file))
             except Exception:
                 continue
             car_info = data.get("car_info", {})
@@ -985,7 +977,7 @@ def scan_all_car_data() -> Dict[str, Any]:
     if icici_dir.exists():
         for file in icici_dir.glob("*.json"):
             try:
-                data = load_icici_data(str(file))
+                data = load_json_data(str(file))
             except Exception:
                 continue
             make_raw = data.get("manufacturer", "").strip()
@@ -1014,7 +1006,7 @@ def scan_all_car_data() -> Dict[str, Any]:
     if cholams_dir.exists():
         for file in cholams_dir.glob("*.json"):
             try:
-                data = load_cholams_data(str(file))
+                data = load_json_data(str(file))
             except Exception:
                 continue
             if isinstance(data, list) and len(data) > 0:
@@ -1044,7 +1036,7 @@ def scan_all_car_data() -> Dict[str, Any]:
     if royal_sundaram_dir.exists():
         for file in royal_sundaram_dir.glob("*.json"):
             try:
-                data = load_royal_sundaram_data(str(file))
+                data = load_json_data(str(file))
             except Exception:
                 continue
             car_details = data.get("car_details", {}) or {}
@@ -1073,7 +1065,7 @@ def scan_all_car_data() -> Dict[str, Any]:
     if godigit_dir.exists():
         for file in godigit_dir.glob("*.json"):
             try:
-                data = load_godigit_data(str(file))
+                data = load_json_data(str(file))
             except Exception:
                 continue
             car_info = data.get("car_info", {}) or {}
@@ -1172,3 +1164,55 @@ def format_premium(premium: Any) -> str:
     if isinstance(premium, str):
         return premium
     return "N/A"
+
+
+def save_normalized_data(
+    car_key: Tuple[str, str, str],
+    all_plans_by_insurer: Dict[str, List[Dict[str, Any]]],
+    output_dir: str = "normalized_data",
+) -> str:
+    """Save normalized plan data to a JSON file.
+
+    Args:
+        car_key: Tuple of (make, model, variant)
+        all_plans_by_insurer: Dictionary mapping insurer names to lists of plan dictionaries
+        output_dir: Directory to save the JSON file (default: "normalized_data")
+
+    Returns:
+        Path to the saved JSON file
+    """
+    make, model, variant = car_key
+
+    # Create output directory if it doesn't exist
+    output_path = Path(output_dir)
+    output_path.mkdir(parents=True, exist_ok=True)
+
+    # Create a safe filename from car details
+    safe_make = re.sub(r"[^\w\s-]", "", make).strip().replace(" ", "_")
+    safe_model = re.sub(r"[^\w\s-]", "", model).strip().replace(" ", "_")
+    safe_variant = re.sub(r"[^\w\s-]", "", variant).strip().replace(" ", "_")
+    filename = f"{safe_make}_{safe_model}_{safe_variant}_normalized.json"
+    file_path = output_path / filename
+
+    # Prepare the data structure
+    normalized_data = {
+        "car_info": {
+            "make": make,
+            "model": model,
+            "variant": variant,
+        },
+        "plans_by_insurer": all_plans_by_insurer,
+        "summary": {
+            "total_plans": sum(len(plans) for plans in all_plans_by_insurer.values()),
+            "insurers": list(all_plans_by_insurer.keys()),
+            "insurer_counts": {
+                insurer: len(plans) for insurer, plans in all_plans_by_insurer.items()
+            },
+        },
+    }
+
+    # Save to JSON file
+    with open(file_path, "w", encoding="utf-8") as f:
+        json.dump(normalized_data, f, indent=2, ensure_ascii=False)
+
+    return str(file_path)

@@ -3,7 +3,6 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import streamlit as st
 import pandas as pd
-import altair as alt
 
 from app_v2_utils import (
     format_claim_status,
@@ -16,12 +15,9 @@ from app_v2_utils import (
     get_godigit_plans,
     get_plan_category_label,
     get_unique_makes_models_variants,
-    load_acko_data,
-    load_cholams_data,
-    load_icici_data,
-    load_royal_sundaram_data,
-    load_godigit_data,
+    load_json_data,
     scan_all_car_data,
+    save_normalized_data,
 )
 
 
@@ -207,6 +203,59 @@ def display_plan_card(
                         st.markdown(f"• {addon}")
 
 
+def _format_addons_csv(addons: Any) -> str:
+    """Flatten addons into a readable string for CSV export."""
+    if not addons:
+        return ""
+    parts: List[str] = []
+    for addon in addons:
+        if isinstance(addon, dict):
+            name = addon.get("name") or addon.get("display_name") or "Addon"
+            price = addon.get("price") or addon.get("net_premium") or ""
+            if price not in ("", None):
+                parts.append(f"{name} ({price})")
+            else:
+                parts.append(str(name))
+        else:
+            parts.append(str(addon))
+    return "; ".join(parts)
+
+
+def plans_to_dataframe(
+    all_plans_by_insurer: Dict[str, List[Dict[str, Any]]],
+) -> pd.DataFrame:
+    """Convert plans grouped by insurer into a flat DataFrame suitable for CSV."""
+    rows: List[Dict[str, Any]] = []
+    for insurer, plans in all_plans_by_insurer.items():
+        for plan in plans:
+            pricing = plan.get("pricing_breakdown", {}) or {}
+            row = {
+                "insurer": insurer,
+                "plan_id": plan.get("plan_id", ""),
+                "plan_name": plan.get("plan_name", ""),
+                "plan_type": plan.get("category_display") or plan.get("category", ""),
+                "premium_value": plan.get("premium_value", 0),
+                # "premium_display": plan.get("premium_display", ""),
+                "claim_status": plan.get("claim_status", ""),
+                # "badge": plan.get("badge", ""),
+                # "description": plan.get("description", ""),
+                # "addons": _format_addons_csv(plan.get("addons")),
+                # "benefits": "; ".join(map(str, plan.get("benefits", []))),
+                # Pricing breakdown columns
+                "base_premium": pricing.get("base_premium"),
+                "own_damage_premium": pricing.get("own_damage_premium"),
+                "third_party_premium": pricing.get("third_party_premium"),
+                "addons_total": pricing.get("addons_total"),
+                "discounts_total": pricing.get("discounts_total"),
+                "gst_amount": pricing.get("gst_amount"),
+                "gst_rate": pricing.get("gst_rate"),
+                "net_premium": pricing.get("net_premium"),
+                "total_premium": pricing.get("total_premium"),
+            }
+            rows.append(row)
+    return pd.DataFrame(rows)
+
+
 def homepage():
     """Homepage with car selection dropdowns"""
     st.title("Insurance Plans Overview")
@@ -302,7 +351,7 @@ def homepage():
         if car_files.get("acko"):
             for acko_file_info in car_files["acko"]:
                 try:
-                    acko_data = load_acko_data(acko_file_info["file"])
+                    acko_data = load_json_data(acko_file_info["file"])
                     acko_plans.extend(
                         get_acko_plans(
                             acko_data, acko_file_info.get("claim_status", "")
@@ -320,7 +369,7 @@ def homepage():
         if car_files.get("icici"):
             for icici_file_info in car_files["icici"]:
                 try:
-                    icici_data = load_icici_data(icici_file_info["file"])
+                    icici_data = load_json_data(icici_file_info["file"])
                     icici_plans.extend(
                         get_icici_plans(
                             icici_data, icici_file_info.get("claim_status", "")
@@ -338,7 +387,7 @@ def homepage():
         if car_files.get("cholams"):
             for cholams_file_info in car_files["cholams"]:
                 try:
-                    cholams_data = load_cholams_data(cholams_file_info["file"])
+                    cholams_data = load_json_data(cholams_file_info["file"])
                     cholams_plans.extend(
                         get_cholams_plans(
                             cholams_data, cholams_file_info.get("claim_status", "")
@@ -356,7 +405,7 @@ def homepage():
         if car_files.get("royal_sundaram"):
             for royal_file_info in car_files["royal_sundaram"]:
                 try:
-                    royal_data = load_royal_sundaram_data(royal_file_info["file"])
+                    royal_data = load_json_data(royal_file_info["file"])
                     royal_sundaram_plans.extend(
                         get_royal_sundaram_plans(
                             royal_data, royal_file_info.get("claim_status", "")
@@ -374,7 +423,7 @@ def homepage():
         if car_files.get("godigit"):
             for godigit_file_info in car_files["godigit"]:
                 try:
-                    godigit_data = load_godigit_data(godigit_file_info["file"])
+                    godigit_data = load_json_data(godigit_file_info["file"])
                     godigit_plans.extend(
                         get_godigit_plans(
                             godigit_data, godigit_file_info.get("claim_status", "")
@@ -387,161 +436,154 @@ def homepage():
             if godigit_plans:
                 all_plans_by_insurer["Go Digit"] = godigit_plans
 
-        # Display plans in accordions grouped by insurer
-        for insurer_name, plans in all_plans_by_insurer.items():
-            with st.expander(
-                f"{insurer_name} Insurance ({len(plans)} plans)", expanded=True
-            ):
-                if plans:
-                    for plan in plans:
-                        display_plan_card(plan, insurer_name)
-                        st.divider()
-                else:
-                    st.info(f"No plans available from {insurer_name}")
+        # Build and display summary statistics
+        summary_stats = build_summary_stats(all_plans_by_insurer)
+        display_summary_table(summary_stats)
 
-        # Store selected car info in session state for comparison page
+        st.markdown("---")
+
+        # Display plans in tabs grouped by insurer
+        if all_plans_by_insurer:
+            tab_names = [
+                f"{insurer} ({len(plans)} plans)"
+                for insurer, plans in sorted(all_plans_by_insurer.items())
+            ]
+            tabs = st.tabs(tab_names)
+
+            sorted_insurers = sorted(all_plans_by_insurer.keys())
+            for idx, insurer_name in enumerate(sorted_insurers):
+                with tabs[idx]:
+                    plans = all_plans_by_insurer[insurer_name]
+                    if plans:
+                        for plan in plans:
+                            display_plan_card(plan, insurer_name)
+                            st.divider()
+                    else:
+                        st.info(f"No plans available from {insurer_name}")
+
+        # Store selected car info in session state for comparison and insights pages
         st.session_state.selected_car_key = key
         st.session_state.selected_car_files = car_files
         st.session_state.all_plans_by_insurer = all_plans_by_insurer
 
-        # Button to go to comparison page
-        if st.button("Compare Plans", type="primary", use_container_width=True):
-            st.session_state.page = "comparison"
-            st.rerun()
+        # CSV exports
+        plans_df = plans_to_dataframe(all_plans_by_insurer)
+        csv_data = plans_df.to_csv(index=False).encode("utf-8")
+
+        # Use Streamlit columns for download buttons
+        cols = st.columns(2)
+        with cols[0]:
+            st.download_button(
+                "⬇️ Download Plans CSV",
+                data=csv_data,
+                file_name="plans_flat.csv",
+                mime="text/csv",
+                use_container_width=True,
+            )
+
+        # Grouped CSV by insurer and plan type
+        if not plans_df.empty:
+            grouped_df = (
+                plans_df.groupby(["insurer", "plan_type"], dropna=False)
+                .agg(
+                    plan_count=("plan_id", "count"),
+                    min_premium=("premium_value", "min"),
+                    max_premium=("premium_value", "max"),
+                    avg_premium=("premium_value", "mean"),
+                )
+                .reset_index()
+            )
+            grouped_csv = grouped_df.to_csv(index=False).encode("utf-8")
+            with cols[1]:
+                st.download_button(
+                    "⬇️ Download Grouped CSV (Insurer x Plan Type)",
+                    data=grouped_csv,
+                    file_name="plans_grouped.csv",
+                    mime="text/csv",
+                    use_container_width=True,
+                )
+
+        # # Save normalized data button
+        # if st.button("💾 Save Normalized Data", use_container_width=True):
+        #     try:
+        #         saved_path = save_normalized_data(key, all_plans_by_insurer)
+        #         st.success(f"✅ Data saved to: `{saved_path}`")
+        #     except Exception as e:
+        #         st.error(f"Error saving data: {e}")
 
 
-def comparison_page():
-    """Plan comparison page"""
-    st.title("Plan Comparison")
-    st.markdown(
-        "<p style='color:#475569'>Fine-tune filters in the sidebar to narrow down plans and compare premiums at a glance.</p>",
-        unsafe_allow_html=True,
-    )
+def build_summary_stats(
+    all_plans_by_insurer: Dict[str, List[Dict[str, Any]]],
+) -> Dict[str, Any]:
+    """Build summary statistics from all plans grouped by insurer."""
+    total_plans = sum(len(plans) for plans in all_plans_by_insurer.values())
+    insurers = sorted(all_plans_by_insurer.keys())
+    insurer_counts = {
+        insurer: len(plans) for insurer, plans in all_plans_by_insurer.items()
+    }
 
-    if (
-        "selected_car_key" not in st.session_state
-        or "all_plans_by_insurer" not in st.session_state
-    ):
-        st.warning("Please select a car from the homepage first.")
-        if st.button("Back to Homepage"):
-            st.session_state.page = "homepage"
-            st.rerun()
-        return
-
-    selected_car_key = st.session_state.selected_car_key
-    all_plans_by_insurer = st.session_state.all_plans_by_insurer
-
-    make, model, variant = selected_car_key
-    st.markdown(f"**Comparing plans for:** {make} {model} {variant}")
-
-    # Collect all plans
-    all_plans = []
-    for insurer, plans in all_plans_by_insurer.items():
+    # Count plans by category
+    plan_type_counts = {"tp": 0, "comp": 0, "zd": 0, "od": 0}
+    for plans in all_plans_by_insurer.values():
         for plan in plans:
-            plan_copy = plan.copy()
-            plan_copy["insurer"] = insurer
-            all_plans.append(plan_copy)
+            category = plan.get("category", "").lower()
+            if category in plan_type_counts:
+                plan_type_counts[category] += 1
 
-    if not all_plans:
-        st.warning("No plans available for comparison.")
-        if st.button("Back to Homepage"):
-            st.session_state.page = "homepage"
-            st.rerun()
-        return
+    return {
+        "total_plans": total_plans,
+        "insurers": insurers,
+        "insurer_counts": insurer_counts,
+        "plan_type_counts": plan_type_counts,
+    }
 
-    # Apply shared sidebar filters
-    filtered_plans, filter_meta = apply_sidebar_filters(all_plans)
-    price_range = filter_meta.get("price_range")
 
-    # Display comparison
-    st.markdown("---")
+def display_summary_table(summary_stats: Dict[str, Any]):
+    """Display a summary table with plan statistics."""
+    st.markdown("### 📊 Summary")
 
-    if not filtered_plans:
-        st.info("No plans match the selected filters.")
-        return
+    # Create summary data for table
+    summary_data = {
+        "Metric": [
+            "Total Plans",
+            "Acko",
+            "ICICI",
+            "Cholams",
+            "Royal Sundaram",
+            "Go Digit",
+            "Third Party (TP)",
+            "Comprehensive (COMP)",
+            "Zero Depreciation (ZD)",
+            "Own Damage (OD)",
+        ],
+        "Count": [
+            summary_stats["total_plans"],
+            summary_stats["insurer_counts"].get("Acko", 0),
+            summary_stats["insurer_counts"].get("ICICI", 0),
+            summary_stats["insurer_counts"].get("Cholams", 0),
+            summary_stats["insurer_counts"].get("Royal Sundaram", 0),
+            summary_stats["insurer_counts"].get("Go Digit", 0),
+            summary_stats["plan_type_counts"].get("tp", 0),
+            summary_stats["plan_type_counts"].get("comp", 0),
+            summary_stats["plan_type_counts"].get("zd", 0),
+            summary_stats["plan_type_counts"].get("od", 0),
+        ],
+    }
 
-    # Summary metrics
-    st.subheader("At a Glance")
-    summary_cols = st.columns(3)
-    summary_cols[0].metric("Plans Available", len(filtered_plans))
-    if price_range:
-        summary_cols[1].metric("Price Floor", format_premium(price_range[0]))
-        summary_cols[2].metric("Price Ceiling", format_premium(price_range[1]))
-    else:
-        premiums = [p.get("premium_value", 0) for p in filtered_plans]
-        summary_cols[1].metric("Lowest Premium", format_premium(min(premiums)))
-        summary_cols[2].metric("Highest Premium", format_premium(max(premiums)))
+    df_summary = pd.DataFrame(summary_data)
 
-    insurer_counts = {}
-    for plan in filtered_plans:
-        insurer_counts.setdefault(plan.get("insurer", "Unknown"), []).append(plan)
+    # Display in columns for better layout
+    col1, col2 = st.columns(2)
 
-    st.markdown(
-        "<div style='display:flex;gap:1rem;flex-wrap:wrap;'>"
-        + "".join(
-            f"<div style='flex:1 1 220px;border:1px solid #e2e8f0;border-radius:0.75rem;padding:0.75rem;background:#f8fafc;'>"
-            f"<div style='font-size:0.85rem;color:#475569;text-transform:uppercase;letter-spacing:0.08em;'>{insurer}</div>"
-            f"<div style='font-size:1.4rem;font-weight:700;color:#0f172a;margin:0.2rem 0;'>{len(plans)} plans</div>"
-            f"<div style='font-size:0.8rem;color:#64748b;'>₹{int(min(p.get('premium_value', 0) for p in plans)):,} – ₹{int(max(p.get('premium_value', 0) for p in plans)):,}</div>"
-            "</div>"
-            for insurer, plans in insurer_counts.items()
-        )
-        + "</div>",
-        unsafe_allow_html=True,
-    )
+    with col1:
+        st.markdown("**Insurer Breakdown**")
+        insurer_df = df_summary.iloc[0:6]
+        st.dataframe(insurer_df, use_container_width=True, hide_index=True)
 
-    # Group by plan type for better comparison
-    plans_by_category = {}
-    for plan in filtered_plans:
-        category = plan.get("category_display") or plan.get("category", "Other")
-        if category not in plans_by_category:
-            plans_by_category[category] = []
-        plans_by_category[category].append(plan)
-
-    # Display comparison table
-    st.subheader("Premium Comparison Table")
-    comparison_data = []
-    for plan in filtered_plans:
-        comparison_data.append(
-            {
-                "Insurer": plan.get("insurer", ""),
-                "Plan Name": plan.get("plan_name", ""),
-                "Type": plan.get("category_display")
-                or plan.get("category", "").upper(),
-                "Premium": format_premium(plan.get("premium_value", 0)),
-                "Claim Status": format_claim_status(plan.get("claim_status", "")),
-                # "Badge": plan.get("badge", ""),
-            }
-        )
-
-    if comparison_data:
-        df = pd.DataFrame(comparison_data)
-        st.dataframe(df, use_container_width=True, hide_index=True)
-
-    # Detailed comparison by category
-    st.markdown("---")
-    st.subheader("Detailed Plan Comparison")
-
-    for category, plans in sorted(plans_by_category.items()):
-        st.markdown(f"### {category} Plans")
-
-        # Sort plans by premium
-        plans_sorted = sorted(plans, key=lambda x: x.get("premium_value", 0))
-
-        # Display in columns
-        num_cols = min(len(plans_sorted), 3)
-        if num_cols > 0:
-            cols = st.columns(num_cols)
-            for idx, plan in enumerate(plans_sorted):
-                with cols[idx % num_cols]:
-                    display_plan_card(plan, plan.get("insurer", ""))
-
-        st.markdown("---")
-
-    # Back button
-    if st.button("Back to Homepage"):
-        st.session_state.page = "homepage"
-        st.rerun()
+    with col2:
+        st.markdown("**Plan Type Breakdown**")
+        plan_type_df = df_summary.iloc[6:10]
+        st.dataframe(plan_type_df, use_container_width=True, hide_index=True)
 
 
 def _collect_all_plans_for_current_car() -> List[Dict[str, Any]]:
@@ -648,224 +690,6 @@ def apply_sidebar_filters(
     return filtered_plans, {"price_range": price_range}
 
 
-def insights_page():
-    """Insights page showing higher-level analytics for the filtered plans."""
-    st.title("Plan Insights")
-    st.markdown(
-        "<p style='color:#475569'>Use the same sidebar filters to uncover where the real value lies across insurers, plan types, and add‑ons.</p>",
-        unsafe_allow_html=True,
-    )
-
-    if (
-        "selected_car_key" not in st.session_state
-        or "all_plans_by_insurer" not in st.session_state
-    ):
-        st.warning("Please select a car from the homepage first.")
-        if st.button("Back to Homepage"):
-            st.session_state.page = "homepage"
-            st.rerun()
-        return
-
-    selected_car_key = st.session_state.selected_car_key
-    make, model, variant = selected_car_key
-    st.markdown(f"**Insights for:** {make} {model} {variant}")
-
-    all_plans = _collect_all_plans_for_current_car()
-    if not all_plans:
-        st.warning("No plans available to generate insights.")
-        if st.button("Back to Homepage"):
-            st.session_state.page = "homepage"
-            st.rerun()
-        return
-
-    # Apply same sidebar filters used on comparison page
-    filtered_plans, filter_meta = apply_sidebar_filters(all_plans)
-    price_range = filter_meta.get("price_range")
-
-    if not filtered_plans:
-        st.info("No plans match the selected filters for insights.")
-        return
-
-    # ---- Key numerical insights ----
-    premiums = [p.get("premium_value", 0) for p in filtered_plans]
-    min_premium = min(premiums)
-    max_premium = max(premiums)
-    avg_premium = sum(premiums) / len(premiums) if premiums else 0
-    premium_saving_pct = (
-        (max_premium - min_premium) / max_premium * 100 if max_premium else 0
-    )
-
-    unique_insurers = sorted(set(p.get("insurer", "") for p in filtered_plans))
-
-    def _addons_count(plan: Dict[str, Any]) -> int:
-        addons = plan.get("addons") or []
-        if isinstance(addons, list):
-            return len(addons)
-        return 0
-
-    addons_counts = [_addons_count(p) for p in filtered_plans]
-    avg_addons = sum(addons_counts) / len(addons_counts) if addons_counts else 0
-
-    # Simple heuristic: how often do strong protection add‑ons appear?
-    protection_keywords = ["zero dep", "zero depreciation", "engine", "ncb", "rsa"]
-
-    def _has_protection_addon(plan: Dict[str, Any]) -> bool:
-        addons = plan.get("addons") or []
-        addon_names: List[str] = []
-        for addon in addons:
-            if isinstance(addon, dict):
-                name = addon.get("name") or addon.get("display_name") or ""
-                addon_names.append(str(name).lower())
-            else:
-                addon_names.append(str(addon).lower())
-        return any(
-            any(keyword in name for keyword in protection_keywords)
-            for name in addon_names
-        )
-
-    protection_plans = [p for p in filtered_plans if _has_protection_addon(p)]
-    protection_share = (
-        len(protection_plans) / len(filtered_plans) * 100 if filtered_plans else 0
-    )
-
-    st.subheader("Key Insights at a Glance")
-    kpi_cols = st.columns(4)
-    kpi_cols[0].metric(
-        "Cheapest vs Costliest",
-        f"{format_premium(min_premium)} – {format_premium(max_premium)}",
-        f"{premium_saving_pct:.1f}% savings potential",
-    )
-    kpi_cols[1].metric("Average Premium (Filtered)", format_premium(avg_premium))
-    kpi_cols[2].metric("Insurers in Play", len(unique_insurers))
-    kpi_cols[3].metric(
-        "Avg Add-ons per Plan",
-        f"{avg_addons:.1f}",
-        f"{protection_share:.1f}% include strong protection add-ons",
-    )
-
-    # ---- Charts section ----
-    st.markdown("---")
-    st.subheader("Premium & Mix Overview")
-
-    # Bar: average premium by insurer
-    insurer_stats = []
-    for insurer in unique_insurers:
-        insurer_plans = [p for p in filtered_plans if p.get("insurer") == insurer]
-        if not insurer_plans:
-            continue
-        ips = [p.get("premium_value", 0) for p in insurer_plans]
-        insurer_stats.append(
-            {
-                "Insurer": insurer,
-                "Average Premium": sum(ips) / len(ips) if ips else 0,
-                "Cheapest Premium": min(ips) if ips else 0,
-                "Costliest Premium": max(ips) if ips else 0,
-                "Number of Plans": len(insurer_plans),
-            }
-        )
-
-    if insurer_stats:
-        df_insurer = pd.DataFrame(insurer_stats)
-        left_col, right_col = st.columns(2)
-
-        with left_col:
-            st.caption("Average premium by insurer (after filters)")
-            bar_chart = (
-                alt.Chart(df_insurer)
-                .mark_bar(cornerRadiusTopLeft=4, cornerRadiusTopRight=4)
-                .encode(
-                    x=alt.X("Insurer:N", sort="-y", title="Insurer"),
-                    y=alt.Y("Average Premium:Q", title="Average Premium (₹)"),
-                    color=alt.Color("Insurer:N", legend=None),
-                    tooltip=[
-                        "Insurer",
-                        alt.Tooltip("Average Premium:Q", format=",.0f"),
-                        alt.Tooltip("Cheapest Premium:Q", format=",.0f"),
-                        alt.Tooltip("Costliest Premium:Q", format=",.0f"),
-                        "Number of Plans",
-                    ],
-                )
-                .properties(height=320)
-            )
-            st.altair_chart(bar_chart, use_container_width=True)
-
-        # Donut: plan mix by type (or fallback to insurer if type missing)
-        plan_type_rows = []
-        for p in filtered_plans:
-            p_type = p.get("category_display") or p.get("category") or "Other"
-            plan_type_rows.append({"Plan Type": str(p_type)})
-
-        df_types = pd.DataFrame(plan_type_rows)
-        with right_col:
-            st.caption("Mix of plan types in your filtered view")
-            type_chart = (
-                alt.Chart(df_types)
-                .mark_arc(innerRadius=60)
-                .encode(
-                    theta=alt.Theta("count():Q", stack=True),
-                    color=alt.Color(
-                        "Plan Type:N", legend=alt.Legend(title="Plan Type")
-                    ),
-                    tooltip=[
-                        alt.Tooltip("Plan Type:N"),
-                        alt.Tooltip("count():Q", title="Number of Plans"),
-                    ],
-                )
-                .properties(height=320)
-            )
-            st.altair_chart(type_chart, use_container_width=True)
-
-    # ---- Table: richer insurer-level view ----
-    st.markdown("---")
-    st.subheader("Insurer Value Summary Table")
-
-    table_rows = []
-    for insurer in unique_insurers:
-        insurer_plans = [p for p in filtered_plans if p.get("insurer") == insurer]
-        if not insurer_plans:
-            continue
-
-        ips = [p.get("premium_value", 0) for p in insurer_plans]
-        addon_counts = [_addons_count(p) for p in insurer_plans]
-        claimed_share = (
-            sum(
-                1
-                for p in insurer_plans
-                if normalize_claim_status(p.get("claim_status")) == "claimed"
-            )
-            / len(insurer_plans)
-            * 100
-            if insurer_plans
-            else 0
-        )
-
-        table_rows.append(
-            {
-                "Insurer": insurer,
-                "Plans": len(insurer_plans),
-                "Cheapest Premium": format_premium(min(ips) if ips else 0),
-                "Average Premium": format_premium(sum(ips) / len(ips) if ips else 0),
-                "Costliest Premium": format_premium(max(ips) if ips else 0),
-                "Avg Add-ons per Plan": (
-                    round(sum(addon_counts) / len(addon_counts), 1)
-                    if addon_counts
-                    else 0.0
-                ),
-                # "% Plans with Claims History": f"{claimed_share:.1f}%",
-            }
-        )
-
-    if table_rows:
-        df_table = pd.DataFrame(table_rows)
-        st.dataframe(df_table, use_container_width=True, hide_index=True)
-
-    # Optional contextual note if user narrowed with price slider
-    if price_range:
-        st.caption(
-            f"Insights are based on plans priced between {format_premium(price_range[0])} and {format_premium(price_range[1])}."
-        )
-
-
 def main():
     st.set_page_config(
         page_title="Insurance Plans Comparison",
@@ -873,36 +697,8 @@ def main():
         initial_sidebar_state="expanded",
     )
 
-    # Initialize page state
-    if "page" not in st.session_state:
-        st.session_state.page = "homepage"
-
-    # Sidebar navigation
-    page_labels = {
-        "homepage": "Overview",
-        "comparison": "Comparison",
-        "insights": "Insights",
-    }
-    current_label = page_labels.get(st.session_state.page, "Overview")
-    label_list = list(page_labels.values())
-    current_index = label_list.index(current_label)
-    selected_label = st.sidebar.radio(
-        "Navigation", options=label_list, index=current_index
-    )
-
-    # Sync selected label back to internal page key
-    for key, label in page_labels.items():
-        if label == selected_label:
-            st.session_state.page = key
-            break
-
-    # Navigation
-    if st.session_state.page == "homepage":
-        homepage()
-    elif st.session_state.page == "comparison":
-        comparison_page()
-    elif st.session_state.page == "insights":
-        insights_page()
+    # Homepage is the default page
+    homepage()
 
 
 if __name__ == "__main__":
